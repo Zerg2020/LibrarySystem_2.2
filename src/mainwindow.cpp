@@ -186,35 +186,10 @@ void MainWindow::setupBooksTab()
     booksTable->setColumnCount(10);
     booksTable->setHorizontalHeaderLabels({"Обложка", "Название", "Автор", "ISBN", "Год", "Жанр", "Доступна", "Количество", "Описание", "Действия"});
     
-    // Устанавливаем ширины колонок
-        booksTable->setColumnWidth(0, 120);   // Обложка - вертикальная пропорция книги
-        booksTable->setColumnWidth(1, 120);  // Название - уменьшено
-        booksTable->setColumnWidth(2, 120);  // Автор - уменьшено
-        booksTable->setColumnWidth(3, 120);  // ISBN - немного уменьшено
-        booksTable->setColumnWidth(4, 70);   // Год - узкий
-        booksTable->setColumnWidth(5, 110);   // Жанр - немного уменьшено
-        booksTable->setColumnWidth(6, 100);   // Доступна - шире для полного текста заголовка
-        booksTable->setColumnWidth(7, 100);   // Количество - шире для полного текста заголовка
-        booksTable->setColumnWidth(8, 300);  // Описание - значительно шире для текста
-        booksTable->setColumnWidth(9, 140); // Действия
-    
-    // Устанавливаем минимальные ширины для колонок, чтобы заголовки полностью помещались
-        booksTable->horizontalHeader()->setMinimumSectionSize(70); // Минимальная ширина для всех колонок
-    
-    // Настраиваем растяжение колонок
-    // Узкие колонки - фиксированные
-        booksTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive); // Обложка
-        booksTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Interactive); // Название - фиксированное
-        booksTable->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Interactive); // Автор - фиксированное
-        booksTable->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Interactive); // ISBN - фиксированное
-        booksTable->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Interactive); // Год
-        booksTable->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Interactive); // Жанр
-        booksTable->horizontalHeader()->setSectionResizeMode(6, QHeaderView::Interactive); // Доступна
-        booksTable->horizontalHeader()->setSectionResizeMode(7, QHeaderView::Interactive); // Количество
-        booksTable->horizontalHeader()->setSectionResizeMode(9, QHeaderView::Interactive); // Действия
-    
-    // Широкие колонки - растягиваются
-    booksTable->horizontalHeader()->setSectionResizeMode(8, QHeaderView::Stretch); // Описание
+    // Устанавливаем ширины и режимы растяжения колонок
+    QList<int> columnWidths = {120, 120, 120, 120, 70, 110, 100, 100, 300, 140};
+    QList<QHeaderView::ResizeMode> resizeModes(10, QHeaderView::Interactive);
+    setupTableColumns(booksTable, columnWidths, resizeModes, 8); // Колонка 8 (Описание) растягивается
     booksTable->setSortingEnabled(false); // Отключаем стандартную сортировку для кастомной
     booksTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     // Убираем контекстное меню, добавим кнопки действий
@@ -238,10 +213,8 @@ void MainWindow::setupBooksTab()
     });
     
     // Панель фильтров (все в одну строку) - перемещена наверх под кнопку "Добавить книгу"
-    auto* filtersGroup = new QGroupBox("Фильтры поиска", booksTab);
-    auto* filtersLayout = new QHBoxLayout(filtersGroup);
-    filtersLayout->setContentsMargins(8, 8, 8, 8);
-    filtersLayout->setSpacing(6);
+    QHBoxLayout* filtersLayout = nullptr;
+    auto* filtersGroup = createFiltersGroup(booksTab, reinterpret_cast<QLayout*&>(filtersLayout));
     
     filtersLayout->addWidget(createLineEditFilter(filtersGroup, "Название...", "titleFilter", 220, &MainWindow::onFilterChanged));
     filtersLayout->addWidget(createLineEditFilter(filtersGroup, "Автор...", "authorFilter", 220, &MainWindow::onFilterChanged));
@@ -261,11 +234,7 @@ void MainWindow::setupBooksTab()
     filtersLayout->addWidget(createComboBoxFilter(filtersGroup, "availabilityFilter", 140, &MainWindow::onFilterChanged));
     
     filtersLayout->addStretch();
-    
-    auto* clearFiltersBtn = new QPushButton("Очистить", filtersGroup);
-    clearFiltersBtn->setMinimumWidth(120);
-    connect(clearFiltersBtn, &QPushButton::clicked, this, &MainWindow::onClearFilters);
-    filtersLayout->addWidget(clearFiltersBtn);
+    filtersLayout->addWidget(createClearFiltersButton(filtersGroup, &MainWindow::onClearFilters));
     
     layout->addWidget(filtersGroup);
     
@@ -284,32 +253,16 @@ void MainWindow::setupMembersTab() // NOSONAR - cannot be const, modifies UI
     membersTable->setColumnCount(7);
     membersTable->setHorizontalHeaderLabels({"Имя", "Фамилия", "Телефон", "Email", "Заблокирован", "Книги на руках", "Действия"});
     
-    // Устанавливаем ширины колонок
-    membersTable->setColumnWidth(0, 120);  // Имя - уже
-    membersTable->setColumnWidth(1, 120);  // Фамилия - уже
-    membersTable->setColumnWidth(2, 140);  // Телефон - шире
-    membersTable->setColumnWidth(3, 220);  // Email - шире для длинных email
-    membersTable->setColumnWidth(4, 130);  // Заблокирован - шире
-    membersTable->setColumnWidth(5, 250);  // Книги на руках - шире
-    membersTable->setColumnWidth(6, 150);  // Действия
-    
-    // Настраиваем растяжение колонок
-        membersTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive); // Имя - фиксированная
-        membersTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Interactive); // Фамилия - фиксированная
-        membersTable->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Interactive); // Телефон - фиксированная
-        membersTable->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Interactive); // Email - фиксированная
-        membersTable->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Interactive); // Заблокирован
-        membersTable->horizontalHeader()->setSectionResizeMode(6, QHeaderView::Interactive); // Действия
-        // Только Книги на руках - растягивается
-        membersTable->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Stretch);
+    // Устанавливаем ширины и режимы растяжения колонок
+    QList<int> memberColumnWidths = {120, 120, 140, 220, 130, 250, 150};
+    QList<QHeaderView::ResizeMode> memberResizeModes(7, QHeaderView::Interactive);
+    setupTableColumns(membersTable, memberColumnWidths, memberResizeModes, 5); // Колонка 5 (Книги на руках) растягивается
     membersTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     // Контекстное меню убрано, действия вынесены в отдельную колонку
     
     // Панель фильтров для абонентов (все в одну строку) - перемещена наверх под кнопку "Добавить абонента"
-    auto* memberFiltersGroup = new QGroupBox("Фильтры поиска", membersTab);
-    auto* memberFiltersLayout = new QHBoxLayout(memberFiltersGroup);
-    memberFiltersLayout->setContentsMargins(8, 8, 8, 8);
-    memberFiltersLayout->setSpacing(6);
+    QHBoxLayout* memberFiltersLayout = nullptr;
+    auto* memberFiltersGroup = createFiltersGroup(membersTab, reinterpret_cast<QLayout*&>(memberFiltersLayout));
     
     memberFiltersLayout->addWidget(createLineEditFilter(memberFiltersGroup, "Имя...", "memberNameFilter", 180, &MainWindow::onMemberFilterChanged));
     memberFiltersLayout->addWidget(createLineEditFilter(memberFiltersGroup, "Фамилия...", "memberSurnameFilter", 180, &MainWindow::onMemberFilterChanged));
@@ -322,11 +275,7 @@ void MainWindow::setupMembersTab() // NOSONAR - cannot be const, modifies UI
     memberFiltersLayout->addWidget(createComboBoxFilter(memberFiltersGroup, "memberBlockedFilter", 140, &MainWindow::onMemberFilterChanged, blockedItems));
     
     memberFiltersLayout->addStretch();
-    
-    auto* clearMemberFiltersBtn = new QPushButton("Очистить", memberFiltersGroup);
-    clearMemberFiltersBtn->setMinimumWidth(120);
-    connect(clearMemberFiltersBtn, &QPushButton::clicked, this, &MainWindow::onClearMemberFilters);
-    memberFiltersLayout->addWidget(clearMemberFiltersBtn);
+    memberFiltersLayout->addWidget(createClearFiltersButton(memberFiltersGroup, &MainWindow::onClearMemberFilters));
     
     layout->addWidget(memberFiltersGroup);
     
@@ -345,22 +294,10 @@ void MainWindow::setupEmployeesTab() // NOSONAR - cannot be const, modifies UI
     employeesTable->setColumnCount(6);
     employeesTable->setHorizontalHeaderLabels({"Имя", "Фамилия", "Должность", "Зарплата", "Часы работы", "Действия"});
     
-    // Устанавливаем ширины колонок
-    employeesTable->setColumnWidth(0, 200);  // Имя - шире
-    employeesTable->setColumnWidth(1, 200);  // Фамилия - шире
-    employeesTable->setColumnWidth(2, 200);  // Должность - шире для длинных названий
-    employeesTable->setColumnWidth(3, 120);  // Зарплата - шире для больших чисел
-    employeesTable->setColumnWidth(4, 120);  // Часы работы
-    employeesTable->setColumnWidth(5, 130);  // Действия
-    
-    // Настраиваем растяжение колонок
-        employeesTable->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Interactive); // Должность
-        employeesTable->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Interactive); // Зарплата
-        employeesTable->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Interactive); // Часы работы
-        employeesTable->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Stretch); // Действия
-        // Имя и Фамилия - растягиваются
-        employeesTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
-        employeesTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Interactive);
+    // Устанавливаем ширины и режимы растяжения колонок
+    QList<int> employeeColumnWidths = {200, 200, 200, 120, 120, 130};
+    QList<QHeaderView::ResizeMode> employeeResizeModes(6, QHeaderView::Interactive);
+    setupTableColumns(employeesTable, employeeColumnWidths, employeeResizeModes, 5); // Колонка 5 (Действия) растягивается
     // Контекстное меню убрано, действия вынесены в отдельную колонку
     
     layout->addWidget(employeesTable);
@@ -2986,5 +2923,46 @@ QComboBox* MainWindow::createComboBoxFilter(QWidget* parent, const QString& obje
     filter->setMinimumWidth(minWidth);
     connect(filter, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this, slot](int) { (this->*slot)(); });
     return filter;
+}
+
+QGroupBox* MainWindow::createFiltersGroup(QWidget* parent, QLayout*& outLayout) const
+{
+    auto* group = new QGroupBox("Фильтры поиска", parent);
+    auto* layout = new QHBoxLayout(group);
+    layout->setContentsMargins(8, 8, 8, 8);
+    layout->setSpacing(6);
+    outLayout = layout;
+    return group;
+}
+
+QPushButton* MainWindow::createClearFiltersButton(QWidget* parent, void (MainWindow::*slot)()) const
+{
+    auto* btn = new QPushButton("Очистить", parent);
+    btn->setMinimumWidth(120);
+    connect(btn, &QPushButton::clicked, this, slot);
+    return btn;
+}
+
+void MainWindow::setupTableColumns(QTableWidget* table, const QList<int>& columnWidths, const QList<QHeaderView::ResizeMode>& resizeModes, int stretchColumn) const
+{
+    // Устанавливаем ширины колонок
+    for (int i = 0; i < columnWidths.size() && i < table->columnCount(); ++i) {
+        table->setColumnWidth(i, columnWidths[i]);
+    }
+    
+    // Устанавливаем минимальную ширину для всех колонок
+    table->horizontalHeader()->setMinimumSectionSize(70);
+    
+    // Настраиваем режимы растяжения колонок
+    for (int i = 0; i < resizeModes.size() && i < table->columnCount(); ++i) {
+        if (i == stretchColumn) {
+            table->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Stretch);
+        } else {
+            table->horizontalHeader()->setSectionResizeMode(i, resizeModes[i]);
+        }
+    }
+    
+    // Устанавливаем поведение выбора строк
+    table->setSelectionBehavior(QAbstractItemView::SelectRows);
 }
 
