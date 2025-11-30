@@ -452,37 +452,23 @@ void MainWindow::refreshBooks()
         QString pdfPath = QString::fromStdString(book->getPdfPath());
 
         // Колонка 9 - Действия (кнопки)
-        auto* actionWidget = new QWidget();
-        auto* actionLayout = new QHBoxLayout(actionWidget);
-        actionLayout->setContentsMargins(0, 0, 0, 0);
-        actionLayout->setSpacing(2);
+        auto* actionWidget = createActionWidget();
+        auto* actionLayout = qobject_cast<QHBoxLayout*>(actionWidget->layout());
 
         // Кнопка "Инфо"
-        auto* infoBtn = new QPushButton();
-        infoBtn->setIcon(style()->standardIcon(QStyle::SP_MessageBoxInformation));
-        infoBtn->setIconSize(QSize(22, 22));
-        infoBtn->setToolTip("Информация о книге");
+        auto* infoBtn = createActionButton(style()->standardIcon(QStyle::SP_MessageBoxInformation), "Информация о книге", [this, book]() { onShowBookDetails(book->getId()); });
         infoBtn->setProperty("row", row);
-        connect(infoBtn, &QPushButton::clicked, this, [this, book]() { onShowBookDetails(book->getId()); });
         actionLayout->addWidget(infoBtn);
 
         // Кнопка "Редактировать"
-        auto* editBtn = new QPushButton();
-        editBtn->setIcon(style()->standardIcon(QStyle::SP_FileDialogContentsView));
-        editBtn->setIconSize(QSize(22, 22));
-        editBtn->setToolTip("Редактировать книгу");
-        connect(editBtn, &QPushButton::clicked, this, [this, book]() {
-            // Выделяем строку и вызываем редактирование
+        auto* editBtn = createActionButton(style()->standardIcon(QStyle::SP_FileDialogContentsView), "Редактировать книгу", [this, book]() {
             auto* booksTableWidget = findChild<QTableWidget*>("booksTable");
-            if (booksTableWidget == nullptr) {
-                onEditBook();
-                return;
-            }
-            
-            for (int r = 0; r < booksTableWidget->rowCount(); ++r) {
-                if (const auto* item = booksTableWidget->item(r, 0); item && item->data(Qt::UserRole).toInt() == book->getId()) {
-                    booksTableWidget->selectRow(r);
-                    break;
+            if (booksTableWidget != nullptr) {
+                for (int r = 0; r < booksTableWidget->rowCount(); ++r) {
+                    if (const auto* item = booksTableWidget->item(r, 0); item && item->data(Qt::UserRole).toInt() == book->getId()) {
+                        booksTableWidget->selectRow(r);
+                        break;
+                    }
                 }
             }
             onEditBook();
@@ -490,22 +476,10 @@ void MainWindow::refreshBooks()
         actionLayout->addWidget(editBtn);
 
         // Кнопка "Удалить"
-        auto* delBtn = new QPushButton();
-        delBtn->setIcon(createRedCrossIcon());
-        delBtn->setIconSize(QSize(22, 22));
-        delBtn->setToolTip("Удалить книгу");
-        connect(delBtn, &QPushButton::clicked, this, [this, book]() {
+        auto* delBtn = createActionButton(createRedCrossIcon(), "Удалить книгу", [this, book]() {
             int ret = QMessageBox::question(this, "Подтверждение удаления", QString("Вы уверены, что хотите удалить книгу '%1'?").arg(QString::fromStdString(book->getTitle())), QMessageBox::Yes | QMessageBox::No);
             if (ret == QMessageBox::Yes) {
-                try {
-                    librarySystem.removeBook(book->getId());
-                    refreshBooks();
-                    autoSave();
-                    updateUndoRedoButtons();
-                    showInfo("Книга успешно удалена");
-                } catch (const LibraryException& e) {
-                    showError(QString::fromStdString(e.what()));
-                }
+                executeWithRefresh([this, book]() { librarySystem.removeBook(book->getId()); }, "Книга успешно удалена");
             }
         });
         actionLayout->addWidget(delBtn);
@@ -2964,5 +2938,72 @@ void MainWindow::setupTableColumns(QTableWidget* table, const QList<int>& column
     
     // Устанавливаем поведение выбора строк
     table->setSelectionBehavior(QAbstractItemView::SelectRows);
+}
+
+QWidget* MainWindow::createActionWidget() const
+{
+    auto* actionWidget = new QWidget();
+    auto* actionLayout = new QHBoxLayout(actionWidget);
+    actionLayout->setContentsMargins(0, 0, 0, 0);
+    actionLayout->setSpacing(2);
+    return actionWidget;
+}
+
+QPushButton* MainWindow::createActionButton(const QIcon& icon, const QString& tooltip, std::function<void()> onClick) const
+{
+    auto* btn = new QPushButton();
+    btn->setIcon(icon);
+    btn->setIconSize(QSize(22, 22));
+    btn->setToolTip(tooltip);
+    connect(btn, &QPushButton::clicked, this, [onClick]() { onClick(); });
+    return btn;
+}
+
+QComboBox* MainWindow::createComboBoxWithCompleter(QWidget* parent, const QStringList& items, const QList<int>& ids, int defaultId) const
+{
+    auto* combo = new QComboBox(parent);
+    combo->setEditable(true);
+    
+    for (int i = 0; i < items.size(); ++i) {
+        if (i < ids.size()) {
+            combo->addItem(items[i], ids[i]);
+        } else {
+            combo->addItem(items[i]);
+        }
+    }
+    
+    if (defaultId >= 0) {
+        if (int idx = combo->findData(defaultId); idx >= 0) {
+            combo->setCurrentIndex(idx);
+        }
+    }
+    
+    auto* completer = new QCompleter(items, combo);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    combo->setCompleter(completer);
+    
+    return combo;
+}
+
+void MainWindow::executeWithRefresh(std::function<void()> action, const QString& successMessage, const QString& errorContext)
+{
+    try {
+        action();
+        if (!successMessage.isEmpty()) {
+            showInfo(successMessage);
+        }
+        // Обновляем все таблицы и состояние
+        refreshBooks();
+        refreshMembers();
+        refreshEmployees();
+        autoSave();
+        updateUndoRedoButtons();
+    } catch (const LibraryException& e) {
+        QString errorMsg = QString::fromStdString(e.what());
+        if (!errorContext.isEmpty()) {
+            errorMsg = errorContext + ": " + errorMsg;
+        }
+        showError(errorMsg);
+    }
 }
 

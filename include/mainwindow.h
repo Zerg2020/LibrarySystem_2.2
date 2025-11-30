@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <memory>
+#include <functional>
 #include <QMainWindow>
 #include <QTableWidget>
 #include <QLineEdit>
@@ -138,6 +139,12 @@ private:
     QGroupBox* createFiltersGroup(QWidget* parent, QLayout*& outLayout) const; // Создание группы фильтров с layout
     QPushButton* createClearFiltersButton(QWidget* parent, void (MainWindow::*slot)()) const; // Создание кнопки "Очистить"
     void setupTableColumns(QTableWidget* table, const QList<int>& columnWidths, const QList<QHeaderView::ResizeMode>& resizeModes, int stretchColumn = -1) const; // Настройка колонок таблицы
+    
+    // Вспомогательные методы для создания UI элементов (устранение дублирования кода)
+    QWidget* createActionWidget() const; // Создание виджета для кнопок действий
+    QPushButton* createActionButton(const QIcon& icon, const QString& tooltip, std::function<void()> onClick) const; // Создание кнопки действия
+    QComboBox* createComboBoxWithCompleter(QWidget* parent, const QStringList& items, const QList<int>& ids = {}, int defaultId = -1) const; // Создание QComboBox с completer
+    void executeWithRefresh(std::function<void()> action, const QString& successMessage, const QString& errorContext = ""); // Выполнение действия с обновлением UI
 };
 
 #endif // MAINWINDOW_H
