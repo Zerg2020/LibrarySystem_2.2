@@ -2922,9 +2922,8 @@ QIcon MainWindow::createRedCrossIcon()
 {
     // Используем стандартную иконку крестика и делаем её красной
     QIcon standardIcon = style()->standardIcon(QStyle::SP_DialogCloseButton);
-    QPixmap pixmap = standardIcon.pixmap(22, 22);
     
-    if (!pixmap.isNull()) {
+    if (QPixmap pixmap = standardIcon.pixmap(22, 22); !pixmap.isNull()) {
         QPixmap redPixmap = pixmap;
         QPainter painter(&redPixmap);
         painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
