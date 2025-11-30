@@ -591,7 +591,7 @@ void MainWindow::refreshBooks()
             if (QPixmap pixmap(coverPath); !pixmap.isNull()) {
                 // Обложка в вертикальной пропорции книги (высота строки 180px, ширина колонки 120px)
                 // Масштабируем с сохранением пропорций, максимальная высота 170px, ширина 110px
-                QPixmap scaled = pixmap.scaled(110, 170, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                auto scaled = pixmap.scaled(110, 170, Qt::KeepAspectRatio, Qt::SmoothTransformation);
                 coverItem->setData(Qt::DecorationRole, scaled);
             } else {
                 coverItem->setText("Нет\nобложки");
@@ -1245,7 +1245,7 @@ void MainWindow::onAddBook()
             coverPath = fileName;
             QPixmap pixmap(fileName);
             if (!pixmap.isNull()) {
-                QPixmap scaled = pixmap.scaled(coverLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                auto scaled = pixmap.scaled(coverLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
                 coverLabel->setPixmap(scaled);
                 coverLabel->setText("");
             }
@@ -1420,7 +1420,7 @@ void MainWindow::onEditBook()
     if (!currentCoverPath.isEmpty() && QFile::exists(currentCoverPath)) {
         QPixmap pixmap(currentCoverPath);
         if (!pixmap.isNull()) {
-            QPixmap scaled = pixmap.scaled(coverLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            auto scaled = pixmap.scaled(coverLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
             coverLabel->setPixmap(scaled);
         } else {
             coverLabel->setText("Обложка не выбрана");
@@ -1447,7 +1447,7 @@ void MainWindow::onEditBook()
             coverPath = fileName;
             QPixmap pixmap(fileName);
             if (!pixmap.isNull()) {
-                QPixmap scaled = pixmap.scaled(coverLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                auto scaled = pixmap.scaled(coverLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
                 coverLabel->setPixmap(scaled);
                 coverLabel->setText("");
             }
@@ -1661,7 +1661,7 @@ void MainWindow::onShowBookDetails(int bookId)
         coverLabelPtr->setStyleSheet("border: 2px solid gray; background-color: #f0f0f0;");
         if (QString coverPath = QString::fromStdString(bookPtr->getCoverPath()); !coverPath.isEmpty() && QFile::exists(coverPath)) {
             if (QPixmap pixmap(coverPath); !pixmap.isNull()) {
-                QPixmap scaled = pixmap.scaled(coverLabelPtr->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                auto scaled = pixmap.scaled(coverLabelPtr->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
                 coverLabelPtr->setPixmap(scaled);
             } else {
                 coverLabelPtr->setText("Обложка\nне найдена");
