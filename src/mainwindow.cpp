@@ -2345,7 +2345,7 @@ void MainWindow::onShowOverdueBooks()
             QList<QPair<int, std::pair<LibraryMember*, BorrowedBook>>> overdueWithDays;
             
             for (const auto& pair : overdue) {
-                LibraryMember* member = pair.first;
+                const LibraryMember* member = pair.first;
                 BorrowedBook book = pair.second;
                 
                 // Парсим дату возврата
