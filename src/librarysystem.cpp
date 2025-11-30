@@ -23,7 +23,7 @@ void LibrarySystem::editBook(int id, std::string_view title, std::string_view au
                              std::string_view isbn, int year, std::string_view genre,
                              std::string_view coverPath, int quantity,
                              std::string_view description, std::string_view pdfPath) {
-    Book* book = findBook(id);
+    const Book* book = findBook(id);
     if (!book) {
         throw NotFoundException("Книга с ID " + std::to_string(id));
     }
@@ -405,7 +405,7 @@ void LibrarySystem::removeMemberDirect(int id) {
     members.removeMember(id);
 }
 
-void LibrarySystem::editMemberDirect(int id, std::string_view name, std::string_view surname, std::string_view phone, std::string_view email) {
+void LibrarySystem::editMemberDirect(int id, std::string_view name, std::string_view surname, std::string_view phone, std::string_view email) const {
     LibraryMember* member = findMember(id);
     if (!member) {
         throw NotFoundException("Абонент с ID " + std::to_string(id));
@@ -416,7 +416,7 @@ void LibrarySystem::editMemberDirect(int id, std::string_view name, std::string_
     member->setEmail(email);
 }
 
-void LibrarySystem::blockMemberDirect(int id) {
+void LibrarySystem::blockMemberDirect(int id) const {
     LibraryMember* member = findMember(id);
     if (!member) {
         throw NotFoundException("Абонент с ID " + std::to_string(id));
@@ -424,7 +424,7 @@ void LibrarySystem::blockMemberDirect(int id) {
     member->setBlocked(true);
 }
 
-void LibrarySystem::unblockMemberDirect(int id) {
+void LibrarySystem::unblockMemberDirect(int id) const {
     LibraryMember* member = findMember(id);
     if (!member) {
         throw NotFoundException("Абонент с ID " + std::to_string(id));
@@ -457,7 +457,7 @@ void LibrarySystem::removeEmployeeDirect(int id) {
 }
 
 void LibrarySystem::editEmployeeDirect(int id, std::string_view name, std::string_view surname,
-                                       std::string_view phone, double salary, int workHours) {
+                                       std::string_view phone, double salary, int workHours) const {
     Employee* emp = nullptr;
     for (const auto& e : employees) {
         if (e->getId() == id) {

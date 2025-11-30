@@ -117,14 +117,14 @@ public:
     void addMemberWithId(int id, std::string_view name, std::string_view surname, 
                          std::string_view phone, bool blocked, std::string_view email = "");
     void removeMemberDirect(int id); // Прямое удаление без команды
-    void editMemberDirect(int id, std::string_view name, std::string_view surname, std::string_view phone, std::string_view email = ""); // Прямое редактирование без команды
-    void blockMemberDirect(int id); // Прямая блокировка без команды
-    void unblockMemberDirect(int id); // Прямая разблокировка без команды
+    void editMemberDirect(int id, std::string_view name, std::string_view surname, std::string_view phone, std::string_view email = "") const; // Прямое редактирование без команды
+    void blockMemberDirect(int id) const; // Прямая блокировка без команды
+    void unblockMemberDirect(int id) const; // Прямая разблокировка без команды
     void addEmployeeWithId(int id, std::string_view name, std::string_view surname,
                           std::string_view phone, double salary, int workHours, bool isLibrarian);
     void removeEmployeeDirect(int id); // Прямое удаление без команды
     void editEmployeeDirect(int id, std::string_view name, std::string_view surname,
-                           std::string_view phone, double salary, int workHours); // Прямое редактирование без команды
+                           std::string_view phone, double salary, int workHours) const; // Прямое редактирование без команды
     void addBorrowedBook(int memberId, int bookId, std::string_view borrowDate, 
                         std::string_view returnDate, bool returned, int employeeId = 0);
 };

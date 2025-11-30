@@ -831,13 +831,13 @@ void MainWindow::onClearFilters()
     bookFilters = BookFilters();
     
     // Очищаем поля ввода
-    auto* titleFilter = findChild<QLineEdit*>("titleFilter");
-    auto* authorFilter = findChild<QLineEdit*>("authorFilter");
-    auto* genreFilter = findChild<QLineEdit*>("genreFilter");
-    auto* isbnFilter = findChild<QLineEdit*>("isbnFilter");
-    auto* yearFromFilter = findChild<QSpinBox*>("yearFromFilter");
-    auto* yearToFilter = findChild<QSpinBox*>("yearToFilter");
-    auto* availabilityFilter = findChild<QComboBox*>("availabilityFilter");
+    const auto* titleFilter = findChild<QLineEdit*>("titleFilter");
+    const auto* authorFilter = findChild<QLineEdit*>("authorFilter");
+    const auto* genreFilter = findChild<QLineEdit*>("genreFilter");
+    const auto* isbnFilter = findChild<QLineEdit*>("isbnFilter");
+    const auto* yearFromFilter = findChild<QSpinBox*>("yearFromFilter");
+    const auto* yearToFilter = findChild<QSpinBox*>("yearToFilter");
+    const auto* availabilityFilter = findChild<QComboBox*>("availabilityFilter");
     
     if (titleFilter) titleFilter->clear();
     if (authorFilter) authorFilter->clear();
@@ -889,7 +889,7 @@ void MainWindow::onBookHeaderClicked(int column)
     applyBookSorting(table);
 }
 
-void MainWindow::applyBookSorting(QTableWidget* table)
+void MainWindow::applyBookSorting(QTableWidget* table) const
 {
     if (table == nullptr) return;
     
@@ -2211,7 +2211,7 @@ void MainWindow::onShowMemberDetails(int memberId)
         booksTable->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Stretch); // Выдал работник растягивается
         booksTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
         
-        booksTable->setRowCount(books.size());
+        booksTable->setRowCount(static_cast<int>(books.size()));
         for (size_t i = 0; i < books.size(); i++) {
             const auto& borrowedBook = books[i];
             
@@ -2235,11 +2235,11 @@ void MainWindow::onShowMemberDetails(int memberId)
                 }
             }
             
-            booksTable->setItem(i, 0, new QTableWidgetItem(bookTitle));
-            booksTable->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(borrowedBook.borrowDate)));
-            booksTable->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(borrowedBook.returnDate)));
-            booksTable->setItem(i, 3, new QTableWidgetItem(borrowedBook.returned ? "Да" : "Нет"));
-            booksTable->setItem(i, 4, new QTableWidgetItem(employeeName));
+            booksTable->setItem(static_cast<int>(i), 0, new QTableWidgetItem(bookTitle));
+            booksTable->setItem(static_cast<int>(i), 1, new QTableWidgetItem(QString::fromStdString(borrowedBook.borrowDate)));
+            booksTable->setItem(static_cast<int>(i), 2, new QTableWidgetItem(QString::fromStdString(borrowedBook.returnDate)));
+            booksTable->setItem(static_cast<int>(i), 3, new QTableWidgetItem(borrowedBook.returned ? "Да" : "Нет"));
+            booksTable->setItem(static_cast<int>(i), 4, new QTableWidgetItem(employeeName));
             
             // Добавляем кнопку возврата для не возвращенных книг
             if (!borrowedBook.returned) {
@@ -2261,10 +2261,10 @@ void MainWindow::onShowMemberDetails(int memberId)
                         showError(QString::fromStdString(e.what()));
                     }
                 });
-                booksTable->setCellWidget(i, 5, returnBtn);
+                booksTable->setCellWidget(static_cast<int>(i), 5, returnBtn);
             } else {
                 // Для возвращенных книг просто пустая ячейка
-                booksTable->setItem(i, 5, new QTableWidgetItem("-"));
+                booksTable->setItem(static_cast<int>(i), 5, new QTableWidgetItem("-"));
             }
         }
         
@@ -2341,7 +2341,7 @@ void MainWindow::onShowOverdueBooks()
                 
                 // Парсим дату возврата
                 QDate returnDate = QDate::fromString(QString::fromStdString(book.returnDate), "yyyy-MM-dd");
-                int daysOverdue = returnDate.daysTo(currentDate);
+                int daysOverdue = static_cast<int>(returnDate.daysTo(currentDate));
                 
                 overdueWithDays.append({daysOverdue, pair});
             }
@@ -2353,14 +2353,13 @@ void MainWindow::onShowOverdueBooks()
                          return a.first > b.first;
                      });
             
-            overdueTable->setRowCount(overdueWithDays.size());
+            overdueTable->setRowCount(static_cast<int>(overdueWithDays.size()));
             
             // Заполняем таблицу
-            for (int i = 0; i < overdueWithDays.size(); ++i) {
-                const auto& item = overdueWithDays[i];
-                int daysOverdue = item.first;
-                const LibraryMember* member = item.second.first;
-                BorrowedBook book = item.second.second;
+            for (int i = 0; i < static_cast<int>(overdueWithDays.size()); ++i) {
+                const auto& [daysOverdue, memberBookPair] = overdueWithDays[i];
+                const LibraryMember* member = memberBookPair.first;
+                const BorrowedBook& book = memberBookPair.second;
                 
                 // Находим название книги
                 QString bookTitle = QString("ID: %1").arg(book.bookId);
@@ -2895,7 +2894,7 @@ void MainWindow::autoSave()
     }
 }
 
-void MainWindow::updateUndoRedoButtons()
+void MainWindow::updateUndoRedoButtons() const
 {
     // Определяем текущую активную вкладку и обновляем кнопки соответственно
     int currentTab = ui->tabWidget->currentIndex();
