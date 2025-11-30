@@ -31,10 +31,8 @@ jobs:
       shell: pwsh
       run: |
         python -m pip install aqtinstall
-        # Устанавливаем Qt без модулей сначала
+        # Устанавливаем Qt - qtbase уже включен в базовую установку
         aqt install-qt windows desktop 6.5.3 win64_msvc2019_64 --outputdir C:\Qt
-        # Затем устанавливаем модуль qtbase
-        aqt install-qt windows desktop 6.5.3 win64_msvc2019_64 -m qtbase --outputdir C:\Qt
         $env:CMAKE_PREFIX_PATH = "C:\Qt\6.5.3\msvc2019_64"
         echo "CMAKE_PREFIX_PATH=$env:CMAKE_PREFIX_PATH" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     
