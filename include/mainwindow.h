@@ -20,6 +20,9 @@
 #include <QTableWidgetItem>
 #include <QHeaderView>
 #include <QMap>
+#include <QSpinBox>
+#include <QComboBox>
+#include <QStringList>
 #include "librarysystem.h"
 #include "filemanager.h"
 
