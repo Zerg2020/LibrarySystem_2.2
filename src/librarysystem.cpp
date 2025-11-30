@@ -30,7 +30,7 @@ void LibrarySystem::editBook(int id, std::string_view title, std::string_view au
     
     // Проверяем, не дублируется ли ISBN у другой книги
     if (const Book* existingBook = books.findBookByIsbn(isbn); existingBook && existingBook->getId() != id) {
-        throw DuplicateException("Книга с ISBN " + isbn + " уже существует");
+        throw DuplicateException("Книга с ISBN " + std::string(isbn) + " уже существует");
     }
     
     try {
