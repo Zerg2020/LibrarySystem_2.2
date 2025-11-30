@@ -28,40 +28,28 @@ jobs:
     
     - name: Install Qt (Windows)
       if: matrix.os == 'windows-latest'
-      id: install-qt
-      uses: jurplel/install-qt-action@v3
-      with:
-        version: '6.7.0'
-        modules: 'qtbase'
-        arch: 'x64'
+      shell: pwsh
+      run: |
+        python -m pip install aqtinstall
+        # Устанавливаем Qt без модулей сначала
+        aqt install-qt windows desktop 6.5.3 win64_msvc2019_64 --outputdir C:\Qt
+        # Затем устанавливаем модуль qtbase
+        aqt install-qt windows desktop 6.5.3 win64_msvc2019_64 -m qtbase --outputdir C:\Qt
+        $env:CMAKE_PREFIX_PATH = "C:\Qt\6.5.3\msvc2019_64"
+        echo "CMAKE_PREFIX_PATH=$env:CMAKE_PREFIX_PATH" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     
     - name: Configure CMake (Windows)
       if: matrix.os == 'windows-latest'
       shell: pwsh
       run: |
-        $qtDir = "${{ steps.install-qt.outputs.Qt6_DIR }}"
-        Write-Host "Qt6_DIR from action: $qtDir"
-        Write-Host "Environment variables:"
-        Get-ChildItem Env: | Where-Object { $_.Name -like "*Qt*" -or $_.Name -like "*QT*" } | ForEach-Object { Write-Host "$($_.Name) = $($_.Value)" }
+        $qtPath = "C:\Qt\6.5.3\msvc2019_64"
+        Write-Host "Using Qt path: $qtPath"
         
-        # Проверяем различные возможные пути к Qt
-        $qtPaths = @()
-        if ($qtDir) { $qtPaths += $qtDir }
-        if ($env:Qt6_DIR) { $qtPaths += $env:Qt6_DIR }
-        $qtPaths += "C:\Qt\6.7.0\msvc2019_64"
-        $qtPaths += "C:\Qt\6.7.0\mingw_64"
-        
-        $foundQt = $false
-        foreach ($path in $qtPaths) {
-          if ($path -and (Test-Path "$path\lib\cmake\Qt6")) {
-            Write-Host "✅ Found Qt at: $path"
-            cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$path"
-            $foundQt = $true
-            break
-          }
-        }
-        if (-not $foundQt) {
-          Write-Host "⚠️  Qt path not found in standard locations, trying without CMAKE_PREFIX_PATH"
+        if (Test-Path "$qtPath\lib\cmake\Qt6") {
+          Write-Host "✅ Found Qt at: $qtPath"
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$qtPath"
+        } else {
+          Write-Host "⚠️  Qt path not found, trying without CMAKE_PREFIX_PATH"
           Write-Host "CMake will try to find Qt automatically"
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
         }
