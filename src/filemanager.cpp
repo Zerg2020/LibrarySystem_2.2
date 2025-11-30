@@ -181,8 +181,9 @@ void FileManager::loadBorrowedBooks(LibrarySystem& system, const std::string& fi
                 
                 try {
                     system.addBorrowedBook(memberId, bookId, borrowDate, returnDate, returned, employeeId);
-                } catch (const LibraryException&) {
+                } catch (const LibraryException& e) {
                     // Игнорируем ошибки при загрузке взятых книг
+                    (void)e; // Suppress unused variable warning
                 }
             }
         }

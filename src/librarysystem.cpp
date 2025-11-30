@@ -15,7 +15,7 @@ void LibrarySystem::addBook(const std::string& title, const std::string& author,
         auto command = std::make_unique<AddBookCommand>(this, id, title, author, isbn, year, genre, coverPath, quantity, description, pdfPath);
         commandManagerBooks.executeCommand(std::move(command));
     } catch (const LibraryException&) {
-        throw;
+        throw; // Re-throw to let caller handle the exception
     }
 }
 
@@ -42,7 +42,7 @@ void LibrarySystem::editBook(int id, const std::string& title, const std::string
             updateBookAvailability(id);
         }
     } catch (const LibraryException&) {
-        throw;
+        throw; // Re-throw to let caller handle the exception
     }
 }
 
@@ -51,7 +51,7 @@ void LibrarySystem::removeBook(int id) {
         auto command = std::make_unique<RemoveBookCommand>(this, id);
         commandManagerBooks.executeCommand(std::move(command));
     } catch (const LibraryException&) {
-        throw;
+        throw; // Re-throw to let caller handle the exception
     }
 }
 
@@ -89,12 +89,12 @@ int LibrarySystem::addMember(const std::string& name, const std::string& surname
         commandManagerMembers.executeCommand(std::move(command));
         return id;
     } catch (const LibraryException&) {
-        throw;
+        throw; // Re-throw to let caller handle the exception
     }
 }
 
 void LibrarySystem::editMember(int id, const std::string& name, const std::string& surname, const std::string& phone, const std::string& email) {
-    if (LibraryMember* member = findMember(id); !member) {
+    if (const LibraryMember* member = findMember(id); !member) {
         throw NotFoundException("Абонент с ID " + std::to_string(id));
     }
     
@@ -102,7 +102,7 @@ void LibrarySystem::editMember(int id, const std::string& name, const std::strin
         auto command = std::make_unique<EditMemberCommand>(this, id, name, surname, phone, email);
         commandManagerMembers.executeCommand(std::move(command));
     } catch (const LibraryException&) {
-        throw;
+        throw; // Re-throw to let caller handle the exception
     }
 }
 
@@ -111,31 +111,31 @@ void LibrarySystem::removeMember(int id) {
         auto command = std::make_unique<RemoveMemberCommand>(this, id);
         commandManagerMembers.executeCommand(std::move(command));
     } catch (const LibraryException&) {
-        throw;
+        throw; // Re-throw to let caller handle the exception
     }
 }
 
 void LibrarySystem::blockMember(int id) {
-    if (LibraryMember* member = findMember(id); !member) {
+    if (const LibraryMember* member = findMember(id); !member) {
         throw NotFoundException("Абонент с ID " + std::to_string(id));
     }
     try {
         auto command = std::make_unique<BlockMemberCommand>(this, id, true);
         commandManagerMembers.executeCommand(std::move(command));
     } catch (const LibraryException&) {
-        throw;
+        throw; // Re-throw to let caller handle the exception
     }
 }
 
 void LibrarySystem::unblockMember(int id) {
-    if (LibraryMember* member = findMember(id); !member) {
+    if (const LibraryMember* member = findMember(id); !member) {
         throw NotFoundException("Абонент с ID " + std::to_string(id));
     }
     try {
         auto command = std::make_unique<BlockMemberCommand>(this, id, false);
         commandManagerMembers.executeCommand(std::move(command));
     } catch (const LibraryException&) {
-        throw;
+        throw; // Re-throw to let caller handle the exception
     }
 }
 
@@ -186,7 +186,7 @@ void LibrarySystem::borrowBook(int memberId, int bookId, int employeeId) {
         // Обновляем доступность после выдачи
         updateBookAvailability(bookId);
     } catch (const LibraryException&) {
-        throw;
+        throw; // Re-throw to let caller handle the exception
     }
 }
 
@@ -208,7 +208,7 @@ void LibrarySystem::returnBook(int memberId, int bookId) {
         // Обновляем доступность после возврата
         updateBookAvailability(bookId);
     } catch (const LibraryException&) {
-        throw;
+        throw; // Re-throw to let caller handle the exception
     }
 }
 
@@ -239,7 +239,7 @@ void LibrarySystem::addLibrarian(const std::string& name, const std::string& sur
         auto command = std::make_unique<AddEmployeeCommand>(this, id, name, surname, phone, salary, workHours, true);
         commandManagerEmployees.executeCommand(std::move(command));
     } catch (const LibraryException&) {
-        throw;
+        throw; // Re-throw to let caller handle the exception
     }
 }
 
@@ -251,7 +251,7 @@ void LibrarySystem::addManager(const std::string& name, const std::string& surna
         auto command = std::make_unique<AddEmployeeCommand>(this, id, name, surname, phone, salary, workHours, false);
         commandManagerEmployees.executeCommand(std::move(command));
     } catch (const LibraryException&) {
-        throw;
+        throw; // Re-throw to let caller handle the exception
     }
 }
 
@@ -272,7 +272,7 @@ void LibrarySystem::editEmployee(int id, const std::string& name, const std::str
         auto command = std::make_unique<EditEmployeeCommand>(this, id, name, surname, phone, salary, workHours);
         commandManagerEmployees.executeCommand(std::move(command));
     } catch (const LibraryException&) {
-        throw;
+        throw; // Re-throw to let caller handle the exception
     }
 }
 
@@ -292,7 +292,7 @@ void LibrarySystem::removeEmployee(int id) {
         auto command = std::make_unique<RemoveEmployeeCommand>(this, id);
         commandManagerEmployees.executeCommand(std::move(command));
     } catch (const LibraryException&) {
-        throw;
+        throw; // Re-throw to let caller handle the exception
     }
 }
 
@@ -483,7 +483,7 @@ void LibrarySystem::addBorrowedBook(int memberId, int bookId, const std::string&
         throw NotFoundException("Абонент с ID " + std::to_string(memberId));
     }
     
-    if (Book* book = findBook(bookId); !book) {
+    if (const Book* book = findBook(bookId); !book) {
         throw NotFoundException("Книга с ID " + std::to_string(bookId));
     }
     

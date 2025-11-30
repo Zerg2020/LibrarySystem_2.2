@@ -2,6 +2,7 @@
 #define PERSON_H
 
 #include <string>
+#include <string_view>
 #include <memory>
 
 class Person {
@@ -23,10 +24,10 @@ public:
     std::string getEmail() const { return email; }
     std::string getFullName() const;
 
-    void setName(const std::string& pName) { name = pName; }
-    void setSurname(const std::string& pSurname) { surname = pSurname; }
-    void setPhone(const std::string& pPhone) { phone = pPhone; }
-    void setEmail(const std::string& pEmail) { email = pEmail; }
+    void setName(std::string_view pName) { name = pName; }
+    void setSurname(std::string_view pSurname) { surname = pSurname; }
+    void setPhone(std::string_view pPhone) { phone = pPhone; }
+    void setEmail(std::string_view pEmail) { email = pEmail; }
 
     virtual std::string getInfo() const = 0;
     virtual std::string getType() const = 0;

@@ -2,6 +2,7 @@
 #define ITEM_H
 
 #include <string>
+#include <string_view>
 
 class Item {
 protected:
@@ -17,7 +18,7 @@ public:
     std::string getTitle() const { return title; }
     bool isAvailable() const { return available; }
 
-    void setTitle(const std::string& pTitle) { title = pTitle; }
+    void setTitle(std::string_view pTitle) { title = pTitle; }
     void setAvailable(bool pAvailable) { available = pAvailable; }
 
     virtual std::string getInfo() const = 0;

@@ -3,6 +3,7 @@
 
 #include "item.h"
 #include <string>
+#include <string_view>
 
 class Book : public Item {
 private:
@@ -31,14 +32,14 @@ public:
     std::string getDescription() const { return description; }
     std::string getPdfPath() const { return pdfPath; }
     
-    void setAuthor(const std::string& pAuthor) { author = pAuthor; }
-    void setIsbn(const std::string& pIsbn) { isbn = pIsbn; }
+    void setAuthor(std::string_view pAuthor) { author = pAuthor; }
+    void setIsbn(std::string_view pIsbn) { isbn = pIsbn; }
     void setYear(int pYear) { year = pYear; }
-    void setGenre(const std::string& pGenre) { genre = pGenre; }
-    void setCoverPath(const std::string& pCoverPath) { coverPath = pCoverPath; }
+    void setGenre(std::string_view pGenre) { genre = pGenre; }
+    void setCoverPath(std::string_view pCoverPath) { coverPath = pCoverPath; }
     void setQuantity(int pQuantity) { quantity = pQuantity; }
-    void setDescription(const std::string& pDescription) { description = pDescription; }
-    void setPdfPath(const std::string& pPdfPath) { pdfPath = pPdfPath; }
+    void setDescription(std::string_view pDescription) { description = pDescription; }
+    void setPdfPath(std::string_view pPdfPath) { pdfPath = pPdfPath; }
     bool getManuallyDisabled() const { return manuallyDisabled; }
     void setManuallyDisabled(bool disabled) { this->manuallyDisabled = disabled; }
     

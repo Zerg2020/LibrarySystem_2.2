@@ -60,10 +60,12 @@ MainWindow::MainWindow(QWidget *parent)
         refreshMembers();
         refreshEmployees();
         updateUndoRedoButtons();
-    } catch (const FileException&) {
+    } catch (const FileException& e) {
         // Игнорируем ошибки при первой загрузке (файлы могут не существовать)
-    } catch (const std::exception&) {
+        (void)e; // Suppress unused variable warning
+    } catch (const std::exception& e) {
         // Игнорируем другие ошибки при первой загрузке
+        (void)e; // Suppress unused variable warning
     }
 }
 
@@ -72,8 +74,9 @@ MainWindow::~MainWindow()
     // Автоматически сохраняем данные при закрытии
     try {
         FileManager::saveLibrarySystem(librarySystem, dataPath.toStdString());
-    } catch (const std::exception&) {
+    } catch (const std::exception& e) {
         // Игнорируем ошибки сохранения при закрытии
+        (void)e; // Suppress unused variable warning
     }
     delete ui;
 }
@@ -1050,8 +1053,7 @@ void MainWindow::refreshMembers()
         editBtn->setIconSize(QSize(22, 22));
         editBtn->setToolTip("Редактировать абонента");
         connect(editBtn, &QPushButton::clicked, this, [this, member]() {
-            QTableWidget* table = findChild<QTableWidget*>("membersTable");
-            if (auto* table = findChild<QTableWidget*>("membersTable"); table != nullptr) {
+            if (const auto* table = findChild<QTableWidget*>("membersTable"); table != nullptr) {
                 for (int r = 0; r < table->rowCount(); ++r) {
                     const auto* item = table->item(r, 0);
                     if (item && item->data(Qt::UserRole).toInt() == member->getId()) {
@@ -1157,8 +1159,7 @@ void MainWindow::refreshEmployees()
         editBtn->setIconSize(QSize(22, 22));
         editBtn->setToolTip("Редактировать работника");
         connect(editBtn, &QPushButton::clicked, this, [this, emp]() {
-            QTableWidget* table = findChild<QTableWidget*>("employeesTable");
-            if (auto* table = findChild<QTableWidget*>("employeesTable"); table != nullptr) {
+            if (const auto* table = findChild<QTableWidget*>("employeesTable"); table != nullptr) {
                 for (int r = 0; r < table->rowCount(); ++r) {
                     const auto* item = table->item(r, 0);
                     if (item && item->data(Qt::UserRole).toInt() == emp->getId()) {
@@ -1355,7 +1356,7 @@ void MainWindow::onAddBook()
 
 void MainWindow::onEditBook()
 {
-    QTableWidget* booksTable = findChild<QTableWidget*>("booksTable");
+    const auto* booksTable = findChild<QTableWidget*>("booksTable");
     if (booksTable == nullptr) {
         showError("Таблица книг не найдена");
         return;
@@ -1368,7 +1369,7 @@ void MainWindow::onEditBook()
     }
     
     // Получаем ID из UserRole первой колонки (обложка)
-    auto* item = booksTable->item(currentRow, 0);
+    const auto* item = booksTable->item(currentRow, 0);
     if (item == nullptr) return;
     
     int bookId = item->data(Qt::UserRole).toInt();
@@ -1763,7 +1764,7 @@ void MainWindow::onAddMember()
 
 void MainWindow::onEditMember()
 {
-    QTableWidget* membersTable = findChild<QTableWidget*>("membersTable");
+    const auto* membersTable = findChild<QTableWidget*>("membersTable");
     if (!membersTable) {
         showError("Таблица абонентов не найдена");
         return;
@@ -1776,7 +1777,7 @@ void MainWindow::onEditMember()
     }
     
     // Получаем ID из UserRole первой колонки (Имя)
-    auto* nameItem = membersTable->item(currentRow, 0);
+    const auto* nameItem = membersTable->item(currentRow, 0);
     if (!nameItem) return;
     
     int id = nameItem->data(Qt::UserRole).toInt();
@@ -2019,7 +2020,7 @@ void MainWindow::onReturnBook()
                     bookCombo->setEnabled(false);
                     bookCombo->addItem("Нет взятых книг", -1);
                 }
-            } catch (...) {
+            } catch (const std::exception&) {
                 bookCombo->setEnabled(false);
                 bookCombo->addItem("Ошибка загрузки", -1);
             }
@@ -2126,7 +2127,7 @@ void MainWindow::onSearchMember()
                 // Показываем список найденных абонентов
                 QStringList items;
                 QMap<QString, int> itemToIdMap;
-                for (auto* member : foundMembers) {
+                for (const auto* member : foundMembers) {
                     QString itemText = QString("%1 %2 (%3)")
                         .arg(QString::fromStdString(member->getName()))
                         .arg(QString::fromStdString(member->getSurname()))
@@ -2580,7 +2581,7 @@ void MainWindow::onAddManager()
 
 void MainWindow::onEditEmployee()
 {
-    QTableWidget* employeesTable = findChild<QTableWidget*>("employeesTable");
+    const auto* employeesTable = findChild<QTableWidget*>("employeesTable");
     if (!employeesTable) return;
     
     int currentRow = employeesTable->currentRow();
@@ -2590,7 +2591,7 @@ void MainWindow::onEditEmployee()
     }
     
     // Получаем ID из UserRole первой колонки (Имя)
-    QTableWidgetItem* item = employeesTable->item(currentRow, 0);
+    const auto* item = employeesTable->item(currentRow, 0);
     if (!item) return;
     
     int employeeId = item->data(Qt::UserRole).toInt();
@@ -2888,8 +2889,9 @@ void MainWindow::autoSave()
     // Автоматическое сохранение без сообщений
     try {
         FileManager::saveLibrarySystem(librarySystem, dataPath.toStdString());
-    } catch (const std::exception&) {
+    } catch (const std::exception& e) {
         // Игнорируем ошибки автосохранения, чтобы не мешать работе пользователя
+        (void)e; // Suppress unused variable warning
     }
 }
 

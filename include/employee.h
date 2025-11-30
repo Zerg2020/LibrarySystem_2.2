@@ -3,6 +3,7 @@
 
 #include "person.h"
 #include <string>
+#include <string_view>
 
 class Employee : public Person {
 protected:
@@ -18,7 +19,7 @@ public:
     double getSalary() const { return salary; }
     int getWorkHours() const { return workHours; }
     
-    void setPosition(const std::string& pPosition) { position = pPosition; }
+    void setPosition(std::string_view pPosition) { position = pPosition; }
     void setSalary(double pSalary) { salary = pSalary; }
     void setWorkHours(int pWorkHours) { workHours = pWorkHours; }
     

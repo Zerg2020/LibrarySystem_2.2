@@ -172,7 +172,7 @@ public:
     
     void execute() override {
         system->editBookDirect(bookId, newTitle, newAuthor, newIsbn, newYear, newGenre, newCoverPath, newQuantity, newDescription, newPdfPath);
-        Book* book = system->findBook(bookId);  // NOLINT: need non-const for setManuallyDisabled
+        const Book* book = system->findBook(bookId);
         if (book) {
             // Обновляем доступность (available может измениться автоматически)
             system->updateBookAvailability(bookId);

@@ -32,7 +32,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ~MainWindow() override;
 
 protected:
     void closeEvent(QCloseEvent *event) override final;
@@ -93,7 +93,7 @@ private:
         int yearFrom = 0;
         int yearTo = 0;
         int availability = -1; // -1 = все, 0 = нет, 1 = да
-    } bookFilters;
+    } bookFilters{};
     
     // Фильтры для абонентов
     struct MemberFilters {
@@ -102,7 +102,7 @@ private:
         QString phone;
         QString email;
         int blocked = -1; // -1 = все, 0 = не заблокирован, 1 = заблокирован
-    } memberFilters;
+    } memberFilters{};
     
     void setupUI();
     void setupMenu();
