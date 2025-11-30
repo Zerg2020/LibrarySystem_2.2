@@ -39,6 +39,7 @@ Makefile
 *.userosscache
 *.sln.docstates
 CMakeLists.txt.user
+CMakeUserPresets.json
 
 # Compiled files
 *.o
@@ -65,6 +66,32 @@ CMakeLists.txt.user
 
 # SonarCloud
 .scannerwork/
+
+# Temporary and cache files
+*.tmp
+*.temp
+*.log
+*.cache
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+*_backup
+*_old
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
 
 
 
