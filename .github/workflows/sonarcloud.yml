@@ -1,0 +1,73 @@
+name: SonarCloud Analysis
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonarcloud:
+    name: SonarCloud Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Shallow clones should be disabled for better analysis
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y qt6-base-dev qt6-base-dev-tools cmake build-essential
+    
+    - name: Configure CMake
+      run: |
+        echo "Current directory: $(pwd)"
+        echo "Listing files:"
+        ls -la
+        echo "Checking for CMakeLists.txt:"
+        if [ -f "CMakeLists.txt" ]; then
+          echo "CMakeLists.txt found!"
+        else
+          echo "ERROR: CMakeLists.txt not found!"
+          exit 1
+        fi
+        # Настраиваем CMake с генерацией compile_commands.json
+        cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        # Собираем проект (это необходимо для генерации compile_commands.json)
+        cmake --build build --config Release
+        # Проверяем, что compile_commands.json создан сразу после конфигурации
+        if [ -f "build/compile_commands.json" ]; then
+          echo "✅ compile_commands.json created during CMake configuration"
+        else
+          echo "⚠️  compile_commands.json not found yet, will search after build"
+        fi
+    
+    - name: Verify compile_commands.json
+      run: |
+        echo "Checking for compile_commands.json..."
+        if [ -f "build/compile_commands.json" ]; then
+          echo "✅ compile_commands.json found at build/compile_commands.json"
+          ls -lh build/compile_commands.json
+          echo "First few lines of compile_commands.json:"
+          head -5 build/compile_commands.json
+        else
+          echo "❌ ERROR: compile_commands.json not found in build/"
+          echo "Searching for compile_commands.json in build directory:"
+          find build -name "compile_commands.json" -type f
+          echo "Listing build directory contents:"
+          ls -la build/ || echo "Build directory does not exist"
+          exit 1
+        fi
+    
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_ }}
+      with:
+        projectBaseDir: .
+

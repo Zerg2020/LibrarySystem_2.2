@@ -1,0 +1,112 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Install Qt (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y qt6-base-dev qt6-base-dev-tools cmake build-essential
+    
+    - name: Install Qt (Windows)
+      if: matrix.os == 'windows-latest'
+      id: install-qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: '6.10.0'
+        modules: 'qtbase'
+        arch: 'x64'
+    
+    - name: Configure CMake (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: pwsh
+      run: |
+        $qtDir = "${{ steps.install-qt.outputs.Qt6_DIR }}"
+        Write-Host "Qt6_DIR from action: $qtDir"
+        Write-Host "Environment variables:"
+        Get-ChildItem Env: | Where-Object { $_.Name -like "*Qt*" -or $_.Name -like "*QT*" } | ForEach-Object { Write-Host "$($_.Name) = $($_.Value)" }
+        
+        # Проверяем различные возможные пути к Qt
+        $qtPaths = @()
+        if ($qtDir) { $qtPaths += $qtDir }
+        if ($env:Qt6_DIR) { $qtPaths += $env:Qt6_DIR }
+        $qtPaths += "C:\Qt\6.10.0\msvc2019_64"
+        $qtPaths += "C:\Qt\6.10.0\mingw_64"
+        
+        $foundQt = $false
+        foreach ($path in $qtPaths) {
+          if ($path -and (Test-Path "$path\lib\cmake\Qt6")) {
+            Write-Host "✅ Found Qt at: $path"
+            cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$path"
+            $foundQt = $true
+            break
+          }
+        }
+        if (-not $foundQt) {
+          Write-Host "⚠️  Qt path not found in standard locations, trying without CMAKE_PREFIX_PATH"
+          Write-Host "CMake will try to find Qt automatically"
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+        }
+    
+    - name: Configure CMake (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+    
+    - name: Build
+      run: |
+        cmake --build build --config Release
+    
+    - name: Check build artifacts (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: pwsh
+      run: |
+        $exeFound = $false
+        if (Test-Path "build/bin/Release/LibrarySystem.exe") {
+          Write-Host "✅ Build successful: found build/bin/Release/LibrarySystem.exe"
+          $exeFound = $true
+        }
+        if (Test-Path "build/bin/LibrarySystem.exe") {
+          Write-Host "✅ Build successful: found build/bin/LibrarySystem.exe"
+          $exeFound = $true
+        }
+        if (Test-Path "build/Release/bin/LibrarySystem.exe") {
+          Write-Host "✅ Build successful: found build/Release/bin/LibrarySystem.exe"
+          $exeFound = $true
+        }
+        if (-not $exeFound) {
+          Write-Host "❌ Build failed - executable not found"
+          Write-Host "Searching for executable..."
+          Get-ChildItem -Path build -Recurse -Filter "LibrarySystem.exe" -ErrorAction SilentlyContinue | ForEach-Object { Write-Host "Found: $($_.FullName)" }
+          exit 1
+        }
+    
+    - name: Check build artifacts (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        if [ -f "build/bin/LibrarySystem" ]; then
+          echo "✅ Build successful: found build/bin/LibrarySystem"
+        else
+          echo "❌ Build failed - executable not found"
+          echo "Searching for executable..."
+          find build -name "LibrarySystem" -type f 2>/dev/null || echo "No executable found"
+          exit 1
+        fi

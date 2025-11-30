@@ -1,0 +1,71 @@
+# Qt
+*.pro.user
+*.pro.user.*
+*.qmake.stash
+*.qm
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.autosave
+
+# Build directories
+build/
+out/
+bin/
+debug/
+release/
+*.exe
+*.dll
+*.so
+*.dylib
+*.ilk
+*.pdb
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+
+# IDE
+.vscode/
+.idea/
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+CMakeLists.txt.user
+
+# Compiled files
+*.o
+*.obj
+*.a
+*.lib
+
+# Data files (опционально, если не хотите коммитить данные)
+# data/*.txt
+# data/covers/
+# data/pdfs/
+
+# Documentation files (опционально)
+*.docx
+*.txt
+!README.md
+!BUILD.md
+!SETUP.md
+!SONARCLOUD_SETUP.md
+!QUICK_START.md
+!CHECKLIST.md
+!GITHUB_UPLOAD_VS.md
+!CMakeLists.txt
+
+# SonarCloud
+.scannerwork/
+
+
+
+
