@@ -7,7 +7,7 @@
 
 class FileManager {
 public:
-    static void saveLibrarySystem(LibrarySystem& system, const std::string& basePath);
+    static void saveLibrarySystem(const LibrarySystem& system, const std::string& basePath);
     static void loadLibrarySystem(LibrarySystem& system, const std::string& basePath);
     
 private:

@@ -168,8 +168,8 @@ void LibrarySystem::borrowBook(int memberId, int bookId, int employeeId) {
     }
     
     // Проверяем существование работника
-    Employee* employee = nullptr;
-    for (auto* emp : getAllEmployees()) {
+    const Employee* employee = nullptr;
+    for (const auto* emp : getAllEmployees()) {
         if (emp->getId() == employeeId) {
             employee = emp;
             break;
@@ -257,8 +257,8 @@ void LibrarySystem::addManager(const std::string& name, const std::string& surna
 
 void LibrarySystem::editEmployee(int id, const std::string& name, const std::string& surname,
                                  const std::string& phone, double salary, int workHours) {
-    Employee* emp = nullptr;
-    for (auto* e : getAllEmployees()) {
+    const Employee* emp = nullptr;
+    for (const auto* e : getAllEmployees()) {
         if (e->getId() == id) {
             emp = e;
             break;
@@ -277,8 +277,8 @@ void LibrarySystem::editEmployee(int id, const std::string& name, const std::str
 }
 
 void LibrarySystem::removeEmployee(int id) {
-    Employee* emp = nullptr;
-    for (auto* e : getAllEmployees()) {
+    const Employee* emp = nullptr;
+    for (const auto* e : getAllEmployees()) {
         if (e->getId() == id) {
             emp = e;
             break;
@@ -459,7 +459,7 @@ void LibrarySystem::removeEmployeeDirect(int id) {
 void LibrarySystem::editEmployeeDirect(int id, const std::string& name, const std::string& surname,
                                        const std::string& phone, double salary, int workHours) {
     Employee* emp = nullptr;
-    for (auto& e : employees) {
+    for (const auto& e : employees) {
         if (e->getId() == id) {
             emp = e.get();
             break;

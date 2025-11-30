@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
         updateUndoRedoButtons();
     } catch (const FileException&) {
         // Игнорируем ошибки при первой загрузке (файлы могут не существовать)
-    } catch (...) {
+    } catch (const std::exception&) {
         // Игнорируем другие ошибки при первой загрузке
     }
 }
@@ -72,7 +72,7 @@ MainWindow::~MainWindow()
     // Автоматически сохраняем данные при закрытии
     try {
         FileManager::saveLibrarySystem(librarySystem, dataPath.toStdString());
-    } catch (...) {
+    } catch (const std::exception&) {
         // Игнорируем ошибки сохранения при закрытии
     }
     delete ui;
@@ -554,22 +554,18 @@ void MainWindow::refreshBooks()
         }
         
         // Фильтр по году (от)
-        if (matches && bookFilters.yearFrom > 0) {
-            if (book->getYear() < bookFilters.yearFrom) {
-                matches = false;
-            }
+        if (matches && bookFilters.yearFrom > 0 && book->getYear() < bookFilters.yearFrom) {
+            matches = false;
         }
         
         // Фильтр по году (до)
-        if (matches && bookFilters.yearTo > 0) {
-            if (book->getYear() > bookFilters.yearTo) {
-                matches = false;
-            }
+        if (matches && bookFilters.yearTo > 0 && book->getYear() > bookFilters.yearTo) {
+            matches = false;
         }
         
         // Фильтр по доступности
         if (matches && bookFilters.availability != -1) {
-            bool isAvailable = book->isAvailable();
+            const bool isAvailable = book->isAvailable();
             if ((bookFilters.availability == 1 && !isAvailable) ||
                 (bookFilters.availability == 0 && isAvailable)) {
                 matches = false;
@@ -665,7 +661,7 @@ void MainWindow::refreshBooks()
             
             for (int r = 0; r < table->rowCount(); ++r) {
                 QTableWidgetItem* item = table->item(r, 0);
-                if (item && item->data(Qt::UserRole).toInt() == book->getId()) {
+                if (const auto* item = table->item(r, 0); item && item->data(Qt::UserRole).toInt() == book->getId()) {
                     table->selectRow(r);
                     break;
                 }
@@ -745,9 +741,10 @@ void MainWindow::refreshBooks()
                 bookList << bookText;
             }
             // По умолчанию выбранная книга — та, по которой нажата кнопка
-            int idx = bookCombo->findData(book->getId());
-            if (idx >= 0) bookCombo->setCurrentIndex(idx);
-            QCompleter* bookCompleter = new QCompleter(bookList, bookCombo);
+            if (int idx = bookCombo->findData(book->getId()); idx >= 0) {
+                bookCombo->setCurrentIndex(idx);
+            }
+            auto* bookCompleter = new QCompleter(bookList, bookCombo);
             bookCompleter->setCaseSensitivity(Qt::CaseInsensitive);
             bookCombo->setCompleter(bookCompleter);
             form.addRow("Книга:", bookCombo);
@@ -1055,9 +1052,9 @@ void MainWindow::refreshMembers()
         editBtn->setToolTip("Редактировать абонента");
         connect(editBtn, &QPushButton::clicked, this, [this, member]() {
             QTableWidget* table = findChild<QTableWidget*>("membersTable");
-            if (table != nullptr) {
+            if (auto* table = findChild<QTableWidget*>("membersTable"); table != nullptr) {
                 for (int r = 0; r < table->rowCount(); ++r) {
-                    QTableWidgetItem* item = table->item(r, 0);
+                    const auto* item = table->item(r, 0);
                     if (item && item->data(Qt::UserRole).toInt() == member->getId()) {
                         table->selectRow(r);
                         break;
@@ -1162,9 +1159,9 @@ void MainWindow::refreshEmployees()
         editBtn->setToolTip("Редактировать работника");
         connect(editBtn, &QPushButton::clicked, this, [this, emp]() {
             QTableWidget* table = findChild<QTableWidget*>("employeesTable");
-            if (table != nullptr) {
+            if (auto* table = findChild<QTableWidget*>("employeesTable"); table != nullptr) {
                 for (int r = 0; r < table->rowCount(); ++r) {
-                    QTableWidgetItem* item = table->item(r, 0);
+                    const auto* item = table->item(r, 0);
                     if (item && item->data(Qt::UserRole).toInt() == emp->getId()) {
                         table->selectRow(r);
                         break;
@@ -2892,7 +2889,7 @@ void MainWindow::autoSave()
     // Автоматическое сохранение без сообщений
     try {
         FileManager::saveLibrarySystem(librarySystem, dataPath.toStdString());
-    } catch (...) {
+    } catch (const std::exception&) {
         // Игнорируем ошибки автосохранения, чтобы не мешать работе пользователя
     }
 }

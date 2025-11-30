@@ -3,7 +3,7 @@
 #include <sstream>
 #include <iostream>
 
-void FileManager::saveLibrarySystem(LibrarySystem& system, const std::string& basePath) {
+void FileManager::saveLibrarySystem(const LibrarySystem& system, const std::string& basePath) {
     try {
         saveBooks(system, basePath + "/books.txt");
         saveMembers(system, basePath + "/members.txt");
