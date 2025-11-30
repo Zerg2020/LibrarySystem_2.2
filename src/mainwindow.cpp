@@ -2432,10 +2432,10 @@ void MainWindow::onAddEmployee()
     mainLayout->addWidget(typeGroup);
     
     // Форма с полями
-    QFormLayout* form = new QFormLayout();
-    QLineEdit* nameEdit = new QLineEdit(&dialog);
-    QLineEdit* surnameEdit = new QLineEdit(&dialog);
-    QLineEdit* phoneEdit = new QLineEdit(&dialog);
+    auto* form = new QFormLayout();
+    auto* nameEdit = new QLineEdit(&dialog);
+    auto* surnameEdit = new QLineEdit(&dialog);
+    auto* phoneEdit = new QLineEdit(&dialog);
     auto* salaryEdit = new QDoubleSpinBox(&dialog);
     salaryEdit->setRange(0, 1000000);
     salaryEdit->setValue(50000);
