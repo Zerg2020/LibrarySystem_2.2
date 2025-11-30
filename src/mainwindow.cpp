@@ -36,9 +36,9 @@
 #include <stdexcept>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent),
+      ui(std::make_unique<Ui::MainWindow>())
 {
-    ui = new Ui::MainWindow;
     ui->setupUi(this);
     
     // Устанавливаем размер главного окна
@@ -74,11 +74,12 @@ MainWindow::~MainWindow()
     // Автоматически сохраняем данные при закрытии
     try {
         FileManager::saveLibrarySystem(librarySystem, dataPath.toStdString());
-    } catch (const std::exception& e) {
+    } catch (const FileException&) {
         // Игнорируем ошибки сохранения при закрытии
-        (void)e; // Suppress unused variable warning
+    } catch (const LibraryException&) {
+        // Игнорируем ошибки сохранения при закрытии
     }
-    delete ui;
+    // ui автоматически удаляется через unique_ptr
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -806,13 +807,13 @@ void MainWindow::onSearchBooks(const QString& text)
 void MainWindow::onFilterChanged()
 {
     // Обновляем фильтры из полей ввода
-    auto* titleFilter = findChild<QLineEdit*>("titleFilter");
-    auto* authorFilter = findChild<QLineEdit*>("authorFilter");
-    auto* genreFilter = findChild<QLineEdit*>("genreFilter");
-    auto* isbnFilter = findChild<QLineEdit*>("isbnFilter");
-    auto* yearFromFilter = findChild<QSpinBox*>("yearFromFilter");
-    auto* yearToFilter = findChild<QSpinBox*>("yearToFilter");
-    auto* availabilityFilter = findChild<QComboBox*>("availabilityFilter");
+    const auto* titleFilter = findChild<QLineEdit*>("titleFilter");
+    const auto* authorFilter = findChild<QLineEdit*>("authorFilter");
+    const auto* genreFilter = findChild<QLineEdit*>("genreFilter");
+    const auto* isbnFilter = findChild<QLineEdit*>("isbnFilter");
+    const auto* yearFromFilter = findChild<QSpinBox*>("yearFromFilter");
+    const auto* yearToFilter = findChild<QSpinBox*>("yearToFilter");
+    const auto* availabilityFilter = findChild<QComboBox*>("availabilityFilter");
     
     if (titleFilter) bookFilters.title = titleFilter->text();
     if (authorFilter) bookFilters.author = authorFilter->text();
@@ -919,10 +920,10 @@ void MainWindow::applyBookSorting(QTableWidget* table) const
 
 void MainWindow::refreshMembers()
 {
-    QTableWidget* table = findChild<QTableWidget*>("membersTable");
-    if (table == nullptr) return;
+    auto* membersTable = findChild<QTableWidget*>("membersTable");
+    if (membersTable == nullptr) return;
     
-    table->setRowCount(0);
+    membersTable->setRowCount(0);
     auto members = librarySystem.getAllMembers();
     
     auto allBooks = librarySystem.getAllBooks();
@@ -977,20 +978,20 @@ void MainWindow::refreshMembers()
             continue;
         }
         
-        int row = table->rowCount();
-        table->insertRow(row);
+        int row = membersTable->rowCount();
+        membersTable->insertRow(row);
         
         // Сохраняем ID в UserRole первой колонки (Имя)
         auto* nameItem = new QTableWidgetItem(QString::fromStdString(member->getName()));
         nameItem->setData(Qt::UserRole, member->getId());
-        table->setItem(row, 0, nameItem);
-        table->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(member->getSurname())));
-        table->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(member->getPhone())));
-        table->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(member->getEmail())));
+        membersTable->setItem(row, 0, nameItem);
+        membersTable->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(member->getSurname())));
+        membersTable->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(member->getPhone())));
+        membersTable->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(member->getEmail())));
         // Колонка "Заблокирован" - выровнена по центру
         auto* blockedItem = new QTableWidgetItem(member->getIsBlocked() ? "Да" : "Нет");
         blockedItem->setTextAlignment(Qt::AlignCenter);
-        table->setItem(row, 4, blockedItem);
+        membersTable->setItem(row, 4, blockedItem);
         
         // Колонка 5 - Книги на руках
         auto borrowedBooks = member->getBorrowedBooks();
@@ -1031,7 +1032,7 @@ void MainWindow::refreshMembers()
         if (notReturnedCount > 0) {
             booksItem->setForeground(QBrush(QColor(255, 140, 0))); // Оранжевый цвет
         }
-        table->setItem(row, 5, booksItem);
+        membersTable->setItem(row, 5, booksItem);
 
         // Колонка 6 - Действия (кнопки)
         auto* actionWidget = new QWidget();
@@ -1122,30 +1123,30 @@ void MainWindow::refreshMembers()
         actionLayout->addWidget(delBtn);
 
         actionWidget->setLayout(actionLayout);
-        table->setCellWidget(row, 6, actionWidget);
+        membersTable->setCellWidget(row, 6, actionWidget);
     }
 }
 
 void MainWindow::refreshEmployees()
 {
-    QTableWidget* table = findChild<QTableWidget*>("employeesTable");
-    if (table == nullptr) return;
+    auto* employeesTable = findChild<QTableWidget*>("employeesTable");
+    if (employeesTable == nullptr) return;
     
-    table->setRowCount(0);
+    employeesTable->setRowCount(0);
     auto employees = librarySystem.getAllEmployees();
     
     for (const auto* emp : employees) {
-        int row = table->rowCount();
-        table->insertRow(row);
+        int row = employeesTable->rowCount();
+        employeesTable->insertRow(row);
         
         // Сохраняем ID в UserRole первой колонки (Имя)
         auto* nameItem = new QTableWidgetItem(QString::fromStdString(emp->getName()));
         nameItem->setData(Qt::UserRole, emp->getId());
-        table->setItem(row, 0, nameItem);
-        table->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(emp->getSurname())));
-        table->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(emp->getPosition())));
-        table->setItem(row, 3, new QTableWidgetItem(QString::number(emp->getSalary())));
-        table->setItem(row, 4, new QTableWidgetItem(QString::number(emp->getWorkHours())));
+        employeesTable->setItem(row, 0, nameItem);
+        employeesTable->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(emp->getSurname())));
+        employeesTable->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(emp->getPosition())));
+        employeesTable->setItem(row, 3, new QTableWidgetItem(QString::number(emp->getSalary())));
+        employeesTable->setItem(row, 4, new QTableWidgetItem(QString::number(emp->getWorkHours())));
 
         // Колонка 5 - Действия (кнопки)
         auto* actionWidget = new QWidget();
@@ -1194,7 +1195,7 @@ void MainWindow::refreshEmployees()
         actionLayout->addWidget(delBtn);
 
         actionWidget->setLayout(actionLayout);
-        table->setCellWidget(row, 5, actionWidget);
+        employeesTable->setCellWidget(row, 5, actionWidget);
     }
 }
 
@@ -2700,7 +2701,7 @@ void MainWindow::onUndo()
         showInfo("Действие отменено");
     } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
-    } catch (const std::exception& e) {
+    } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
     }
 }
@@ -2741,7 +2742,7 @@ void MainWindow::onRedo()
         showInfo("Действие повторено");
     } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
-    } catch (const std::exception& e) {
+    } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
     }
 }
@@ -2888,9 +2889,8 @@ void MainWindow::autoSave()
     // Автоматическое сохранение без сообщений
     try {
         FileManager::saveLibrarySystem(librarySystem, dataPath.toStdString());
-    } catch (const std::exception& e) {
+    } catch (const FileException&) {
         // Игнорируем ошибки автосохранения, чтобы не мешать работе пользователя
-        (void)e; // Suppress unused variable warning
     }
 }
 
@@ -2917,7 +2917,7 @@ void MainWindow::updateUndoRedoButtons() const
     }
 }
 
-QIcon MainWindow::createRedCrossIcon()
+QIcon MainWindow::createRedCrossIcon() const
 {
     // Используем стандартную иконку крестика и делаем её красной
     QIcon standardIcon = style()->standardIcon(QStyle::SP_DialogCloseButton);
@@ -2948,11 +2948,11 @@ QIcon MainWindow::createRedCrossIcon()
 void MainWindow::onMemberFilterChanged()
 {
     // Обновляем фильтры из полей ввода
-    QLineEdit* nameFilter = findChild<QLineEdit*>("memberNameFilter");
-    QLineEdit* surnameFilter = findChild<QLineEdit*>("memberSurnameFilter");
-    QLineEdit* phoneFilter = findChild<QLineEdit*>("memberPhoneFilter");
-    QLineEdit* emailFilter = findChild<QLineEdit*>("memberEmailFilter");
-    QComboBox* blockedFilter = findChild<QComboBox*>("memberBlockedFilter");
+    const auto* nameFilter = findChild<QLineEdit*>("memberNameFilter");
+    const auto* surnameFilter = findChild<QLineEdit*>("memberSurnameFilter");
+    const auto* phoneFilter = findChild<QLineEdit*>("memberPhoneFilter");
+    const auto* emailFilter = findChild<QLineEdit*>("memberEmailFilter");
+    const auto* blockedFilter = findChild<QComboBox*>("memberBlockedFilter");
     
     if (nameFilter) memberFilters.name = nameFilter->text();
     if (surnameFilter) memberFilters.surname = surnameFilter->text();

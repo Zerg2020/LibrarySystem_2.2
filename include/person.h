@@ -6,7 +6,7 @@
 #include <memory>
 
 class Person {
-protected:
+private:
     std::string name;
     std::string surname;
     std::string phone;

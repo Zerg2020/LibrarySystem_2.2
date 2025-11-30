@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <memory>
 #include <QMainWindow>
 #include <QTableWidget>
 #include <QLineEdit>
@@ -79,7 +80,7 @@ private slots:
     void onBookHeaderClicked(int column);
 
 private:
-    Ui::MainWindow *ui = nullptr;
+    std::unique_ptr<Ui::MainWindow> ui;
     LibrarySystem librarySystem;
     QString dataPath = "data";
     QMap<int, int> bookSortStates; // колонка -> состояние (0=неактивна, 1=возрастание, 2=убывание)
@@ -117,7 +118,7 @@ private:
     void autoSave(); // Автоматическое сохранение
     void updateUndoRedoButtons() const; // Обновление состояния кнопок undo/redo во всех вкладках
     void applyBookSorting(QTableWidget* table) const; // Применение сортировки книг
-    QIcon createRedCrossIcon(); // Создание красной иконки крестика
+    QIcon createRedCrossIcon() const; // Создание красной иконки крестика
 };
 
 #endif // MAINWINDOW_H

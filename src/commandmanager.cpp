@@ -18,9 +18,11 @@ void CommandManager::executeCommand(std::unique_ptr<Command> command) {
                 undoStack.pop();
             }
         }
-    } catch (const LibraryException&) {
+    } catch (const LibraryException& e) {
         // Если команда не может выполниться, не добавляем её в стек
-        throw; // Re-throw to let caller handle the exception
+        // Re-throw to let caller handle the exception
+        (void)e; // Suppress unused variable warning
+        throw;
     }
 }
 

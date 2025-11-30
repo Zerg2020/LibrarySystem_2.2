@@ -6,7 +6,7 @@
 #include <string_view>
 
 class Employee : public Person {
-protected:
+private:
     std::string position;
     double salary;
     int workHours;

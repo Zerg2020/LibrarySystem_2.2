@@ -8,10 +8,10 @@ Employee::Employee(int pId, std::string_view pName, std::string_view pSurname,
 
 std::string Employee::getInfo() const {
     std::ostringstream oss;
-    oss << "ID: " << id << ", " << getFullName() 
-        << ", Position: " << position 
-        << ", Salary: " << salary 
-        << ", Work Hours: " << workHours;
+    oss << "ID: " << getId() << ", " << getFullName() 
+        << ", Position: " << getPosition() 
+        << ", Salary: " << getSalary() 
+        << ", Work Hours: " << getWorkHours();
     return oss.str();
 }
 

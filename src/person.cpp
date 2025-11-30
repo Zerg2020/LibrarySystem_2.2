@@ -6,6 +6,6 @@ Person::Person(int pId, std::string_view pName, std::string_view pSurname, std::
 }
 
 std::string Person::getFullName() const {
-    return name + " " + surname;
+    return getName() + " " + getSurname();
 }
 

@@ -5,7 +5,7 @@
 #include <string_view>
 
 class Item {
-protected:
+private:
     int id;
     std::string title;
     bool available = true;
