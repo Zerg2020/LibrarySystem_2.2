@@ -835,9 +835,9 @@ void MainWindow::onClearFilters()
     const auto* authorFilter = findChild<QLineEdit*>("authorFilter");
     const auto* genreFilter = findChild<QLineEdit*>("genreFilter");
     const auto* isbnFilter = findChild<QLineEdit*>("isbnFilter");
-    const auto* yearFromFilter = findChild<QSpinBox*>("yearFromFilter");
-    const auto* yearToFilter = findChild<QSpinBox*>("yearToFilter");
-    const auto* availabilityFilter = findChild<QComboBox*>("availabilityFilter");
+    auto* yearFromFilter = findChild<QSpinBox*>("yearFromFilter");
+    auto* yearToFilter = findChild<QSpinBox*>("yearToFilter");
+    auto* availabilityFilter = findChild<QComboBox*>("availabilityFilter");
     
     if (titleFilter) titleFilter->clear();
     if (authorFilter) authorFilter->clear();

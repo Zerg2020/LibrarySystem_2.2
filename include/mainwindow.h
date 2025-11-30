@@ -115,8 +115,8 @@ private:
     void showError(const QString& message);
     void showInfo(const QString& message);
     void autoSave(); // Автоматическое сохранение
-    void updateUndoRedoButtons(); // Обновление состояния кнопок undo/redo во всех вкладках
-    void applyBookSorting(QTableWidget* table); // Применение сортировки книг
+    void updateUndoRedoButtons() const; // Обновление состояния кнопок undo/redo во всех вкладках
+    void applyBookSorting(QTableWidget* table) const; // Применение сортировки книг
     QIcon createRedCrossIcon(); // Создание красной иконки крестика
 };
 
