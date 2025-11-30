@@ -437,9 +437,9 @@ void LibrarySystem::unblockMemberDirect(int id) {
 void LibrarySystem::addEmployeeWithId(int id, const std::string& name, const std::string& surname,
                                       const std::string& phone, double salary, int workHours, bool isLibrarian) {
     if (isLibrarian) {
-        employees.push_back(std::make_unique<Librarian>(id, name, surname, phone, salary, workHours));
+        employees.emplace_back(std::make_unique<Librarian>(id, name, surname, phone, salary, workHours));
     } else {
-        employees.push_back(std::make_unique<Manager>(id, name, surname, phone, salary, workHours));
+        employees.emplace_back(std::make_unique<Manager>(id, name, surname, phone, salary, workHours));
     }
     if (id >= nextEmployeeId) {
         nextEmployeeId = id + 1;

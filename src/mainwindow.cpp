@@ -2342,7 +2342,7 @@ void MainWindow::onShowOverdueBooks()
             
             // Вычисляем количество дней просрочки и сортируем
             QDate currentDate = QDate::currentDate();
-            QList<QPair<int, std::pair<LibraryMember*, BorrowedBook>>> overdueWithDays;
+            QList<QPair<int, std::pair<const LibraryMember*, BorrowedBook>>> overdueWithDays;
             
             for (const auto& pair : overdue) {
                 const LibraryMember* member = pair.first;
@@ -2357,8 +2357,8 @@ void MainWindow::onShowOverdueBooks()
             
             // Сортируем по количеству дней просрочки (по убыванию)
             std::sort(overdueWithDays.begin(), overdueWithDays.end(),
-                     [](const QPair<int, std::pair<LibraryMember*, BorrowedBook>>& a,
-                        const QPair<int, std::pair<LibraryMember*, BorrowedBook>>& b) {
+                     [](const QPair<int, std::pair<const LibraryMember*, BorrowedBook>>& a,
+                        const QPair<int, std::pair<const LibraryMember*, BorrowedBook>>& b) {
                          return a.first > b.first;
                      });
             
@@ -2368,7 +2368,7 @@ void MainWindow::onShowOverdueBooks()
             for (int i = 0; i < overdueWithDays.size(); ++i) {
                 const auto& item = overdueWithDays[i];
                 int daysOverdue = item.first;
-                LibraryMember* member = item.second.first;
+                const LibraryMember* member = item.second.first;
                 BorrowedBook book = item.second.second;
                 
                 // Находим название книги
