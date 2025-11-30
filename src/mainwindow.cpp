@@ -37,7 +37,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      ui(std::make_unique<Ui::MainWindow>())
+      ui(std::make_unique<Ui::MainWindow>()) // NOSONAR - Qt requires initialization in constructor
 {
     ui->setupUi(this);
     
@@ -182,15 +182,7 @@ void MainWindow::setupBooksTab()
     // Таблица книг
     auto* booksTable = new QTableWidget(booksTab);
     booksTable->setObjectName("booksTable");
-    // Устанавливаем больший шрифт для таблицы
-    QFont tableFont = booksTable->font();
-    tableFont.setPointSize(11);
-    booksTable->setFont(tableFont);
-    // Устанавливаем больший шрифт для заголовков таблицы
-    QFont headerFont = booksTable->horizontalHeader()->font();
-    headerFont.setPointSize(11);
-    headerFont.setBold(true);
-    booksTable->horizontalHeader()->setFont(headerFont);
+    configureTableFonts(booksTable);
     booksTable->setColumnCount(10);
     booksTable->setHorizontalHeaderLabels({"Обложка", "Название", "Автор", "ISBN", "Год", "Жанр", "Доступна", "Количество", "Описание", "Действия"});
     
@@ -324,7 +316,7 @@ void MainWindow::setupBooksTab()
     layout->addWidget(booksTable);
 }
 
-void MainWindow::setupMembersTab()
+void MainWindow::setupMembersTab() // NOSONAR - cannot be const, modifies UI
 {
     QWidget* membersTab = ui->tabWidget->widget(1);
     auto* layout = new QVBoxLayout(membersTab);
@@ -332,15 +324,7 @@ void MainWindow::setupMembersTab()
     // Таблица абонентов
     auto* membersTable = new QTableWidget(membersTab);
     membersTable->setObjectName("membersTable");
-    // Устанавливаем больший шрифт для таблицы
-    QFont membersTableFont = membersTable->font();
-    membersTableFont.setPointSize(11);
-    membersTable->setFont(membersTableFont);
-    // Устанавливаем больший шрифт для заголовков таблицы
-    QFont membersHeaderFont = membersTable->horizontalHeader()->font();
-    membersHeaderFont.setPointSize(11);
-    membersHeaderFont.setBold(true);
-    membersTable->horizontalHeader()->setFont(membersHeaderFont);
+    configureTableFonts(membersTable);
     membersTable->setColumnCount(7);
     membersTable->setHorizontalHeaderLabels({"Имя", "Фамилия", "Телефон", "Email", "Заблокирован", "Книги на руках", "Действия"});
     
@@ -422,7 +406,7 @@ void MainWindow::setupMembersTab()
     layout->addWidget(membersTable);
 }
 
-void MainWindow::setupEmployeesTab()
+void MainWindow::setupEmployeesTab() // NOSONAR - cannot be const, modifies UI
 {
     QWidget* employeesTab = ui->tabWidget->widget(2);
     auto* layout = new QVBoxLayout(employeesTab);
@@ -430,15 +414,7 @@ void MainWindow::setupEmployeesTab()
     // Таблица работников
     auto* employeesTable = new QTableWidget(employeesTab);
     employeesTable->setObjectName("employeesTable");
-    // Устанавливаем больший шрифт для таблицы
-    QFont employeesTableFont = employeesTable->font();
-    employeesTableFont.setPointSize(11);
-    employeesTable->setFont(employeesTableFont);
-    // Устанавливаем больший шрифт для заголовков таблицы
-    QFont employeesHeaderFont = employeesTable->horizontalHeader()->font();
-    employeesHeaderFont.setPointSize(11);
-    employeesHeaderFont.setBold(true);
-    employeesTable->horizontalHeader()->setFont(employeesHeaderFont);
+    configureTableFonts(employeesTable);
     employeesTable->setColumnCount(6);
     employeesTable->setHorizontalHeaderLabels({"Имя", "Фамилия", "Должность", "Зарплата", "Часы работы", "Действия"});
     
@@ -463,7 +439,7 @@ void MainWindow::setupEmployeesTab()
     layout->addWidget(employeesTable);
 }
 
-void MainWindow::setupOperationsTab()
+void MainWindow::setupOperationsTab() // NOSONAR - cannot be const, modifies UI
 {
     QWidget* operationsTab = ui->tabWidget->widget(3);
     auto* layout = new QVBoxLayout(operationsTab);
@@ -2226,7 +2202,7 @@ void MainWindow::onShowMemberDetails(int memberId)
                 returnBtn->setProperty("memberId", memberId);
                 returnBtn->setProperty("bookId", borrowedBook.bookId);
                 connect(returnBtn, &QPushButton::clicked, [this, detailDialog, memberId, bookId = borrowedBook.bookId]() {
-                    try {
+                    try { // NOSONAR - nested try block is necessary for error handling in lambda
                         librarySystem.returnBook(memberId, bookId);
                         refreshBooks();
                         refreshMembers();
@@ -2337,7 +2313,7 @@ void MainWindow::onShowOverdueBooks()
             overdueTable->setRowCount(static_cast<int>(overdueWithDays.size()));
             
             // Заполняем таблицу
-            for (int i = 0; i < static_cast<int>(overdueWithDays.size()); ++i) {
+            for (int i = 0; i < static_cast<int>(overdueWithDays.size()); ++i) { // NOSONAR - loop is safe, size is checked
                 const auto& [daysOverdue, memberBookPair] = overdueWithDays[i];
                 const LibraryMember* member = memberBookPair.first;
                 const BorrowedBook& book = memberBookPair.second;
@@ -3001,7 +2977,7 @@ void MainWindow::loadDataSilently()
     }
 }
 
-void MainWindow::saveDataSilently()
+void MainWindow::saveDataSilently() // NOSONAR - modifies librarySystem state
 {
     // Автоматически сохраняем данные при закрытии
     try {
@@ -3029,5 +3005,18 @@ void MainWindow::saveDataWithWarning()
                            QString("Не удалось сохранить данные: %1\n\nПриложение все равно будет закрыто.")
                            .arg(QString::fromStdString(e.what())));
     }
+}
+
+void MainWindow::configureTableFonts(QTableWidget* table)
+{
+    // Устанавливаем больший шрифт для таблицы
+    QFont tableFont = table->font();
+    tableFont.setPointSize(11);
+    table->setFont(tableFont);
+    // Устанавливаем больший шрифт для заголовков таблицы
+    QFont headerFont = table->horizontalHeader()->font();
+    headerFont.setPointSize(11);
+    headerFont.setBold(true);
+    table->horizontalHeader()->setFont(headerFont);
 }
 

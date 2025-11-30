@@ -124,6 +124,9 @@ private:
     void loadDataSilently(); // Загрузка данных без сообщений об ошибках
     void saveDataSilently(); // Сохранение данных без сообщений об ошибках
     void saveDataWithWarning(); // Сохранение данных с предупреждением при ошибке
+    
+    // Вспомогательные методы для настройки таблиц (устранение дублирования кода)
+    void configureTableFonts(QTableWidget* table); // Настройка шрифтов таблицы и заголовков
 };
 
 #endif // MAINWINDOW_H
