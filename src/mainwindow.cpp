@@ -54,50 +54,20 @@ MainWindow::MainWindow(QWidget *parent)
     setupUI();
     
     // Загружаем данные при старте, если они есть
-    try {
-        FileManager::loadLibrarySystem(librarySystem, dataPath.toStdString());
-        refreshBooks();
-        refreshMembers();
-        refreshEmployees();
-        updateUndoRedoButtons();
-    } catch (const FileException&) {
-        // Игнорируем ошибки файлов при первой загрузке (файлы могут не существовать)
-        // Это ожидаемое поведение при первом запуске приложения
-    } catch (const LibraryException&) {
-        // Игнорируем другие ошибки при первой загрузке
-        // Это ожидаемое поведение при первом запуске приложения
-    }
+    loadDataSilently();
 }
 
 MainWindow::~MainWindow()
 {
     // Автоматически сохраняем данные при закрытии
-    try {
-        FileManager::saveLibrarySystem(librarySystem, dataPath.toStdString());
-    } catch (const FileException&) {
-        // Игнорируем ошибки сохранения при закрытии
-        // Приложение все равно будет закрыто, пользователь не может ничего сделать
-    } catch (const LibraryException&) {
-        // Игнорируем ошибки сохранения при закрытии
-        // Приложение все равно будет закрыто, пользователь не может ничего сделать
-    }
+    saveDataSilently();
     // ui автоматически удаляется через unique_ptr
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     // Сохраняем данные перед закрытием
-    try {
-        FileManager::saveLibrarySystem(librarySystem, dataPath.toStdString());
-    } catch (const FileException& e) {
-        QMessageBox::warning(this, "Предупреждение", 
-                           QString("Не удалось сохранить данные: %1\n\nПриложение все равно будет закрыто.")
-                           .arg(QString::fromStdString(e.what())));
-    } catch (const LibraryException& e) {
-        QMessageBox::warning(this, "Предупреждение", 
-                           QString("Не удалось сохранить данные: %1\n\nПриложение все равно будет закрыто.")
-                           .arg(QString::fromStdString(e.what())));
-    }
+    saveDataWithWarning();
     event->accept();
 }
 
@@ -3011,5 +2981,53 @@ void MainWindow::onClearMemberFilters()
     if (blockedFilter) blockedFilter->setCurrentIndex(0);
     
     refreshMembers();
+}
+
+void MainWindow::loadDataSilently() const
+{
+    // Загружаем данные при старте, если они есть
+    try {
+        FileManager::loadLibrarySystem(librarySystem, dataPath.toStdString());
+        refreshBooks();
+        refreshMembers();
+        refreshEmployees();
+        updateUndoRedoButtons();
+    } catch (const FileException&) {
+        // Игнорируем ошибки файлов при первой загрузке (файлы могут не существовать)
+        // Это ожидаемое поведение при первом запуске приложения
+    } catch (const LibraryException&) {
+        // Игнорируем другие ошибки при первой загрузке
+        // Это ожидаемое поведение при первом запуске приложения
+    }
+}
+
+void MainWindow::saveDataSilently() const
+{
+    // Автоматически сохраняем данные при закрытии
+    try {
+        FileManager::saveLibrarySystem(librarySystem, dataPath.toStdString());
+    } catch (const FileException&) {
+        // Игнорируем ошибки сохранения при закрытии
+        // Приложение все равно будет закрыто, пользователь не может ничего сделать
+    } catch (const LibraryException&) {
+        // Игнорируем ошибки сохранения при закрытии
+        // Приложение все равно будет закрыто, пользователь не может ничего сделать
+    }
+}
+
+void MainWindow::saveDataWithWarning()
+{
+    // Сохраняем данные перед закрытием
+    try {
+        FileManager::saveLibrarySystem(librarySystem, dataPath.toStdString());
+    } catch (const FileException& e) {
+        QMessageBox::warning(this, "Предупреждение", 
+                           QString("Не удалось сохранить данные: %1\n\nПриложение все равно будет закрыто.")
+                           .arg(QString::fromStdString(e.what())));
+    } catch (const LibraryException& e) {
+        QMessageBox::warning(this, "Предупреждение", 
+                           QString("Не удалось сохранить данные: %1\n\nПриложение все равно будет закрыто.")
+                           .arg(QString::fromStdString(e.what())));
+    }
 }
 

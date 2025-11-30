@@ -119,6 +119,11 @@ private:
     void updateUndoRedoButtons() const; // Обновление состояния кнопок undo/redo во всех вкладках
     void applyBookSorting(QTableWidget* table) const; // Применение сортировки книг
     QIcon createRedCrossIcon() const; // Создание красной иконки крестика
+    
+    // Вспомогательные методы для загрузки/сохранения данных (устранение дублирования кода)
+    void loadDataSilently() const; // Загрузка данных без сообщений об ошибках
+    void saveDataSilently() const; // Сохранение данных без сообщений об ошибках
+    void saveDataWithWarning(); // Сохранение данных с предупреждением при ошибке
 };
 
 #endif // MAINWINDOW_H
