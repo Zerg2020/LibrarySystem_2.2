@@ -214,7 +214,7 @@ void MainWindow::setupBooksTab()
     
     // Панель фильтров (все в одну строку) - перемещена наверх под кнопку "Добавить книгу"
     QHBoxLayout* filtersLayout = nullptr;
-    auto* filtersGroup = createFiltersGroup(booksTab, reinterpret_cast<QLayout*&>(filtersLayout));
+    auto* filtersGroup = createFiltersGroup(booksTab, filtersLayout);
     
     filtersLayout->addWidget(createLineEditFilter(filtersGroup, "Название...", "titleFilter", 220, &MainWindow::onFilterChanged));
     filtersLayout->addWidget(createLineEditFilter(filtersGroup, "Автор...", "authorFilter", 220, &MainWindow::onFilterChanged));
@@ -262,7 +262,7 @@ void MainWindow::setupMembersTab() // NOSONAR - cannot be const, modifies UI
     
     // Панель фильтров для абонентов (все в одну строку) - перемещена наверх под кнопку "Добавить абонента"
     QHBoxLayout* memberFiltersLayout = nullptr;
-    auto* memberFiltersGroup = createFiltersGroup(membersTab, reinterpret_cast<QLayout*&>(memberFiltersLayout));
+    auto* memberFiltersGroup = createFiltersGroup(membersTab, memberFiltersLayout);
     
     memberFiltersLayout->addWidget(createLineEditFilter(memberFiltersGroup, "Имя...", "memberNameFilter", 180, &MainWindow::onMemberFilterChanged));
     memberFiltersLayout->addWidget(createLineEditFilter(memberFiltersGroup, "Фамилия...", "memberSurnameFilter", 180, &MainWindow::onMemberFilterChanged));
@@ -2899,7 +2899,7 @@ QComboBox* MainWindow::createComboBoxFilter(QWidget* parent, const QString& obje
     return filter;
 }
 
-QGroupBox* MainWindow::createFiltersGroup(QWidget* parent, QLayout*& outLayout) const
+QGroupBox* MainWindow::createFiltersGroup(QWidget* parent, QHBoxLayout*& outLayout) const
 {
     auto* group = new QGroupBox("Фильтры поиска", parent);
     auto* layout = new QHBoxLayout(group);
