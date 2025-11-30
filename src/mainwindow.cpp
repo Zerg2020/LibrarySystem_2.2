@@ -1053,7 +1053,7 @@ void MainWindow::refreshMembers()
         editBtn->setIconSize(QSize(22, 22));
         editBtn->setToolTip("Редактировать абонента");
         connect(editBtn, &QPushButton::clicked, this, [this, member]() {
-            if (const auto* table = findChild<QTableWidget*>("membersTable"); table != nullptr) {
+            if (auto* table = findChild<QTableWidget*>("membersTable"); table != nullptr) {
                 for (int r = 0; r < table->rowCount(); ++r) {
                     const auto* item = table->item(r, 0);
                     if (item && item->data(Qt::UserRole).toInt() == member->getId()) {
@@ -1159,7 +1159,7 @@ void MainWindow::refreshEmployees()
         editBtn->setIconSize(QSize(22, 22));
         editBtn->setToolTip("Редактировать работника");
         connect(editBtn, &QPushButton::clicked, this, [this, emp]() {
-            if (const auto* table = findChild<QTableWidget*>("employeesTable"); table != nullptr) {
+            if (auto* table = findChild<QTableWidget*>("employeesTable"); table != nullptr) {
                 for (int r = 0; r < table->rowCount(); ++r) {
                     const auto* item = table->item(r, 0);
                     if (item && item->data(Qt::UserRole).toInt() == emp->getId()) {
