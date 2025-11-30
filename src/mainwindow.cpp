@@ -831,10 +831,10 @@ void MainWindow::onClearFilters()
     bookFilters = BookFilters();
     
     // Очищаем поля ввода
-    const auto* titleFilter = findChild<QLineEdit*>("titleFilter");
-    const auto* authorFilter = findChild<QLineEdit*>("authorFilter");
-    const auto* genreFilter = findChild<QLineEdit*>("genreFilter");
-    const auto* isbnFilter = findChild<QLineEdit*>("isbnFilter");
+    auto* titleFilter = findChild<QLineEdit*>("titleFilter");
+    auto* authorFilter = findChild<QLineEdit*>("authorFilter");
+    auto* genreFilter = findChild<QLineEdit*>("genreFilter");
+    auto* isbnFilter = findChild<QLineEdit*>("isbnFilter");
     auto* yearFromFilter = findChild<QSpinBox*>("yearFromFilter");
     auto* yearToFilter = findChild<QSpinBox*>("yearToFilter");
     auto* availabilityFilter = findChild<QComboBox*>("availabilityFilter");
