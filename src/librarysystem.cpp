@@ -11,7 +11,8 @@ void LibrarySystem::addBook(const std::string& title, const std::string& author,
                             const std::string& coverPath, int quantity,
                             const std::string& description, const std::string& pdfPath) {
     try {
-        int id = nextBookId++;
+        int id = nextBookId;
+        nextBookId++;
         auto command = std::make_unique<AddBookCommand>(this, id, title, author, isbn, year, genre, coverPath, quantity, description, pdfPath);
         commandManagerBooks.executeCommand(std::move(command));
     } catch (const LibraryException&) {
@@ -29,8 +30,7 @@ void LibrarySystem::editBook(int id, const std::string& title, const std::string
     }
     
     // Проверяем, не дублируется ли ISBN у другой книги
-    const Book* existingBook = books.findBookByIsbn(isbn);
-    if (existingBook && existingBook->getId() != id) {
+    if (const Book* existingBook = books.findBookByIsbn(isbn); existingBook && existingBook->getId() != id) {
         throw DuplicateException("Книга с ISBN " + isbn + " уже существует");
     }
     
@@ -238,7 +238,8 @@ std::vector<std::pair<const LibraryMember*, BorrowedBook>> LibrarySystem::getOve
 void LibrarySystem::addLibrarian(const std::string& name, const std::string& surname,
                                   const std::string& phone, double salary, int workHours) {
     try {
-        int id = nextEmployeeId++;
+        int id = nextEmployeeId;
+        nextEmployeeId++;
         auto command = std::make_unique<AddEmployeeCommand>(this, id, name, surname, phone, salary, workHours, true);
         commandManagerEmployees.executeCommand(std::move(command));
     } catch (const LibraryException&) {
@@ -249,7 +250,8 @@ void LibrarySystem::addLibrarian(const std::string& name, const std::string& sur
 void LibrarySystem::addManager(const std::string& name, const std::string& surname,
                                 const std::string& phone, double salary, int workHours) {
     try {
-        int id = nextEmployeeId++;
+        int id = nextEmployeeId;
+        nextEmployeeId++;
         auto command = std::make_unique<AddEmployeeCommand>(this, id, name, surname, phone, salary, workHours, false);
         commandManagerEmployees.executeCommand(std::move(command));
     } catch (const LibraryException&) {
