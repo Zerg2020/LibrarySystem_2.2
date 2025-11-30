@@ -36,7 +36,9 @@ public:
     void addBook(std::unique_ptr<Book> book);
     void removeBook(int id);
     Book* findBook(int id);
+    const Book* findBook(int id) const;
     Book* findBookByIsbn(const std::string& isbn);
+    const Book* findBookByIsbn(const std::string& isbn) const;
     std::vector<Book*> getAllBooks() const;
     std::vector<Book*> getAvailableBooks() const;
     size_t size() const { return books.size(); }

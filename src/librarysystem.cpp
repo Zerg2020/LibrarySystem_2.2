@@ -29,7 +29,7 @@ void LibrarySystem::editBook(int id, const std::string& title, const std::string
     }
     
     // Проверяем, не дублируется ли ISBN у другой книги
-    Book* existingBook = books.findBookByIsbn(isbn);
+    const Book* existingBook = books.findBookByIsbn(isbn);
     if (existingBook && existingBook->getId() != id) {
         throw DuplicateException("Книга с ISBN " + isbn + " уже существует");
     }
@@ -76,6 +76,10 @@ std::vector<Book*> LibrarySystem::getAvailableBooks() const {
 }
 
 Book* LibrarySystem::findBook(int id) {
+    return books.findBook(id);
+}
+
+const Book* LibrarySystem::findBook(int id) const {
     return books.findBook(id);
 }
 
@@ -213,16 +217,16 @@ void LibrarySystem::returnBook(int memberId, int bookId) {
 }
 
 std::vector<BorrowedBook> LibrarySystem::getMemberBooks(int memberId) const {
-    LibraryMember* member = members.findMember(memberId);
+    const LibraryMember* member = members.findMember(memberId);
     if (!member) {
         throw NotFoundException("Абонент с ID " + std::to_string(memberId));
     }
     return member->getBorrowedBooks();
 }
 
-std::vector<std::pair<LibraryMember*, BorrowedBook>> LibrarySystem::getOverdueBooks() const {
-    std::vector<std::pair<LibraryMember*, BorrowedBook>> overdue;
-    for (auto* member : getAllMembers()) {
+std::vector<std::pair<const LibraryMember*, BorrowedBook>> LibrarySystem::getOverdueBooks() const {
+    std::vector<std::pair<const LibraryMember*, BorrowedBook>> overdue;
+    for (const auto* member : getAllMembers()) {
         auto memberOverdue = member->getOverdueBooks();
         for (const auto& book : memberOverdue) {
             overdue.emplace_back(member, book);

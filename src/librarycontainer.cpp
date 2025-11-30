@@ -28,7 +28,23 @@ Book* LibraryContainer::findBook(int id) {
     return (it != books.end()) ? it->get() : nullptr;
 }
 
+const Book* LibraryContainer::findBook(int id) const {
+    auto it = std::find_if(books.begin(), books.end(),
+                          [id](const std::unique_ptr<Book>& book) {
+                              return book->getId() == id;
+                          });
+    return (it != books.end()) ? it->get() : nullptr;
+}
+
 Book* LibraryContainer::findBookByIsbn(const std::string& isbn) {
+    auto it = std::find_if(books.begin(), books.end(),
+                          [&isbn](const std::unique_ptr<Book>& book) {
+                              return book->getIsbn() == isbn;
+                          });
+    return (it != books.end()) ? it->get() : nullptr;
+}
+
+const Book* LibraryContainer::findBookByIsbn(const std::string& isbn) const {
     auto it = std::find_if(books.begin(), books.end(),
                           [&isbn](const std::unique_ptr<Book>& book) {
                               return book->getIsbn() == isbn;

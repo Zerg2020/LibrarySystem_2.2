@@ -39,6 +39,7 @@ public:
     std::vector<Book*> getAllBooks() const;
     std::vector<Book*> getAvailableBooks() const;
     Book* findBook(int id);
+    const Book* findBook(int id) const;
     int getBorrowedCount(int bookId) const; // Подсчет количества выданных экземпляров
     void updateBookAvailability(int bookId); // Обновление доступности на основе количества
     
@@ -56,7 +57,7 @@ public:
     void borrowBook(int memberId, int bookId, int employeeId);
     void returnBook(int memberId, int bookId);
     std::vector<BorrowedBook> getMemberBooks(int memberId) const;
-    std::vector<std::pair<LibraryMember*, BorrowedBook>> getOverdueBooks() const;
+    std::vector<std::pair<const LibraryMember*, BorrowedBook>> getOverdueBooks() const;
     
     // Работники
     void addLibrarian(const std::string& name, const std::string& surname,
