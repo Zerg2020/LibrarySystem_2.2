@@ -133,8 +133,8 @@ private:
     
     // Вспомогательные методы для создания фильтров (устранение дублирования кода)
     QLineEdit* createLineEditFilter(QWidget* parent, const QString& placeholder, const QString& objectName, int minWidth, void (MainWindow::*slot)()) const;
-    QSpinBox* createSpinBoxFilter(QWidget* parent, const QString& objectName, int minWidth, void (MainWindow::*slot)()) const;
-    QComboBox* createComboBoxFilter(QWidget* parent, const QString& objectName, int minWidth, void (MainWindow::*slot)(), const QStringList& items = {}) const;
+    QSpinBox* createSpinBoxFilter(QWidget* parent, const QString& objectName, int minWidth, void (MainWindow::*slot)());
+    QComboBox* createComboBoxFilter(QWidget* parent, const QString& objectName, int minWidth, void (MainWindow::*slot)(), const QStringList& items = {});
     QGroupBox* createFiltersGroup(QWidget* parent, QLayout*& outLayout) const; // Создание группы фильтров с layout
     QPushButton* createClearFiltersButton(QWidget* parent, void (MainWindow::*slot)()) const; // Создание кнопки "Очистить"
     void setupTableColumns(QTableWidget* table, const QList<int>& columnWidths, const QList<QHeaderView::ResizeMode>& resizeModes, int stretchColumn = -1) const; // Настройка колонок таблицы

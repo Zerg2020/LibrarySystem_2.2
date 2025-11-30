@@ -2894,7 +2894,7 @@ QLineEdit* MainWindow::createLineEditFilter(QWidget* parent, const QString& plac
     return filter;
 }
 
-QSpinBox* MainWindow::createSpinBoxFilter(QWidget* parent, const QString& objectName, int minWidth, void (MainWindow::*slot)()) const
+QSpinBox* MainWindow::createSpinBoxFilter(QWidget* parent, const QString& objectName, int minWidth, void (MainWindow::*slot)())
 {
     auto* filter = new QSpinBox(parent);
     filter->setRange(0, 9999);
@@ -2906,7 +2906,7 @@ QSpinBox* MainWindow::createSpinBoxFilter(QWidget* parent, const QString& object
     return filter;
 }
 
-QComboBox* MainWindow::createComboBoxFilter(QWidget* parent, const QString& objectName, int minWidth, void (MainWindow::*slot)(), const QStringList& items) const
+QComboBox* MainWindow::createComboBoxFilter(QWidget* parent, const QString& objectName, int minWidth, void (MainWindow::*slot)(), const QStringList& items)
 {
     auto* filter = new QComboBox(parent);
     if (items.isEmpty()) {
