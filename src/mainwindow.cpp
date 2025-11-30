@@ -660,7 +660,6 @@ void MainWindow::refreshBooks()
             }
             
             for (int r = 0; r < table->rowCount(); ++r) {
-                QTableWidgetItem* item = table->item(r, 0);
                 if (const auto* item = table->item(r, 0); item && item->data(Qt::UserRole).toInt() == book->getId()) {
                     table->selectRow(r);
                     break;
