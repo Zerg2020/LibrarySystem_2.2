@@ -33,5 +33,11 @@ public:
         : DataException("Дублирующийся элемент: " + item) {}
 };
 
+class CommandException : public LibraryException {
+public:
+    explicit CommandException(const std::string& message) 
+        : LibraryException("Ошибка команды: " + message) {}
+};
+
 #endif // EXCEPTIONS_H
 

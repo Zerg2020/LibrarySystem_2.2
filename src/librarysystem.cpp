@@ -14,9 +14,9 @@ void LibrarySystem::addBook(std::string_view title, std::string_view author,
         nextBookId++;
         auto command = std::make_unique<AddBookCommand>(this, id, title, author, isbn, year, genre, coverPath, quantity, description, pdfPath);
         commandManagerBooks.executeCommand(std::move(command));
-    } catch (const LibraryException& e) {
+    } catch (const LibraryException&) {
         // Re-throw to let caller handle the exception
-        throw e;
+        throw;
     }
 }
 
@@ -42,9 +42,9 @@ void LibrarySystem::editBook(int id, std::string_view title, std::string_view au
         if (!book->getManuallyDisabled()) {
             updateBookAvailability(id);
         }
-    } catch (const LibraryException& e) {
+    } catch (const LibraryException&) {
         // Re-throw to let caller handle the exception
-        throw e;
+        throw;
     }
 }
 
@@ -52,9 +52,9 @@ void LibrarySystem::removeBook(int id) {
     try {
         auto command = std::make_unique<RemoveBookCommand>(this, id);
         commandManagerBooks.executeCommand(std::move(command));
-    } catch (const LibraryException& e) {
+    } catch (const LibraryException&) {
         // Re-throw to let caller handle the exception
-        throw e;
+        throw;
     }
 }
 
@@ -91,9 +91,9 @@ int LibrarySystem::addMember(std::string_view name, std::string_view surname, st
         auto command = std::make_unique<AddMemberCommand>(this, id, name, surname, phone, email);
         commandManagerMembers.executeCommand(std::move(command));
         return id;
-    } catch (const LibraryException& e) {
+    } catch (const LibraryException&) {
         // Re-throw to let caller handle the exception
-        throw e;
+        throw;
     }
 }
 
@@ -105,9 +105,9 @@ void LibrarySystem::editMember(int id, std::string_view name, std::string_view s
     try {
         auto command = std::make_unique<EditMemberCommand>(this, id, name, surname, phone, email);
         commandManagerMembers.executeCommand(std::move(command));
-    } catch (const LibraryException& e) {
+    } catch (const LibraryException&) {
         // Re-throw to let caller handle the exception
-        throw e;
+        throw;
     }
 }
 
@@ -115,9 +115,9 @@ void LibrarySystem::removeMember(int id) {
     try {
         auto command = std::make_unique<RemoveMemberCommand>(this, id);
         commandManagerMembers.executeCommand(std::move(command));
-    } catch (const LibraryException& e) {
+    } catch (const LibraryException&) {
         // Re-throw to let caller handle the exception
-        throw e;
+        throw;
     }
 }
 
@@ -128,9 +128,9 @@ void LibrarySystem::blockMember(int id) {
     try {
         auto command = std::make_unique<BlockMemberCommand>(this, id, true);
         commandManagerMembers.executeCommand(std::move(command));
-    } catch (const LibraryException& e) {
+    } catch (const LibraryException&) {
         // Re-throw to let caller handle the exception
-        throw e;
+        throw;
     }
 }
 
@@ -141,9 +141,9 @@ void LibrarySystem::unblockMember(int id) {
     try {
         auto command = std::make_unique<BlockMemberCommand>(this, id, false);
         commandManagerMembers.executeCommand(std::move(command));
-    } catch (const LibraryException& e) {
+    } catch (const LibraryException&) {
         // Re-throw to let caller handle the exception
-        throw e;
+        throw;
     }
 }
 
@@ -193,9 +193,9 @@ void LibrarySystem::borrowBook(int memberId, int bookId, int employeeId) {
         book->setQuantity(book->getQuantity() - 1);
         // Обновляем доступность после выдачи
         updateBookAvailability(bookId);
-    } catch (const LibraryException& e) {
+    } catch (const LibraryException&) {
         // Re-throw to let caller handle the exception
-        throw e;
+        throw;
     }
 }
 
@@ -216,9 +216,9 @@ void LibrarySystem::returnBook(int memberId, int bookId) {
         book->setQuantity(book->getQuantity() + 1);
         // Обновляем доступность после возврата
         updateBookAvailability(bookId);
-    } catch (const LibraryException& e) {
+    } catch (const LibraryException&) {
         // Re-throw to let caller handle the exception
-        throw e;
+        throw;
     }
 }
 
@@ -248,9 +248,9 @@ void LibrarySystem::addLibrarian(std::string_view name, std::string_view surname
         nextEmployeeId++;
         auto command = std::make_unique<AddEmployeeCommand>(this, id, name, surname, phone, salary, workHours, true);
         commandManagerEmployees.executeCommand(std::move(command));
-    } catch (const LibraryException& e) {
+    } catch (const LibraryException&) {
         // Re-throw to let caller handle the exception
-        throw e;
+        throw;
     }
 }
 
@@ -261,9 +261,9 @@ void LibrarySystem::addManager(std::string_view name, std::string_view surname,
         nextEmployeeId++;
         auto command = std::make_unique<AddEmployeeCommand>(this, id, name, surname, phone, salary, workHours, false);
         commandManagerEmployees.executeCommand(std::move(command));
-    } catch (const LibraryException& e) {
+    } catch (const LibraryException&) {
         // Re-throw to let caller handle the exception
-        throw e;
+        throw;
     }
 }
 
@@ -283,9 +283,9 @@ void LibrarySystem::editEmployee(int id, std::string_view name, std::string_view
     try {
         auto command = std::make_unique<EditEmployeeCommand>(this, id, name, surname, phone, salary, workHours);
         commandManagerEmployees.executeCommand(std::move(command));
-    } catch (const LibraryException& e) {
+    } catch (const LibraryException&) {
         // Re-throw to let caller handle the exception
-        throw e;
+        throw;
     }
 }
 
@@ -304,9 +304,9 @@ void LibrarySystem::removeEmployee(int id) {
     try {
         auto command = std::make_unique<RemoveEmployeeCommand>(this, id);
         commandManagerEmployees.executeCommand(std::move(command));
-    } catch (const LibraryException& e) {
+    } catch (const LibraryException&) {
         // Re-throw to let caller handle the exception
-        throw e;
+        throw;
     }
 }
 

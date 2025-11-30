@@ -63,9 +63,10 @@ MainWindow::MainWindow(QWidget *parent)
     } catch (const FileException& e) {
         // Игнорируем ошибки при первой загрузке (файлы могут не существовать)
         (void)e; // Suppress unused variable warning
-    } catch (const std::exception& e) {
+    } catch (const FileException&) {
+        // Игнорируем ошибки файлов при первой загрузке
+    } catch (const LibraryException&) {
         // Игнорируем другие ошибки при первой загрузке
-        (void)e; // Suppress unused variable warning
     }
 }
 
@@ -657,15 +658,15 @@ void MainWindow::refreshBooks()
         editBtn->setToolTip("Редактировать книгу");
         connect(editBtn, &QPushButton::clicked, this, [this, book]() {
             // Выделяем строку и вызываем редактирование
-            auto* table = findChild<QTableWidget*>("booksTable");
-            if (table == nullptr) {
+            auto* booksTableWidget = findChild<QTableWidget*>("booksTable");
+            if (booksTableWidget == nullptr) {
                 onEditBook();
                 return;
             }
             
-            for (int r = 0; r < table->rowCount(); ++r) {
-                if (const auto* item = table->item(r, 0); item && item->data(Qt::UserRole).toInt() == book->getId()) {
-                    table->selectRow(r);
+            for (int r = 0; r < booksTableWidget->rowCount(); ++r) {
+                if (const auto* item = booksTableWidget->item(r, 0); item && item->data(Qt::UserRole).toInt() == book->getId()) {
+                    booksTableWidget->selectRow(r);
                     break;
                 }
             }
@@ -737,8 +738,8 @@ void MainWindow::refreshBooks()
             auto* bookCombo = new QComboBox(&dialog);
             bookCombo->setEditable(true);
             QStringList bookList;
-            auto books = librarySystem.getAllBooks();
-            for (const auto* b : books) {
+            auto allBooks = librarySystem.getAllBooks();
+            for (const auto* b : allBooks) {
                 QString bookText = QString::fromStdString(b->getTitle());
                 bookCombo->addItem(bookText, b->getId());
                 bookList << bookText;
@@ -1054,11 +1055,11 @@ void MainWindow::refreshMembers()
         editBtn->setIconSize(QSize(22, 22));
         editBtn->setToolTip("Редактировать абонента");
         connect(editBtn, &QPushButton::clicked, this, [this, member]() {
-            if (auto* table = findChild<QTableWidget*>("membersTable"); table != nullptr) {
-                for (int r = 0; r < table->rowCount(); ++r) {
-                    const auto* item = table->item(r, 0);
+            if (auto* membersTableWidget = findChild<QTableWidget*>("membersTable"); membersTableWidget != nullptr) {
+                for (int r = 0; r < membersTableWidget->rowCount(); ++r) {
+                    const auto* item = membersTableWidget->item(r, 0);
                     if (item && item->data(Qt::UserRole).toInt() == member->getId()) {
-                        table->selectRow(r);
+                        membersTableWidget->selectRow(r);
                         break;
                     }
                 }
@@ -1160,11 +1161,11 @@ void MainWindow::refreshEmployees()
         editBtn->setIconSize(QSize(22, 22));
         editBtn->setToolTip("Редактировать работника");
         connect(editBtn, &QPushButton::clicked, this, [this, emp]() {
-            if (auto* table = findChild<QTableWidget*>("employeesTable"); table != nullptr) {
-                for (int r = 0; r < table->rowCount(); ++r) {
-                    const auto* item = table->item(r, 0);
+            if (auto* employeesTableWidget = findChild<QTableWidget*>("employeesTable"); employeesTableWidget != nullptr) {
+                for (int r = 0; r < employeesTableWidget->rowCount(); ++r) {
+                    const auto* item = employeesTableWidget->item(r, 0);
                     if (item && item->data(Qt::UserRole).toInt() == emp->getId()) {
-                        table->selectRow(r);
+                        employeesTableWidget->selectRow(r);
                         break;
                     }
                 }
@@ -1717,6 +1718,8 @@ void MainWindow::onShowBookDetails(int bookId)
         detailDialogPtr->exec();
         delete detailDialogPtr;
         
+    } catch (const CommandException& e) {
+        showError(QString::fromStdString(e.what()));
     } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
     }
@@ -2021,7 +2024,7 @@ void MainWindow::onReturnBook()
                     bookCombo->setEnabled(false);
                     bookCombo->addItem("Нет взятых книг", -1);
                 }
-            } catch (const std::exception&) {
+            } catch (const LibraryException&) {
                 bookCombo->setEnabled(false);
                 bookCombo->addItem("Ошибка загрузки", -1);
             }
@@ -2280,6 +2283,8 @@ void MainWindow::onShowMemberDetails(int memberId)
         detailDialog->exec();
         delete detailDialog;
         
+    } catch (const CommandException& e) {
+        showError(QString::fromStdString(e.what()));
     } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
     }
@@ -2338,11 +2343,11 @@ void MainWindow::onShowOverdueBooks()
             QList<QPair<int, std::pair<const LibraryMember*, BorrowedBook>>> overdueWithDays;
             
             for (const auto& pair : overdue) {
-                BorrowedBook book = pair.second;
+                auto book = pair.second;
                 
                 // Парсим дату возврата
                 QDate returnDate = QDate::fromString(QString::fromStdString(book.returnDate), "yyyy-MM-dd");
-                int daysOverdue = static_cast<int>(returnDate.daysTo(currentDate));
+                auto daysOverdue = static_cast<int>(returnDate.daysTo(currentDate));
                 
                 overdueWithDays.append({daysOverdue, pair});
             }
@@ -2406,6 +2411,8 @@ void MainWindow::onShowOverdueBooks()
         overdueDialog->exec();
         
         // Убрано обновление текстового поля в операциях
+    } catch (const CommandException& e) {
+        showError(QString::fromStdString(e.what()));
     } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
     }
@@ -2699,6 +2706,8 @@ void MainWindow::onUndo()
         
         updateUndoRedoButtons();
         showInfo("Действие отменено");
+    } catch (const CommandException& e) {
+        showError(QString::fromStdString(e.what()));
     } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
     }
@@ -2738,6 +2747,8 @@ void MainWindow::onRedo()
         
         updateUndoRedoButtons();
         showInfo("Действие повторено");
+    } catch (const CommandException& e) {
+        showError(QString::fromStdString(e.what()));
     } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
     }
@@ -2755,6 +2766,8 @@ void MainWindow::onUndoBooks()
         refreshBooks();
         updateUndoRedoButtons();
         showInfo("Действие отменено");
+    } catch (const CommandException& e) {
+        showError(QString::fromStdString(e.what()));
     } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
     }
@@ -2772,6 +2785,8 @@ void MainWindow::onRedoBooks()
         refreshBooks();
         updateUndoRedoButtons();
         showInfo("Действие повторено");
+    } catch (const CommandException& e) {
+        showError(QString::fromStdString(e.what()));
     } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
     }
@@ -2789,6 +2804,8 @@ void MainWindow::onUndoMembers()
         refreshMembers();
         updateUndoRedoButtons();
         showInfo("Действие отменено");
+    } catch (const CommandException& e) {
+        showError(QString::fromStdString(e.what()));
     } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
     }
@@ -2806,6 +2823,8 @@ void MainWindow::onRedoMembers()
         refreshMembers();
         updateUndoRedoButtons();
         showInfo("Действие повторено");
+    } catch (const CommandException& e) {
+        showError(QString::fromStdString(e.what()));
     } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
     }
@@ -2823,6 +2842,8 @@ void MainWindow::onUndoEmployees()
         refreshEmployees();
         updateUndoRedoButtons();
         showInfo("Действие отменено");
+    } catch (const CommandException& e) {
+        showError(QString::fromStdString(e.what()));
     } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
     }
@@ -2840,6 +2861,8 @@ void MainWindow::onRedoEmployees()
         refreshEmployees();
         updateUndoRedoButtons();
         showInfo("Действие повторено");
+    } catch (const CommandException& e) {
+        showError(QString::fromStdString(e.what()));
     } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
     }
@@ -2850,6 +2873,8 @@ void MainWindow::onSave()
     try {
         FileManager::saveLibrarySystem(librarySystem, dataPath.toStdString());
         showInfo("Данные успешно сохранены");
+    } catch (const CommandException& e) {
+        showError(QString::fromStdString(e.what()));
     } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
     }
@@ -2863,6 +2888,8 @@ void MainWindow::onLoad()
         refreshMembers();
         refreshEmployees();
         showInfo("Данные успешно загружены");
+    } catch (const CommandException& e) {
+        showError(QString::fromStdString(e.what()));
     } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
     }
