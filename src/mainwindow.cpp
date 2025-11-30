@@ -2983,7 +2983,7 @@ void MainWindow::onClearMemberFilters()
     refreshMembers();
 }
 
-void MainWindow::loadDataSilently() const
+void MainWindow::loadDataSilently()
 {
     // Загружаем данные при старте, если они есть
     try {
@@ -3001,7 +3001,7 @@ void MainWindow::loadDataSilently() const
     }
 }
 
-void MainWindow::saveDataSilently() const
+void MainWindow::saveDataSilently()
 {
     // Автоматически сохраняем данные при закрытии
     try {
