@@ -62,8 +62,10 @@ MainWindow::MainWindow(QWidget *parent)
         updateUndoRedoButtons();
     } catch (const FileException&) {
         // Игнорируем ошибки файлов при первой загрузке (файлы могут не существовать)
+        // Это ожидаемое поведение при первом запуске приложения
     } catch (const LibraryException&) {
         // Игнорируем другие ошибки при первой загрузке
+        // Это ожидаемое поведение при первом запуске приложения
     }
 }
 
@@ -74,8 +76,10 @@ MainWindow::~MainWindow()
         FileManager::saveLibrarySystem(librarySystem, dataPath.toStdString());
     } catch (const FileException&) {
         // Игнорируем ошибки сохранения при закрытии
+        // Приложение все равно будет закрыто, пользователь не может ничего сделать
     } catch (const LibraryException&) {
         // Игнорируем ошибки сохранения при закрытии
+        // Приложение все равно будет закрыто, пользователь не может ничего сделать
     }
     // ui автоматически удаляется через unique_ptr
 }
@@ -2344,7 +2348,7 @@ void MainWindow::onShowOverdueBooks()
             QList<QPair<int, std::pair<const LibraryMember*, BorrowedBook>>> overdueWithDays;
             
             for (const auto& pair : overdue) {
-                auto book = pair.second;
+                const auto& book = pair.second;
                 
                 // Парсим дату возврата
                 QDate returnDate = QDate::fromString(QString::fromStdString(book.returnDate), "yyyy-MM-dd");
@@ -2915,6 +2919,7 @@ void MainWindow::autoSave() const
         FileManager::saveLibrarySystem(librarySystem, dataPath.toStdString());
     } catch (const FileException&) {
         // Игнорируем ошибки автосохранения, чтобы не мешать работе пользователя
+        // Автосохранение выполняется в фоне, ошибки не критичны
     }
 }
 
