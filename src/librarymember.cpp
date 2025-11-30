@@ -97,8 +97,8 @@ std::vector<BorrowedBook> LibraryMember::getOverdueBooks() const {
 
 std::string LibraryMember::getInfo() const {
     std::ostringstream oss;
-    oss << "ID: " << id << ", " << getFullName() 
-        << ", Телефон: " << phone 
+    oss << "ID: " << getId() << ", " << getFullName()
+        << ", Телефон: " << getPhone()
         << ", Заблокирован: " << (isBlocked ? "Да" : "Нет")
         << ", Взято книг: " << borrowedBooks.size();
     return oss.str();

@@ -2701,8 +2701,6 @@ void MainWindow::onUndo()
         showInfo("Действие отменено");
     } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
-    } catch (const LibraryException& e) {
-        showError(QString::fromStdString(e.what()));
     }
 }
 
@@ -2740,8 +2738,6 @@ void MainWindow::onRedo()
         
         updateUndoRedoButtons();
         showInfo("Действие повторено");
-    } catch (const LibraryException& e) {
-        showError(QString::fromStdString(e.what()));
     } catch (const LibraryException& e) {
         showError(QString::fromStdString(e.what()));
     }
