@@ -35,7 +35,7 @@ public:
     ~MainWindow() override;
 
 protected:
-    void closeEvent(QCloseEvent *event) override final;
+    void closeEvent(QCloseEvent *event) final;
 
 private slots:
     void onAddBook();
@@ -93,7 +93,8 @@ private:
         int yearFrom = 0;
         int yearTo = 0;
         int availability = -1; // -1 = все, 0 = нет, 1 = да
-    } bookFilters{};
+    };
+    BookFilters bookFilters{};
     
     // Фильтры для абонентов
     struct MemberFilters {
@@ -102,7 +103,8 @@ private:
         QString phone;
         QString email;
         int blocked = -1; // -1 = все, 0 = не заблокирован, 1 = заблокирован
-    } memberFilters{};
+    };
+    MemberFilters memberFilters{};
     
     void setupUI();
     void setupMenu();

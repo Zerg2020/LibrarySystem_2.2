@@ -1903,7 +1903,7 @@ void MainWindow::onBorrowBook()
         memberCombo->addItem(memberText, member->getId());
         memberList << memberText;
     }
-    QCompleter* memberCompleter = new QCompleter(memberList, memberCombo);
+    auto* memberCompleter = new QCompleter(memberList, memberCombo);
     memberCompleter->setCaseSensitivity(Qt::CaseInsensitive);
     memberCombo->setCompleter(memberCompleter);
     form.addRow("Абонент:", memberCombo);
@@ -1918,7 +1918,7 @@ void MainWindow::onBorrowBook()
         bookCombo->addItem(bookText, book->getId());
         bookList << bookText;
     }
-    QCompleter* bookCompleter = new QCompleter(bookList, bookCombo);
+    auto* bookCompleter = new QCompleter(bookList, bookCombo);
     bookCompleter->setCaseSensitivity(Qt::CaseInsensitive);
     bookCombo->setCompleter(bookCompleter);
     form.addRow("Книга:", bookCombo);
@@ -1933,7 +1933,7 @@ void MainWindow::onBorrowBook()
         employeeCombo->addItem(empText, emp->getId());
         employeeList << empText;
     }
-    QCompleter* empCompleter = new QCompleter(employeeList, employeeCombo);
+    auto* empCompleter = new QCompleter(employeeList, employeeCombo);
     empCompleter->setCaseSensitivity(Qt::CaseInsensitive);
     employeeCombo->setCompleter(empCompleter);
     form.addRow("Работник:", employeeCombo);
@@ -1976,7 +1976,7 @@ void MainWindow::onReturnBook()
         memberCombo->addItem(memberText, member->getId());
         memberList << memberText;
     }
-    QCompleter* memberCompleter = new QCompleter(memberList, memberCombo);
+    auto* memberCompleter = new QCompleter(memberList, memberCombo);
     memberCompleter->setCaseSensitivity(Qt::CaseInsensitive);
     memberCombo->setCompleter(memberCompleter);
     form.addRow("Абонент:", memberCombo);
@@ -2013,7 +2013,7 @@ void MainWindow::onReturnBook()
                 
                 if (bookCombo->count() > 0) {
                     bookCombo->setEnabled(true);
-                    QCompleter* bookCompleter = new QCompleter(bookList, bookCombo);
+                    auto* bookCompleter = new QCompleter(bookList, bookCombo);
                     bookCompleter->setCaseSensitivity(Qt::CaseInsensitive);
                     bookCombo->setCompleter(bookCompleter);
                 } else {
@@ -2372,25 +2372,25 @@ void MainWindow::onShowOverdueBooks()
                 }
                 
                 // Заполняем строку
-                QTableWidgetItem* memberItem = new QTableWidgetItem(QString("%1 (ID: %2)")
+                auto* memberItem = new QTableWidgetItem(QString("%1 (ID: %2)")
                     .arg(QString::fromStdString(member->getFullName()))
                     .arg(member->getId()));
                 overdueTable->setItem(i, 0, memberItem);
                 
-                QTableWidgetItem* phoneItem = new QTableWidgetItem(QString::fromStdString(member->getPhone()));
+                auto* phoneItem = new QTableWidgetItem(QString::fromStdString(member->getPhone()));
                 overdueTable->setItem(i, 1, phoneItem);
                 
-                QTableWidgetItem* bookItem = new QTableWidgetItem(bookTitle);
+                auto* bookItem = new QTableWidgetItem(bookTitle);
                 overdueTable->setItem(i, 2, bookItem);
                 
-                QTableWidgetItem* borrowDateItem = new QTableWidgetItem(QString::fromStdString(book.borrowDate));
+                auto* borrowDateItem = new QTableWidgetItem(QString::fromStdString(book.borrowDate));
                 overdueTable->setItem(i, 3, borrowDateItem);
                 
-                QTableWidgetItem* returnDateItem = new QTableWidgetItem(QString::fromStdString(book.returnDate));
+                auto* returnDateItem = new QTableWidgetItem(QString::fromStdString(book.returnDate));
                 overdueTable->setItem(i, 4, returnDateItem);
                 
                 // Количество дней просрочки
-                QTableWidgetItem* daysItem = new QTableWidgetItem(QString::number(daysOverdue));
+                auto* daysItem = new QTableWidgetItem(QString::number(daysOverdue));
                 daysItem->setTextAlignment(Qt::AlignCenter);
                 overdueTable->setItem(i, 5, daysItem);
             }
