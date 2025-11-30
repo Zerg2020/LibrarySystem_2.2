@@ -12,10 +12,10 @@ Book::Book(int pId, std::string_view pTitle, std::string_view pAuthor,
 
 std::string Book::getInfo() const {
     std::ostringstream oss;
-    oss << "ID: " << id << ", " << title << " by " << author 
+    oss << "ID: " << getId() << ", " << getTitle() << " by " << author 
         << ", ISBN: " << isbn << ", Year: " << year 
         << ", Genre: " << genre 
-        << ", Available: " << (available ? "Yes" : "No");
+        << ", Available: " << (isAvailable() ? "Yes" : "No");
     return oss.str();
 }
 
