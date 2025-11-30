@@ -42,7 +42,7 @@ public:
 
     void addMember(std::unique_ptr<LibraryMember> member);
     void removeMember(int id);
-    LibraryMember* findMember(int id);
+    LibraryMember* findMember(int id) const;
     std::vector<LibraryMember*> getAllMembers() const;
     std::vector<LibraryMember*> getBlockedMembers() const;
     size_t size() const { return members.size(); }

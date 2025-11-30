@@ -197,7 +197,7 @@ void FileManager::saveEmployees(LibrarySystem& system, const std::string& filena
     }
     
     auto allEmployees = system.getAllEmployees();
-    for (const auto* emp : allEmployees) {
+    for (auto* emp : allEmployees) {
         file << emp->getId() << "|"
              << emp->getName() << "|"
              << emp->getSurname() << "|"
@@ -207,12 +207,12 @@ void FileManager::saveEmployees(LibrarySystem& system, const std::string& filena
              << emp->getWorkHours() << "|";
         
         if (emp->getType() == "Librarian") {
-            Librarian* lib = dynamic_cast<Librarian*>(const_cast<Employee*>(emp));
+            auto* lib = dynamic_cast<Librarian*>(emp);
             if (lib) {
                 file << lib->getBooksProcessed() << "\n";
             }
         } else if (emp->getType() == "Manager") {
-            Manager* mgr = dynamic_cast<Manager*>(const_cast<Employee*>(emp));
+            auto* mgr = dynamic_cast<Manager*>(emp);
             if (mgr) {
                 file << mgr->getEmployeesManaged() << "\n";
             }

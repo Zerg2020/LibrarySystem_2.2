@@ -48,7 +48,7 @@ public:
     void removeMember(int id);
     void blockMember(int id);
     void unblockMember(int id);
-    LibraryMember* findMember(int id);
+    LibraryMember* findMember(int id) const;
     std::vector<LibraryMember*> getAllMembers() const;
     std::vector<LibraryMember*> getBlockedMembers() const;
     

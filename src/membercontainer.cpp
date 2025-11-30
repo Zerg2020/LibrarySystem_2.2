@@ -20,7 +20,7 @@ void MemberContainer::removeMember(int id) {
     }
 }
 
-LibraryMember* MemberContainer::findMember(int id) {
+LibraryMember* MemberContainer::findMember(int id) const {
     auto it = std::find_if(members.begin(), members.end(),
                           [id](const std::unique_ptr<LibraryMember>& member) {
                               return member->getId() == id;
