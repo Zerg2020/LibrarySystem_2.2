@@ -635,7 +635,7 @@ void MainWindow::refreshBooks()
         QString pdfPath = QString::fromStdString(book->getPdfPath());
 
         // Колонка 9 - Действия (кнопки)
-        QWidget* actionWidget = new QWidget();
+        auto* actionWidget = new QWidget();
         auto* actionLayout = new QHBoxLayout(actionWidget);
         actionLayout->setContentsMargins(0, 0, 0, 0);
         actionLayout->setSpacing(2);
@@ -727,7 +727,7 @@ void MainWindow::refreshBooks()
                 memberCombo->addItem(memberText, member->getId());
                 memberList << memberText;
             }
-            QCompleter* memberCompleter = new QCompleter(memberList, memberCombo);
+            auto* memberCompleter = new QCompleter(memberList, memberCombo);
             memberCompleter->setCaseSensitivity(Qt::CaseInsensitive);
             memberCombo->setCompleter(memberCompleter);
             form.addRow("Абонент:", memberCombo);
@@ -761,7 +761,7 @@ void MainWindow::refreshBooks()
                 employeeCombo->addItem(empText, emp->getId());
                 employeeList << empText;
             }
-            QCompleter* empCompleter = new QCompleter(employeeList, employeeCombo);
+            auto* empCompleter = new QCompleter(employeeList, employeeCombo);
             empCompleter->setCaseSensitivity(Qt::CaseInsensitive);
             employeeCombo->setCompleter(empCompleter);
             form.addRow("Работник:", employeeCombo);
@@ -1034,7 +1034,7 @@ void MainWindow::refreshMembers()
         table->setItem(row, 5, booksItem);
 
         // Колонка 6 - Действия (кнопки)
-        QWidget* actionWidget = new QWidget();
+        auto* actionWidget = new QWidget();
         auto* actionLayout = new QHBoxLayout(actionWidget);
         actionLayout->setContentsMargins(0, 0, 0, 0);
         actionLayout->setSpacing(2);
@@ -1148,7 +1148,7 @@ void MainWindow::refreshEmployees()
         table->setItem(row, 4, new QTableWidgetItem(QString::number(emp->getWorkHours())));
 
         // Колонка 5 - Действия (кнопки)
-        QWidget* actionWidget = new QWidget();
+        auto* actionWidget = new QWidget();
         auto* actionLayout = new QHBoxLayout(actionWidget);
         actionLayout->setContentsMargins(0, 0, 0, 0);
         actionLayout->setSpacing(2);
@@ -1697,7 +1697,7 @@ void MainWindow::onShowBookDetails(int bookId)
         rightLayoutPtr->addWidget(infoBoxPtr);
         // Кнопка открытия PDF
         QString pdfPath = QString::fromStdString(bookPtr->getPdfPath());
-        QPushButton* openPdfBtnPtr = nullptr;
+        auto* openPdfBtnPtr = static_cast<QPushButton*>(nullptr);
         if (!pdfPath.isEmpty() && QFile::exists(pdfPath)) {
             openPdfBtnPtr = new QPushButton("Открыть PDF", detailDialogPtr);
             connect(openPdfBtnPtr, &QPushButton::clicked, [pdfPath]() {
@@ -1708,7 +1708,7 @@ void MainWindow::onShowBookDetails(int bookId)
         }
         rightLayoutPtr->addStretch();
         // Кнопка закрытия
-        QPushButton* closeBtnPtr = new QPushButton("Закрыть", detailDialogPtr);
+        auto* closeBtnPtr = new QPushButton("Закрыть", detailDialogPtr);
         connect(closeBtnPtr, &QPushButton::clicked, detailDialogPtr, &QDialog::accept);
         rightLayoutPtr->addWidget(closeBtnPtr);
         mainLayoutPtr->addLayout(leftLayoutPtr);
@@ -2243,7 +2243,7 @@ void MainWindow::onShowMemberDetails(int memberId)
             
             // Добавляем кнопку возврата для не возвращенных книг
             if (!borrowedBook.returned) {
-                QPushButton* returnBtn = new QPushButton("Вернуть", detailDialog);
+                auto* returnBtn = new QPushButton("Вернуть", detailDialog);
                 returnBtn->setProperty("memberId", memberId);
                 returnBtn->setProperty("bookId", borrowedBook.bookId);
                 connect(returnBtn, &QPushButton::clicked, [this, detailDialog, memberId, bookId = borrowedBook.bookId]() {
@@ -2272,7 +2272,7 @@ void MainWindow::onShowMemberDetails(int memberId)
         mainLayout->addWidget(booksBox);
         
         // Кнопка закрытия
-        QPushButton* closeBtn = new QPushButton("Закрыть", detailDialog);
+        auto* closeBtn = new QPushButton("Закрыть", detailDialog);
         connect(closeBtn, &QPushButton::clicked, detailDialog, &QDialog::accept);
         mainLayout->addWidget(closeBtn);
         
@@ -2291,7 +2291,7 @@ void MainWindow::onShowOverdueBooks()
         auto allBooks = librarySystem.getAllBooks();
         
         // Создаем простое диалоговое окно
-        QDialog* overdueDialog = new QDialog(this);
+        auto* overdueDialog = new QDialog(this);
         overdueDialog->setWindowTitle("Отчет по задолженностям");
         overdueDialog->setMinimumSize(800, 400);
         overdueDialog->resize(1000, 500);
@@ -2299,7 +2299,7 @@ void MainWindow::onShowOverdueBooks()
         auto* mainLayout = new QVBoxLayout(overdueDialog);
         
         // Простой заголовок
-        QLabel* headerLabel = new QLabel(overdueDialog);
+        auto* headerLabel = new QLabel(overdueDialog);
         if (overdue.empty()) {
             headerLabel->setText(QString("<h3>Нет задолженностей по книгам</h3>"));
         } else {
@@ -2309,7 +2309,7 @@ void MainWindow::onShowOverdueBooks()
         
         if (!overdue.empty()) {
             // Таблица задолженностей
-            QTableWidget* overdueTable = new QTableWidget(overdueDialog);
+            auto* overdueTable = new QTableWidget(overdueDialog);
             overdueTable->setColumnCount(6);
             overdueTable->setHorizontalHeaderLabels({"Абонент", "Телефон", "Название книги", "Дата взятия", "Дата возврата", "Дней просрочки"});
             
@@ -2399,7 +2399,7 @@ void MainWindow::onShowOverdueBooks()
         }
         
         // Кнопка закрытия
-        QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Close, overdueDialog);
+        auto* buttonBox = new QDialogButtonBox(QDialogButtonBox::Close, overdueDialog);
         connect(buttonBox, &QDialogButtonBox::rejected, overdueDialog, &QDialog::reject);
         mainLayout->addWidget(buttonBox);
         
@@ -2489,9 +2489,9 @@ void MainWindow::onAddLibrarian()
     dialog.setWindowTitle("Добавить библиотекаря");
     QFormLayout form(&dialog);
     
-    QLineEdit* nameEdit = new QLineEdit(&dialog);
-    QLineEdit* surnameEdit = new QLineEdit(&dialog);
-    QLineEdit* phoneEdit = new QLineEdit(&dialog);
+    auto* nameEdit = new QLineEdit(&dialog);
+    auto* surnameEdit = new QLineEdit(&dialog);
+    auto* phoneEdit = new QLineEdit(&dialog);
     auto* salaryEdit = new QDoubleSpinBox(&dialog);
     salaryEdit->setRange(0, 1000000);
     salaryEdit->setValue(50000);
@@ -2537,9 +2537,9 @@ void MainWindow::onAddManager()
     dialog.setWindowTitle("Добавить менеджера");
     QFormLayout form(&dialog);
     
-    QLineEdit* nameEdit = new QLineEdit(&dialog);
-    QLineEdit* surnameEdit = new QLineEdit(&dialog);
-    QLineEdit* phoneEdit = new QLineEdit(&dialog);
+    auto* nameEdit = new QLineEdit(&dialog);
+    auto* surnameEdit = new QLineEdit(&dialog);
+    auto* phoneEdit = new QLineEdit(&dialog);
     auto* salaryEdit = new QDoubleSpinBox(&dialog);
     salaryEdit->setRange(0, 1000000);
     salaryEdit->setValue(80000);
