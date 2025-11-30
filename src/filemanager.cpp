@@ -29,7 +29,7 @@ void FileManager::loadLibrarySystem(LibrarySystem& system, const std::string& ba
         
         // Обновляем доступность всех книг после загрузки всех данных
         auto allBooks = system.getAllBooks();
-        for (auto* book : allBooks) {
+        for (const auto* book : allBooks) {
             system.updateBookAvailability(book->getId());
         }
     } catch (const std::exception& e) {
@@ -37,7 +37,7 @@ void FileManager::loadLibrarySystem(LibrarySystem& system, const std::string& ba
     }
 }
 
-void FileManager::saveBooks(LibrarySystem& system, const std::string& filename) {
+void FileManager::saveBooks(const LibrarySystem& system, const std::string& filename) {
     std::ofstream file(filename);
     if (!file.is_open()) {
         throw FileException("Не удалось открыть файл: " + filename);
@@ -99,7 +99,7 @@ void FileManager::loadBooks(LibrarySystem& system, const std::string& filename) 
     file.close();
 }
 
-void FileManager::saveMembers(LibrarySystem& system, const std::string& filename) {
+void FileManager::saveMembers(const LibrarySystem& system, const std::string& filename) {
     std::ofstream file(filename);
     if (!file.is_open()) {
         throw FileException("Не удалось открыть файл: " + filename);
@@ -190,14 +190,14 @@ void FileManager::loadBorrowedBooks(LibrarySystem& system, const std::string& fi
     file.close();
 }
 
-void FileManager::saveEmployees(LibrarySystem& system, const std::string& filename) {
+void FileManager::saveEmployees(const LibrarySystem& system, const std::string& filename) {
     std::ofstream file(filename);
     if (!file.is_open()) {
         throw FileException("Не удалось открыть файл: " + filename);
     }
     
     auto allEmployees = system.getAllEmployees();
-    for (auto* emp : allEmployees) {
+    for (const auto* emp : allEmployees) {
         file << emp->getId() << "|"
              << emp->getName() << "|"
              << emp->getSurname() << "|"
@@ -207,12 +207,12 @@ void FileManager::saveEmployees(LibrarySystem& system, const std::string& filena
              << emp->getWorkHours() << "|";
         
         if (emp->getType() == "Librarian") {
-            auto* lib = dynamic_cast<Librarian*>(emp);
+            const auto* lib = dynamic_cast<const Librarian*>(emp);
             if (lib) {
                 file << lib->getBooksProcessed() << "\n";
             }
         } else if (emp->getType() == "Manager") {
-            auto* mgr = dynamic_cast<Manager*>(emp);
+            const auto* mgr = dynamic_cast<const Manager*>(emp);
             if (mgr) {
                 file << mgr->getEmployeesManaged() << "\n";
             }
@@ -248,7 +248,7 @@ void FileManager::loadEmployees(LibrarySystem& system, const std::string& filena
     file.close();
 }
 
-void FileManager::saveMetadata(LibrarySystem& system, const std::string& filename) {
+void FileManager::saveMetadata(const LibrarySystem& system, const std::string& filename) {
     std::ofstream file(filename);
     if (!file.is_open()) {
         throw FileException("Не удалось открыть файл: " + filename);

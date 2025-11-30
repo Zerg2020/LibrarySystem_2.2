@@ -11,16 +11,16 @@ public:
     static void loadLibrarySystem(LibrarySystem& system, const std::string& basePath);
     
 private:
-    static void saveBooks(LibrarySystem& system, const std::string& filename);
+    static void saveBooks(const LibrarySystem& system, const std::string& filename);
     static void loadBooks(LibrarySystem& system, const std::string& filename);
     
-    static void saveMembers(LibrarySystem& system, const std::string& filename);
+    static void saveMembers(const LibrarySystem& system, const std::string& filename);
     static void loadMembers(LibrarySystem& system, const std::string& filename);
     
-    static void saveEmployees(LibrarySystem& system, const std::string& filename);
+    static void saveEmployees(const LibrarySystem& system, const std::string& filename);
     static void loadEmployees(LibrarySystem& system, const std::string& filename);
     
-    static void saveMetadata(LibrarySystem& system, const std::string& filename);
+    static void saveMetadata(const LibrarySystem& system, const std::string& filename);
     static void loadMetadata(LibrarySystem& system, const std::string& filename);
     
     static void loadBorrowedBooks(LibrarySystem& system, const std::string& filename);

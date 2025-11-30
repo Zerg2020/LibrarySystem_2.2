@@ -376,7 +376,7 @@ private:
 public:
     RemoveEmployeeCommand(LibrarySystem* sys, int id) : system(sys), employeeId(id) {
         const Employee* emp = nullptr;
-        for (auto* e : sys->getAllEmployees()) {
+        for (const auto* e : sys->getAllEmployees()) {
             if (e->getId() == id) {
                 emp = e;
                 break;
@@ -428,7 +428,7 @@ public:
         : system(sys), employeeId(id), newName(n), newSurname(s), newPhone(p),
           newSalary(sal), newWorkHours(hours) {
         const Employee* emp = nullptr;
-        for (auto* e : sys->getAllEmployees()) {
+        for (const auto* e : sys->getAllEmployees()) {
             if (e->getId() == id) {
                 emp = e;
                 break;

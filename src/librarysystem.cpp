@@ -3,8 +3,7 @@
 #include "commands.h"
 #include <algorithm>
 
-LibrarySystem::LibrarySystem() {
-}
+LibrarySystem::LibrarySystem() = default;
 
 void LibrarySystem::addBook(const std::string& title, const std::string& author,
                             const std::string& isbn, int year, const std::string& genre,

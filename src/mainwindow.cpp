@@ -61,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent)
         refreshMembers();
         refreshEmployees();
         updateUndoRedoButtons();
-    } catch (const FileException& e) {
+    } catch (const FileException&) {
         // Игнорируем ошибки при первой загрузке (файлы могут не существовать)
     } catch (...) {
         // Игнорируем другие ошибки при первой загрузке
@@ -249,20 +249,20 @@ void MainWindow::setupBooksTab()
     // Убираем контекстное меню, добавим кнопки действий
     // Подключаем обработчик клика на заголовок для трехсостоятельной сортировки
     connect(booksTable->horizontalHeader(), &QHeaderView::sectionClicked, this, &MainWindow::onBookHeaderClicked);
-    connect(booksTable, &QTableWidget::itemDoubleClicked, this, [this](QTableWidgetItem* item) {
-        if (item != nullptr) {
-            int row = item->row();
-            QTableWidget* table = qobject_cast<QTableWidget*>(item->tableWidget());
-            if (table != nullptr) {
-                // Получаем ID из UserRole первой колонки (обложка) или второй (название)
-                QTableWidgetItem* item = table->item(row, 0);
-                if (item != nullptr) {
-                    int bookId = item->data(Qt::UserRole).toInt();
-                    if (bookId > 0) {
-                        onShowBookDetails(bookId);
-                    }
-                }
-            }
+    connect(booksTable, &QTableWidget::itemDoubleClicked, this, [this](const QTableWidgetItem* item) {
+        if (item == nullptr) return;
+        
+        int row = item->row();
+        const QTableWidget* table = qobject_cast<const QTableWidget*>(item->tableWidget());
+        if (table == nullptr) return;
+        
+        // Получаем ID из UserRole первой колонки (обложка) или второй (название)
+        const QTableWidgetItem* rowItem = table->item(row, 0);
+        if (rowItem == nullptr) return;
+        
+        int bookId = rowItem->data(Qt::UserRole).toInt();
+        if (bookId > 0) {
+            onShowBookDetails(bookId);
         }
     });
     
@@ -659,13 +659,16 @@ void MainWindow::refreshBooks()
         connect(editBtn, &QPushButton::clicked, this, [this, book]() {
             // Выделяем строку и вызываем редактирование
             QTableWidget* table = findChild<QTableWidget*>("booksTable");
-            if (table) {
-                for (int r = 0; r < table->rowCount(); ++r) {
-                    QTableWidgetItem* item = table->item(r, 0);
-                    if (item && item->data(Qt::UserRole).toInt() == book->getId()) {
-                        table->selectRow(r);
-                        break;
-                    }
+            if (table == nullptr) {
+                onEditBook();
+                return;
+            }
+            
+            for (int r = 0; r < table->rowCount(); ++r) {
+                QTableWidgetItem* item = table->item(r, 0);
+                if (item && item->data(Qt::UserRole).toInt() == book->getId()) {
+                    table->selectRow(r);
+                    break;
                 }
             }
             onEditBook();
@@ -1052,9 +1055,11 @@ void MainWindow::refreshMembers()
         editBtn->setIconSize(QSize(22, 22));
         editBtn->setToolTip("Редактировать абонента");
         connect(editBtn, &QPushButton::clicked, this, [this, member]() {
-            if (QTableWidget* table = findChild<QTableWidget*>("membersTable"); table) {
+            QTableWidget* table = findChild<QTableWidget*>("membersTable");
+            if (table != nullptr) {
                 for (int r = 0; r < table->rowCount(); ++r) {
-                    if (QTableWidgetItem* item = table->item(r, 0); item && item->data(Qt::UserRole).toInt() == member->getId()) {
+                    QTableWidgetItem* item = table->item(r, 0);
+                    if (item && item->data(Qt::UserRole).toInt() == member->getId()) {
                         table->selectRow(r);
                         break;
                     }
@@ -1157,9 +1162,11 @@ void MainWindow::refreshEmployees()
         editBtn->setIconSize(QSize(22, 22));
         editBtn->setToolTip("Редактировать работника");
         connect(editBtn, &QPushButton::clicked, this, [this, emp]() {
-            if (QTableWidget* table = findChild<QTableWidget*>("employeesTable"); table) {
+            QTableWidget* table = findChild<QTableWidget*>("employeesTable");
+            if (table != nullptr) {
                 for (int r = 0; r < table->rowCount(); ++r) {
-                    if (QTableWidgetItem* item = table->item(r, 0); item && item->data(Qt::UserRole).toInt() == emp->getId()) {
+                    QTableWidgetItem* item = table->item(r, 0);
+                    if (item && item->data(Qt::UserRole).toInt() == emp->getId()) {
                         table->selectRow(r);
                         break;
                     }
@@ -1232,7 +1239,7 @@ void MainWindow::onAddBook()
     coverBoxLayout->addWidget(coverLabel);
     coverBoxLayout->addLayout(coverLayout);
     
-    connect(selectCoverBtn, &QPushButton::clicked, [&]() {
+    connect(selectCoverBtn, &QPushButton::clicked, [&dialog, &coverPath, coverLabel]() {
         QString fileName = QFileDialog::getOpenFileName(&dialog, "Выбрать обложку", "", 
                                                         "Изображения (*.png *.jpg *.jpeg *.bmp *.gif)");
         if (!fileName.isEmpty()) {
@@ -1246,7 +1253,7 @@ void MainWindow::onAddBook()
         }
     });
     
-    connect(clearCoverBtn, &QPushButton::clicked, [&]() {
+    connect(clearCoverBtn, &QPushButton::clicked, [&coverPath, coverLabel]() {
         coverPath = "";
         coverLabel->clear();
         coverLabel->setText("Обложка не выбрана");
@@ -1267,7 +1274,7 @@ void MainWindow::onAddBook()
     pdfBoxLayout->addWidget(pdfLabel);
     pdfBoxLayout->addLayout(pdfLayout);
     
-    connect(selectPdfBtn, &QPushButton::clicked, [&]() {
+    connect(selectPdfBtn, &QPushButton::clicked, [&dialog, &pdfPath, pdfLabel]() {
         QString fileName = QFileDialog::getOpenFileName(&dialog, "Выбрать PDF файл", "", "PDF файлы (*.pdf)");
         if (!fileName.isEmpty()) {
             pdfPath = fileName;
@@ -1276,7 +1283,7 @@ void MainWindow::onAddBook()
         }
     });
     
-    connect(clearPdfBtn, &QPushButton::clicked, [&]() {
+    connect(clearPdfBtn, &QPushButton::clicked, [&pdfPath, pdfLabel]() {
         pdfPath = "";
         pdfLabel->setText("PDF не выбран");
     });
@@ -1434,7 +1441,7 @@ void MainWindow::onEditBook()
     coverBoxLayout->addWidget(coverLabel);
     coverBoxLayout->addLayout(coverLayout);
     
-    connect(selectCoverBtn, &QPushButton::clicked, [&]() {
+    connect(selectCoverBtn, &QPushButton::clicked, [&dialog, &coverPath, coverLabel]() {
         QString fileName = QFileDialog::getOpenFileName(&dialog, "Выбрать обложку", "", 
                                                         "Изображения (*.png *.jpg *.jpeg *.bmp *.gif)");
         if (!fileName.isEmpty()) {
@@ -1448,7 +1455,7 @@ void MainWindow::onEditBook()
         }
     });
     
-    connect(clearCoverBtn, &QPushButton::clicked, [&]() {
+    connect(clearCoverBtn, &QPushButton::clicked, [&coverPath, coverLabel]() {
         coverPath = "";
         coverLabel->clear();
         coverLabel->setText("Обложка не выбрана");
@@ -1475,7 +1482,7 @@ void MainWindow::onEditBook()
     pdfBoxLayout->addWidget(pdfLabel);
     pdfBoxLayout->addLayout(pdfLayout);
     
-    connect(selectPdfBtn, &QPushButton::clicked, [&]() {
+    connect(selectPdfBtn, &QPushButton::clicked, [&dialog, &pdfPath, pdfLabel]() {
         QString fileName = QFileDialog::getOpenFileName(&dialog, "Выбрать PDF файл", "", "PDF файлы (*.pdf)");
         if (!fileName.isEmpty()) {
             pdfPath = fileName;
@@ -1484,7 +1491,7 @@ void MainWindow::onEditBook()
         }
     });
     
-    connect(clearPdfBtn, &QPushButton::clicked, [&]() {
+    connect(clearPdfBtn, &QPushButton::clicked, [&pdfPath, pdfLabel]() {
         pdfPath = "";
         pdfLabel->setText("PDF не выбран");
     });
@@ -1637,7 +1644,7 @@ void MainWindow::onRemoveBook()
 void MainWindow::onShowBookDetails(int bookId)
 {
     try {
-        Book* bookPtr = librarySystem.findBook(bookId);
+        const Book* bookPtr = librarySystem.findBook(bookId);
         if (bookPtr == nullptr) {
             showError("Книга не найдена");
             return;
@@ -1783,7 +1790,7 @@ void MainWindow::onEditMember()
         return;
     }
     
-    LibraryMember* member = librarySystem.findMember(id);
+    const LibraryMember* member = librarySystem.findMember(id);
     if (!member) {
         showError("Абонент не найден");
         return;
@@ -2152,7 +2159,7 @@ void MainWindow::onSearchMember()
 void MainWindow::onShowMemberDetails(int memberId)
 {
     try {
-        LibraryMember* member = librarySystem.findMember(memberId);
+        const LibraryMember* member = librarySystem.findMember(memberId);
         if (!member) {
             showError("Абонент не найден");
             return;
@@ -2334,7 +2341,6 @@ void MainWindow::onShowOverdueBooks()
             QList<QPair<int, std::pair<const LibraryMember*, BorrowedBook>>> overdueWithDays;
             
             for (const auto& pair : overdue) {
-                const LibraryMember* member = pair.first;
                 BorrowedBook book = pair.second;
                 
                 // Парсим дату возврата
@@ -2595,8 +2601,8 @@ void MainWindow::onEditEmployee()
     int employeeId = item->data(Qt::UserRole).toInt();
     if (employeeId <= 0) return;
     
-    Employee* emp = nullptr;
-    for (auto* e : librarySystem.getAllEmployees()) {
+    const Employee* emp = nullptr;
+    for (const auto* e : librarySystem.getAllEmployees()) {
         if (e->getId() == employeeId) {
             emp = e;
             break;
