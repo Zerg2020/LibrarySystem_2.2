@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
         // Используем Segoe UI для Windows (современный и приятный шрифт)
         // Qt автоматически выберет ближайший доступный шрифт, если Segoe UI не найден
         QFont defaultFont("Segoe UI", 10);
-        app.setFont(defaultFont);
+        QApplication::setFont(defaultFont);
     
     // Создаем папку для данных, если её нет
     if (QDir dir; !dir.exists("data")) {
@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     MainWindow window;
     window.show();
     
-    return app.exec();
+    return QApplication::exec();
 }
 
 

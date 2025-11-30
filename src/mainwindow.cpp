@@ -102,13 +102,13 @@ void MainWindow::setupMenu()
     fileEditToolBar->setMovable(false);
     
     // Кнопки Файл
-    QPushButton* saveBtn = new QPushButton("Сохранить", this);
+    auto* saveBtn = new QPushButton("Сохранить", this);
     saveBtn->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
     saveBtn->setToolTip("Сохранить данные (Ctrl+S)");
     connect(saveBtn, &QPushButton::clicked, this, &MainWindow::onSave);
     fileEditToolBar->addWidget(saveBtn);
     
-    QPushButton* loadBtn = new QPushButton("Загрузить", this);
+    auto* loadBtn = new QPushButton("Загрузить", this);
     loadBtn->setIcon(style()->standardIcon(QStyle::SP_DialogOpenButton));
     loadBtn->setToolTip("Загрузить данные (Ctrl+O)");
     connect(loadBtn, &QPushButton::clicked, this, &MainWindow::onLoad);
@@ -117,7 +117,7 @@ void MainWindow::setupMenu()
     fileEditToolBar->addSeparator();
     
     // Кнопки Правка
-    QPushButton* undoBtn = new QPushButton("Назад", this);
+    auto* undoBtn = new QPushButton("Назад", this);
     undoBtn->setIcon(style()->standardIcon(QStyle::SP_ArrowLeft));
     undoBtn->setToolTip("Отменить действие (Ctrl+Z)");
     undoBtn->setObjectName("undoButton");
@@ -125,7 +125,7 @@ void MainWindow::setupMenu()
     undoBtn->setEnabled(false);
     fileEditToolBar->addWidget(undoBtn);
     
-    QPushButton* redoBtn = new QPushButton("Вперед", this);
+    auto* redoBtn = new QPushButton("Вперед", this);
     redoBtn->setIcon(style()->standardIcon(QStyle::SP_ArrowRight));
     redoBtn->setToolTip("Повторить действие (Ctrl+Y)");
     redoBtn->setObjectName("redoButton");
@@ -138,14 +138,14 @@ void MainWindow::setupMenu()
 void MainWindow::setupUI()
 {
     // Создаем универсальную панель кнопок над вкладками
-    QWidget* toolbarWidget = new QWidget(ui->centralwidget);
+    auto* toolbarWidget = new QWidget(ui->centralwidget);
     toolbarWidget->setObjectName("toolbarWidget");
-    QVBoxLayout* toolbarLayout = new QVBoxLayout(toolbarWidget);
+    auto* toolbarLayout = new QVBoxLayout(toolbarWidget);
     toolbarLayout->setContentsMargins(8, 6, 8, 6);
     toolbarLayout->setSpacing(6);
     
     // Кнопка "Добавить" в панели сверху (растянута на всю ширину, меняется в зависимости от вкладки)
-    QPushButton* addButton = new QPushButton("Добавить книгу", toolbarWidget);
+    auto* addButton = new QPushButton("Добавить книгу", toolbarWidget);
     addButton->setObjectName("addButton");
     addButton->setMinimumHeight(32);
     addButton->setIcon(style()->standardIcon(QStyle::SP_FileDialogNewFolder));
@@ -198,10 +198,10 @@ void MainWindow::setupUI()
 void MainWindow::setupBooksTab()
 {
     QWidget* booksTab = ui->tabWidget->widget(0);
-    QVBoxLayout* layout = new QVBoxLayout(booksTab);
+    auto* layout = new QVBoxLayout(booksTab);
     
     // Таблица книг
-    QTableWidget* booksTable = new QTableWidget(booksTab);
+    auto* booksTable = new QTableWidget(booksTab);
     booksTable->setObjectName("booksTable");
     // Устанавливаем больший шрифт для таблицы
     QFont tableFont = booksTable->font();
@@ -267,41 +267,41 @@ void MainWindow::setupBooksTab()
     });
     
     // Панель фильтров (все в одну строку) - перемещена наверх под кнопку "Добавить книгу"
-    QGroupBox* filtersGroup = new QGroupBox("Фильтры поиска", booksTab);
-    QHBoxLayout* filtersLayout = new QHBoxLayout(filtersGroup);
+    auto* filtersGroup = new QGroupBox("Фильтры поиска", booksTab);
+    auto* filtersLayout = new QHBoxLayout(filtersGroup);
     filtersLayout->setContentsMargins(8, 8, 8, 8);
     filtersLayout->setSpacing(6);
     
-    QLineEdit* titleFilter = new QLineEdit(filtersGroup);
+    auto* titleFilter = new QLineEdit(filtersGroup);
     titleFilter->setPlaceholderText("Название...");
     titleFilter->setObjectName("titleFilter");
     titleFilter->setMinimumWidth(220);
     connect(titleFilter, &QLineEdit::textChanged, this, &MainWindow::onFilterChanged);
     filtersLayout->addWidget(titleFilter);
     
-    QLineEdit* authorFilter = new QLineEdit(filtersGroup);
+    auto* authorFilter = new QLineEdit(filtersGroup);
     authorFilter->setPlaceholderText("Автор...");
     authorFilter->setObjectName("authorFilter");
     authorFilter->setMinimumWidth(220);
     connect(authorFilter, &QLineEdit::textChanged, this, &MainWindow::onFilterChanged);
     filtersLayout->addWidget(authorFilter);
     
-    QLineEdit* genreFilter = new QLineEdit(filtersGroup);
+    auto* genreFilter = new QLineEdit(filtersGroup);
     genreFilter->setPlaceholderText("Жанр...");
     genreFilter->setObjectName("genreFilter");
     genreFilter->setMinimumWidth(180);
     connect(genreFilter, &QLineEdit::textChanged, this, &MainWindow::onFilterChanged);
     filtersLayout->addWidget(genreFilter);
     
-    QLineEdit* isbnFilter = new QLineEdit(filtersGroup);
+    auto* isbnFilter = new QLineEdit(filtersGroup);
     isbnFilter->setPlaceholderText("ISBN...");
     isbnFilter->setObjectName("isbnFilter");
     isbnFilter->setMinimumWidth(180);
     connect(isbnFilter, &QLineEdit::textChanged, this, &MainWindow::onFilterChanged);
     filtersLayout->addWidget(isbnFilter);
     
-    QLabel* yearFromLabel = new QLabel("Год от:", filtersGroup);
-    QSpinBox* yearFromFilter = new QSpinBox(filtersGroup);
+    auto* yearFromLabel = new QLabel("Год от:", filtersGroup);
+    auto* yearFromFilter = new QSpinBox(filtersGroup);
     yearFromFilter->setRange(0, 9999);
     yearFromFilter->setValue(0);
     yearFromFilter->setSpecialValueText("Любой");
@@ -311,8 +311,8 @@ void MainWindow::setupBooksTab()
     filtersLayout->addWidget(yearFromLabel);
     filtersLayout->addWidget(yearFromFilter);
     
-    QLabel* yearToLabel = new QLabel("до:", filtersGroup);
-    QSpinBox* yearToFilter = new QSpinBox(filtersGroup);
+    auto* yearToLabel = new QLabel("до:", filtersGroup);
+    auto* yearToFilter = new QSpinBox(filtersGroup);
     yearToFilter->setRange(0, 9999);
     yearToFilter->setValue(0);
     yearToFilter->setSpecialValueText("Любой");
@@ -322,8 +322,8 @@ void MainWindow::setupBooksTab()
     filtersLayout->addWidget(yearToLabel);
     filtersLayout->addWidget(yearToFilter);
     
-    QLabel* availabilityLabel = new QLabel("Доступность:", filtersGroup);
-    QComboBox* availabilityFilter = new QComboBox(filtersGroup);
+    auto* availabilityLabel = new QLabel("Доступность:", filtersGroup);
+    auto* availabilityFilter = new QComboBox(filtersGroup);
     availabilityFilter->addItem("Все", -1);
     availabilityFilter->addItem("Доступна", 1);
     availabilityFilter->addItem("Недоступна", 0);
@@ -335,7 +335,7 @@ void MainWindow::setupBooksTab()
     
     filtersLayout->addStretch();
     
-    QPushButton* clearFiltersBtn = new QPushButton("Очистить", filtersGroup);
+    auto* clearFiltersBtn = new QPushButton("Очистить", filtersGroup);
     clearFiltersBtn->setMinimumWidth(120);
     connect(clearFiltersBtn, &QPushButton::clicked, this, &MainWindow::onClearFilters);
     filtersLayout->addWidget(clearFiltersBtn);
@@ -348,10 +348,10 @@ void MainWindow::setupBooksTab()
 void MainWindow::setupMembersTab()
 {
     QWidget* membersTab = ui->tabWidget->widget(1);
-    QVBoxLayout* layout = new QVBoxLayout(membersTab);
+    auto* layout = new QVBoxLayout(membersTab);
     
     // Таблица абонентов
-    QTableWidget* membersTable = new QTableWidget(membersTab);
+    auto* membersTable = new QTableWidget(membersTab);
     membersTable->setObjectName("membersTable");
     // Устанавливаем больший шрифт для таблицы
     QFont membersTableFont = membersTable->font();
@@ -387,41 +387,41 @@ void MainWindow::setupMembersTab()
     // Контекстное меню убрано, действия вынесены в отдельную колонку
     
     // Панель фильтров для абонентов (все в одну строку) - перемещена наверх под кнопку "Добавить абонента"
-    QGroupBox* memberFiltersGroup = new QGroupBox("Фильтры поиска", membersTab);
-    QHBoxLayout* memberFiltersLayout = new QHBoxLayout(memberFiltersGroup);
+    auto* memberFiltersGroup = new QGroupBox("Фильтры поиска", membersTab);
+    auto* memberFiltersLayout = new QHBoxLayout(memberFiltersGroup);
     memberFiltersLayout->setContentsMargins(8, 8, 8, 8);
     memberFiltersLayout->setSpacing(6);
     
-    QLineEdit* nameFilter = new QLineEdit(memberFiltersGroup);
+    auto* nameFilter = new QLineEdit(memberFiltersGroup);
     nameFilter->setPlaceholderText("Имя...");
     nameFilter->setObjectName("memberNameFilter");
     nameFilter->setMinimumWidth(180);
     connect(nameFilter, &QLineEdit::textChanged, this, &MainWindow::onMemberFilterChanged);
     memberFiltersLayout->addWidget(nameFilter);
     
-    QLineEdit* surnameFilter = new QLineEdit(memberFiltersGroup);
+    auto* surnameFilter = new QLineEdit(memberFiltersGroup);
     surnameFilter->setPlaceholderText("Фамилия...");
     surnameFilter->setObjectName("memberSurnameFilter");
     surnameFilter->setMinimumWidth(180);
     connect(surnameFilter, &QLineEdit::textChanged, this, &MainWindow::onMemberFilterChanged);
     memberFiltersLayout->addWidget(surnameFilter);
     
-    QLineEdit* phoneFilter = new QLineEdit(memberFiltersGroup);
+    auto* phoneFilter = new QLineEdit(memberFiltersGroup);
     phoneFilter->setPlaceholderText("Телефон...");
     phoneFilter->setObjectName("memberPhoneFilter");
     phoneFilter->setMinimumWidth(150);
     connect(phoneFilter, &QLineEdit::textChanged, this, &MainWindow::onMemberFilterChanged);
     memberFiltersLayout->addWidget(phoneFilter);
     
-    QLineEdit* emailFilter = new QLineEdit(memberFiltersGroup);
+    auto* emailFilter = new QLineEdit(memberFiltersGroup);
     emailFilter->setPlaceholderText("Email...");
     emailFilter->setObjectName("memberEmailFilter");
     emailFilter->setMinimumWidth(200);
     connect(emailFilter, &QLineEdit::textChanged, this, &MainWindow::onMemberFilterChanged);
     memberFiltersLayout->addWidget(emailFilter);
     
-    QLabel* blockedLabel = new QLabel("Статус:", memberFiltersGroup);
-    QComboBox* blockedFilter = new QComboBox(memberFiltersGroup);
+    auto* blockedLabel = new QLabel("Статус:", memberFiltersGroup);
+    auto* blockedFilter = new QComboBox(memberFiltersGroup);
     blockedFilter->addItem("Все", -1);
     blockedFilter->addItem("Не заблокирован", 0);
     blockedFilter->addItem("Заблокирован", 1);
@@ -433,7 +433,7 @@ void MainWindow::setupMembersTab()
     
     memberFiltersLayout->addStretch();
     
-    QPushButton* clearMemberFiltersBtn = new QPushButton("Очистить", memberFiltersGroup);
+    auto* clearMemberFiltersBtn = new QPushButton("Очистить", memberFiltersGroup);
     clearMemberFiltersBtn->setMinimumWidth(120);
     connect(clearMemberFiltersBtn, &QPushButton::clicked, this, &MainWindow::onClearMemberFilters);
     memberFiltersLayout->addWidget(clearMemberFiltersBtn);
@@ -446,10 +446,10 @@ void MainWindow::setupMembersTab()
 void MainWindow::setupEmployeesTab()
 {
     QWidget* employeesTab = ui->tabWidget->widget(2);
-    QVBoxLayout* layout = new QVBoxLayout(employeesTab);
+    auto* layout = new QVBoxLayout(employeesTab);
     
     // Таблица работников
-    QTableWidget* employeesTable = new QTableWidget(employeesTab);
+    auto* employeesTable = new QTableWidget(employeesTab);
     employeesTable->setObjectName("employeesTable");
     // Устанавливаем больший шрифт для таблицы
     QFont employeesTableFont = employeesTable->font();
@@ -487,12 +487,12 @@ void MainWindow::setupEmployeesTab()
 void MainWindow::setupOperationsTab()
 {
     QWidget* operationsTab = ui->tabWidget->widget(3);
-    QVBoxLayout* layout = new QVBoxLayout(operationsTab);
+    auto* layout = new QVBoxLayout(operationsTab);
     
     // Кнопки операций
-    QPushButton* borrowBtn = new QPushButton("Выдать книгу", operationsTab);
-    QPushButton* returnBtn = new QPushButton("Вернуть книгу", operationsTab);
-    QPushButton* overdueBtn = new QPushButton("Показать задолженности", operationsTab);
+    auto* borrowBtn = new QPushButton("Выдать книгу", operationsTab);
+    auto* returnBtn = new QPushButton("Вернуть книгу", operationsTab);
+    auto* overdueBtn = new QPushButton("Показать задолженности", operationsTab);
     
     connect(borrowBtn, &QPushButton::clicked, this, &MainWindow::onBorrowBook);
     connect(returnBtn, &QPushButton::clicked, this, &MainWindow::onReturnBook);
@@ -504,7 +504,7 @@ void MainWindow::setupOperationsTab()
     layout->addStretch();
     
     // Текстовое поле для вывода информации
-    QTextEdit* infoText = new QTextEdit(operationsTab);
+    auto* infoText = new QTextEdit(operationsTab);
     infoText->setObjectName("infoText");
     infoText->setReadOnly(true);
     layout->addWidget(infoText);
@@ -512,7 +512,7 @@ void MainWindow::setupOperationsTab()
 
 void MainWindow::refreshBooks()
 {
-    QTableWidget* table = findChild<QTableWidget*>("booksTable");
+    auto* table = findChild<QTableWidget*>("booksTable");
     if (table == nullptr) return;
     
     table->setRowCount(0);
@@ -585,7 +585,7 @@ void MainWindow::refreshBooks()
         table->insertRow(row);
         
         // Колонка 0 - Обложка
-        QTableWidgetItem* coverItem = new QTableWidgetItem();
+        auto* coverItem = new QTableWidgetItem();
         if (QString coverPath = QString::fromStdString(book->getCoverPath()); !coverPath.isEmpty() && QFile::exists(coverPath)) {
             if (QPixmap pixmap(coverPath); !pixmap.isNull()) {
                 // Обложка в вертикальной пропорции книги (высота строки 180px, ширина колонки 120px)
@@ -612,7 +612,7 @@ void MainWindow::refreshBooks()
         table->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(book->getIsbn())));
         
         // Год (колонка 4) - числовая
-        QTableWidgetItem* yearItem = new QTableWidgetItem(QString::number(book->getYear()));
+        auto* yearItem = new QTableWidgetItem(QString::number(book->getYear()));
         yearItem->setData(Qt::UserRole, book->getYear());
         table->setItem(row, 4, yearItem);
         
@@ -620,14 +620,14 @@ void MainWindow::refreshBooks()
         table->setItem(row, 6, new QTableWidgetItem(book->isAvailable() ? "Да" : "Нет"));
         
         // Количество (колонка 7) - числовая, выровнено по центру
-        QTableWidgetItem* quantityItem = new QTableWidgetItem(QString::number(book->getQuantity()));
+        auto* quantityItem = new QTableWidgetItem(QString::number(book->getQuantity()));
         quantityItem->setData(Qt::UserRole, book->getQuantity());
         quantityItem->setTextAlignment(Qt::AlignCenter);
         table->setItem(row, 7, quantityItem);
         
         // Колонка описания - многострочное описание
         QString description = QString::fromStdString(book->getDescription());
-        QLabel* descriptionLabel = new QLabel(description);
+        auto* descriptionLabel = new QLabel(description);
         descriptionLabel->setWordWrap(true);
         descriptionLabel->setTextInteractionFlags(Qt::NoTextInteraction);
         descriptionLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
@@ -638,12 +638,12 @@ void MainWindow::refreshBooks()
 
         // Колонка 9 - Действия (кнопки)
         QWidget* actionWidget = new QWidget();
-        QHBoxLayout* actionLayout = new QHBoxLayout(actionWidget);
+        auto* actionLayout = new QHBoxLayout(actionWidget);
         actionLayout->setContentsMargins(0, 0, 0, 0);
         actionLayout->setSpacing(2);
 
         // Кнопка "Инфо"
-        QPushButton* infoBtn = new QPushButton();
+        auto* infoBtn = new QPushButton();
         infoBtn->setIcon(style()->standardIcon(QStyle::SP_MessageBoxInformation));
         infoBtn->setIconSize(QSize(22, 22));
         infoBtn->setToolTip("Информация о книге");
@@ -652,13 +652,13 @@ void MainWindow::refreshBooks()
         actionLayout->addWidget(infoBtn);
 
         // Кнопка "Редактировать"
-        QPushButton* editBtn = new QPushButton();
+        auto* editBtn = new QPushButton();
         editBtn->setIcon(style()->standardIcon(QStyle::SP_FileDialogContentsView));
         editBtn->setIconSize(QSize(22, 22));
         editBtn->setToolTip("Редактировать книгу");
         connect(editBtn, &QPushButton::clicked, this, [this, book]() {
             // Выделяем строку и вызываем редактирование
-            QTableWidget* table = findChild<QTableWidget*>("booksTable");
+            auto* table = findChild<QTableWidget*>("booksTable");
             if (table == nullptr) {
                 onEditBook();
                 return;
@@ -676,7 +676,7 @@ void MainWindow::refreshBooks()
         actionLayout->addWidget(editBtn);
 
         // Кнопка "Удалить"
-        QPushButton* delBtn = new QPushButton();
+        auto* delBtn = new QPushButton();
         delBtn->setIcon(createRedCrossIcon());
         delBtn->setIconSize(QSize(22, 22));
         delBtn->setToolTip("Удалить книгу");
@@ -698,7 +698,7 @@ void MainWindow::refreshBooks()
 
         // Кнопка "PDF"
         if (!pdfPath.isEmpty() && QFile::exists(pdfPath)) {
-            QPushButton* pdfBtn = new QPushButton();
+            auto* pdfBtn = new QPushButton();
             pdfBtn->setIcon(style()->standardIcon(QStyle::SP_FileIcon));
             pdfBtn->setIconSize(QSize(22, 22));
             pdfBtn->setToolTip("Открыть PDF");
@@ -712,7 +712,7 @@ void MainWindow::refreshBooks()
         }
 
         // Кнопка "Выдать"
-        QPushButton* borrowBtn = new QPushButton();
+        auto* borrowBtn = new QPushButton();
         borrowBtn->setIcon(style()->standardIcon(QStyle::SP_DialogApplyButton));
         borrowBtn->setIconSize(QSize(22, 22));
         borrowBtn->setToolTip("Выдать книгу");
@@ -721,7 +721,7 @@ void MainWindow::refreshBooks()
             dialog.setWindowTitle("Выдать книгу");
             QFormLayout form(&dialog);
             // Поиск по пользователям
-            QComboBox* memberCombo = new QComboBox(&dialog);
+            auto* memberCombo = new QComboBox(&dialog);
             memberCombo->setEditable(true);
             QStringList memberList;
             auto members = librarySystem.getAllMembers();
@@ -736,7 +736,7 @@ void MainWindow::refreshBooks()
             form.addRow("Абонент:", memberCombo);
 
             // Поиск по книгам
-            QComboBox* bookCombo = new QComboBox(&dialog);
+            auto* bookCombo = new QComboBox(&dialog);
             bookCombo->setEditable(true);
             QStringList bookList;
             auto books = librarySystem.getAllBooks();
@@ -754,7 +754,7 @@ void MainWindow::refreshBooks()
             form.addRow("Книга:", bookCombo);
 
             // Поиск по работникам
-            QComboBox* employeeCombo = new QComboBox(&dialog);
+            auto* employeeCombo = new QComboBox(&dialog);
             employeeCombo->setEditable(true);
             QStringList employeeList;
             auto employees = librarySystem.getAllEmployees();
@@ -808,13 +808,13 @@ void MainWindow::onSearchBooks(const QString& text)
 void MainWindow::onFilterChanged()
 {
     // Обновляем фильтры из полей ввода
-    QLineEdit* titleFilter = findChild<QLineEdit*>("titleFilter");
-    QLineEdit* authorFilter = findChild<QLineEdit*>("authorFilter");
-    QLineEdit* genreFilter = findChild<QLineEdit*>("genreFilter");
-    QLineEdit* isbnFilter = findChild<QLineEdit*>("isbnFilter");
-    QSpinBox* yearFromFilter = findChild<QSpinBox*>("yearFromFilter");
-    QSpinBox* yearToFilter = findChild<QSpinBox*>("yearToFilter");
-    QComboBox* availabilityFilter = findChild<QComboBox*>("availabilityFilter");
+    auto* titleFilter = findChild<QLineEdit*>("titleFilter");
+    auto* authorFilter = findChild<QLineEdit*>("authorFilter");
+    auto* genreFilter = findChild<QLineEdit*>("genreFilter");
+    auto* isbnFilter = findChild<QLineEdit*>("isbnFilter");
+    auto* yearFromFilter = findChild<QSpinBox*>("yearFromFilter");
+    auto* yearToFilter = findChild<QSpinBox*>("yearToFilter");
+    auto* availabilityFilter = findChild<QComboBox*>("availabilityFilter");
     
     if (titleFilter) bookFilters.title = titleFilter->text();
     if (authorFilter) bookFilters.author = authorFilter->text();
@@ -833,13 +833,13 @@ void MainWindow::onClearFilters()
     bookFilters = BookFilters();
     
     // Очищаем поля ввода
-    QLineEdit* titleFilter = findChild<QLineEdit*>("titleFilter");
-    QLineEdit* authorFilter = findChild<QLineEdit*>("authorFilter");
-    QLineEdit* genreFilter = findChild<QLineEdit*>("genreFilter");
-    QLineEdit* isbnFilter = findChild<QLineEdit*>("isbnFilter");
-    QSpinBox* yearFromFilter = findChild<QSpinBox*>("yearFromFilter");
-    QSpinBox* yearToFilter = findChild<QSpinBox*>("yearToFilter");
-    QComboBox* availabilityFilter = findChild<QComboBox*>("availabilityFilter");
+    auto* titleFilter = findChild<QLineEdit*>("titleFilter");
+    auto* authorFilter = findChild<QLineEdit*>("authorFilter");
+    auto* genreFilter = findChild<QLineEdit*>("genreFilter");
+    auto* isbnFilter = findChild<QLineEdit*>("isbnFilter");
+    auto* yearFromFilter = findChild<QSpinBox*>("yearFromFilter");
+    auto* yearToFilter = findChild<QSpinBox*>("yearToFilter");
+    auto* availabilityFilter = findChild<QComboBox*>("availabilityFilter");
     
     if (titleFilter) titleFilter->clear();
     if (authorFilter) authorFilter->clear();
@@ -873,7 +873,7 @@ void MainWindow::onBookHeaderClicked(int column)
     bookSortStates[column] = newState;
     
     // Обновляем отображение заголовков
-    QTableWidget* table = findChild<QTableWidget*>("booksTable");
+    auto* table = findChild<QTableWidget*>("booksTable");
     if (table == nullptr) return;
     
     QHeaderView* header = table->horizontalHeader();
@@ -983,14 +983,14 @@ void MainWindow::refreshMembers()
         table->insertRow(row);
         
         // Сохраняем ID в UserRole первой колонки (Имя)
-        QTableWidgetItem* nameItem = new QTableWidgetItem(QString::fromStdString(member->getName()));
+        auto* nameItem = new QTableWidgetItem(QString::fromStdString(member->getName()));
         nameItem->setData(Qt::UserRole, member->getId());
         table->setItem(row, 0, nameItem);
         table->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(member->getSurname())));
         table->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(member->getPhone())));
         table->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(member->getEmail())));
         // Колонка "Заблокирован" - выровнена по центру
-        QTableWidgetItem* blockedItem = new QTableWidgetItem(member->getIsBlocked() ? "Да" : "Нет");
+        auto* blockedItem = new QTableWidgetItem(member->getIsBlocked() ? "Да" : "Нет");
         blockedItem->setTextAlignment(Qt::AlignCenter);
         table->setItem(row, 4, blockedItem);
         
@@ -1028,7 +1028,7 @@ void MainWindow::refreshMembers()
             }
         }
         
-        QTableWidgetItem* booksItem = new QTableWidgetItem(booksInfo);
+        auto* booksItem = new QTableWidgetItem(booksInfo);
         // Выделяем цветом, если есть книги на руках
         if (notReturnedCount > 0) {
             booksItem->setForeground(QBrush(QColor(255, 140, 0))); // Оранжевый цвет
@@ -1037,12 +1037,12 @@ void MainWindow::refreshMembers()
 
         // Колонка 6 - Действия (кнопки)
         QWidget* actionWidget = new QWidget();
-        QHBoxLayout* actionLayout = new QHBoxLayout(actionWidget);
+        auto* actionLayout = new QHBoxLayout(actionWidget);
         actionLayout->setContentsMargins(0, 0, 0, 0);
         actionLayout->setSpacing(2);
 
         // Кнопка "Инфо"
-        QPushButton* infoBtn = new QPushButton();
+        auto* infoBtn = new QPushButton();
         infoBtn->setIcon(style()->standardIcon(QStyle::SP_MessageBoxInformation));
         infoBtn->setIconSize(QSize(22, 22));
         infoBtn->setToolTip("Информация об абоненте");
@@ -1050,7 +1050,7 @@ void MainWindow::refreshMembers()
         actionLayout->addWidget(infoBtn);
 
         // Кнопка "Редактировать"
-        QPushButton* editBtn = new QPushButton();
+        auto* editBtn = new QPushButton();
         editBtn->setIcon(style()->standardIcon(QStyle::SP_FileDialogContentsView));
         editBtn->setIconSize(QSize(22, 22));
         editBtn->setToolTip("Редактировать абонента");
@@ -1070,7 +1070,7 @@ void MainWindow::refreshMembers()
         actionLayout->addWidget(editBtn);
 
         // Кнопка "Блок/Разблок"
-        QPushButton* blockBtn = new QPushButton();
+        auto* blockBtn = new QPushButton();
         blockBtn->setIconSize(QSize(22, 22));
         if (member->getIsBlocked()) {
             blockBtn->setIcon(style()->standardIcon(QStyle::SP_DialogResetButton));
@@ -1104,7 +1104,7 @@ void MainWindow::refreshMembers()
         actionLayout->addWidget(blockBtn);
 
         // Кнопка "Удалить"
-        QPushButton* delBtn = new QPushButton();
+        auto* delBtn = new QPushButton();
         delBtn->setIcon(createRedCrossIcon());
         delBtn->setIconSize(QSize(22, 22));
         delBtn->setToolTip("Удалить абонента");
@@ -1142,7 +1142,7 @@ void MainWindow::refreshEmployees()
         table->insertRow(row);
         
         // Сохраняем ID в UserRole первой колонки (Имя)
-        QTableWidgetItem* nameItem = new QTableWidgetItem(QString::fromStdString(emp->getName()));
+        auto* nameItem = new QTableWidgetItem(QString::fromStdString(emp->getName()));
         nameItem->setData(Qt::UserRole, emp->getId());
         table->setItem(row, 0, nameItem);
         table->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(emp->getSurname())));
@@ -1152,12 +1152,12 @@ void MainWindow::refreshEmployees()
 
         // Колонка 5 - Действия (кнопки)
         QWidget* actionWidget = new QWidget();
-        QHBoxLayout* actionLayout = new QHBoxLayout(actionWidget);
+        auto* actionLayout = new QHBoxLayout(actionWidget);
         actionLayout->setContentsMargins(0, 0, 0, 0);
         actionLayout->setSpacing(2);
 
         // Кнопка "Редактировать"
-        QPushButton* editBtn = new QPushButton();
+        auto* editBtn = new QPushButton();
         editBtn->setIcon(style()->standardIcon(QStyle::SP_FileDialogContentsView));
         editBtn->setIconSize(QSize(22, 22));
         editBtn->setToolTip("Редактировать работника");
@@ -1177,7 +1177,7 @@ void MainWindow::refreshEmployees()
         actionLayout->addWidget(editBtn);
 
         // Кнопка "Удалить"
-        QPushButton* delBtn = new QPushButton();
+        auto* delBtn = new QPushButton();
         delBtn->setIcon(createRedCrossIcon());
         delBtn->setIconSize(QSize(22, 22));
         delBtn->setToolTip("Удалить работника");
@@ -1208,34 +1208,34 @@ void MainWindow::onAddBook()
     dialog.setWindowTitle("Добавить книгу");
     QFormLayout form(&dialog);
     
-    QLineEdit* titleEdit = new QLineEdit(&dialog);
-    QLineEdit* authorEdit = new QLineEdit(&dialog);
-    QLineEdit* isbnEdit = new QLineEdit(&dialog);
-    QSpinBox* yearEdit = new QSpinBox(&dialog);
+    auto* titleEdit = new QLineEdit(&dialog);
+    auto* authorEdit = new QLineEdit(&dialog);
+    auto* isbnEdit = new QLineEdit(&dialog);
+    auto* yearEdit = new QSpinBox(&dialog);
     yearEdit->setRange(1000, 9999);
     yearEdit->setValue(2024);
-    QLineEdit* genreEdit = new QLineEdit(&dialog);
-    QSpinBox* quantityEdit = new QSpinBox(&dialog);
+    auto* genreEdit = new QLineEdit(&dialog);
+    auto* quantityEdit = new QSpinBox(&dialog);
     quantityEdit->setRange(1, 10000);
     quantityEdit->setValue(1);
-    QTextEdit* descriptionEdit = new QTextEdit(&dialog);
+    auto* descriptionEdit = new QTextEdit(&dialog);
     descriptionEdit->setMaximumHeight(100);
     
     // Обложка книги
-    QLabel* coverLabel = new QLabel(&dialog);
+    auto* coverLabel = new QLabel(&dialog);
     coverLabel->setMinimumSize(200, 300);
     coverLabel->setAlignment(Qt::AlignCenter);
     coverLabel->setStyleSheet("border: 1px solid gray; background-color: #f0f0f0;");
     coverLabel->setText("Обложка не выбрана");
-    QPushButton* selectCoverBtn = new QPushButton("Выбрать обложку", &dialog);
-    QPushButton* clearCoverBtn = new QPushButton("Удалить обложку", &dialog);
+    auto* selectCoverBtn = new QPushButton("Выбрать обложку", &dialog);
+    auto* clearCoverBtn = new QPushButton("Удалить обложку", &dialog);
     QString coverPath;
     
-    QHBoxLayout* coverLayout = new QHBoxLayout();
+    auto* coverLayout = new QHBoxLayout();
     coverLayout->addWidget(selectCoverBtn);
     coverLayout->addWidget(clearCoverBtn);
     
-    QVBoxLayout* coverBoxLayout = new QVBoxLayout();
+    auto* coverBoxLayout = new QVBoxLayout();
     coverBoxLayout->addWidget(coverLabel);
     coverBoxLayout->addLayout(coverLayout);
     
@@ -1260,17 +1260,17 @@ void MainWindow::onAddBook()
     });
     
     // PDF файл книги
-    QLabel* pdfLabel = new QLabel(&dialog);
+    auto* pdfLabel = new QLabel(&dialog);
     pdfLabel->setText("PDF не выбран");
-    QPushButton* selectPdfBtn = new QPushButton("Выбрать PDF", &dialog);
-    QPushButton* clearPdfBtn = new QPushButton("Удалить PDF", &dialog);
+    auto* selectPdfBtn = new QPushButton("Выбрать PDF", &dialog);
+    auto* clearPdfBtn = new QPushButton("Удалить PDF", &dialog);
     QString pdfPath;
     
-    QHBoxLayout* pdfLayout = new QHBoxLayout();
+    auto* pdfLayout = new QHBoxLayout();
     pdfLayout->addWidget(selectPdfBtn);
     pdfLayout->addWidget(clearPdfBtn);
     
-    QVBoxLayout* pdfBoxLayout = new QVBoxLayout();
+    auto* pdfBoxLayout = new QVBoxLayout();
     pdfBoxLayout->addWidget(pdfLabel);
     pdfBoxLayout->addLayout(pdfLayout);
     
@@ -1373,7 +1373,7 @@ void MainWindow::onEditBook()
     }
     
     // Получаем ID из UserRole первой колонки (обложка)
-    QTableWidgetItem* item = booksTable->item(currentRow, 0);
+    auto* item = booksTable->item(currentRow, 0);
     if (item == nullptr) return;
     
     int bookId = item->data(Qt::UserRole).toInt();
@@ -1392,26 +1392,26 @@ void MainWindow::onEditBook()
     dialog.setWindowTitle("Редактировать книгу");
     QFormLayout form(&dialog);
     
-    QLineEdit* titleEdit = new QLineEdit(&dialog);
+    auto* titleEdit = new QLineEdit(&dialog);
     titleEdit->setText(QString::fromStdString(bookPtr->getTitle()));
-    QLineEdit* authorEdit = new QLineEdit(&dialog);
+    auto* authorEdit = new QLineEdit(&dialog);
     authorEdit->setText(QString::fromStdString(bookPtr->getAuthor()));
-    QLineEdit* isbnEdit = new QLineEdit(&dialog);
+    auto* isbnEdit = new QLineEdit(&dialog);
     isbnEdit->setText(QString::fromStdString(bookPtr->getIsbn()));
-    QSpinBox* yearEdit = new QSpinBox(&dialog);
+    auto* yearEdit = new QSpinBox(&dialog);
     yearEdit->setRange(1000, 9999);
     yearEdit->setValue(bookPtr->getYear());
-    QLineEdit* genreEdit = new QLineEdit(&dialog);
+    auto* genreEdit = new QLineEdit(&dialog);
     genreEdit->setText(QString::fromStdString(bookPtr->getGenre()));
-    QSpinBox* quantityEdit = new QSpinBox(&dialog);
+    auto* quantityEdit = new QSpinBox(&dialog);
     quantityEdit->setRange(1, 10000);
     quantityEdit->setValue(bookPtr->getQuantity());
-    QTextEdit* descriptionEdit = new QTextEdit(&dialog);
+    auto* descriptionEdit = new QTextEdit(&dialog);
     descriptionEdit->setMaximumHeight(100);
     descriptionEdit->setPlainText(QString::fromStdString(bookPtr->getDescription()));
     
     // Обложка книги
-    QLabel* coverLabel = new QLabel(&dialog);
+    auto* coverLabel = new QLabel(&dialog);
     coverLabel->setMinimumSize(200, 300);
     coverLabel->setAlignment(Qt::AlignCenter);
     coverLabel->setStyleSheet("border: 1px solid gray; background-color: #f0f0f0;");
@@ -1430,14 +1430,14 @@ void MainWindow::onEditBook()
         coverLabel->setText("Обложка не выбрана");
     }
     
-    QPushButton* selectCoverBtn = new QPushButton("Выбрать обложку", &dialog);
-    QPushButton* clearCoverBtn = new QPushButton("Удалить обложку", &dialog);
+    auto* selectCoverBtn = new QPushButton("Выбрать обложку", &dialog);
+    auto* clearCoverBtn = new QPushButton("Удалить обложку", &dialog);
     
-    QHBoxLayout* coverLayout = new QHBoxLayout();
+    auto* coverLayout = new QHBoxLayout();
     coverLayout->addWidget(selectCoverBtn);
     coverLayout->addWidget(clearCoverBtn);
     
-    QVBoxLayout* coverBoxLayout = new QVBoxLayout();
+    auto* coverBoxLayout = new QVBoxLayout();
     coverBoxLayout->addWidget(coverLabel);
     coverBoxLayout->addLayout(coverLayout);
     
@@ -1464,21 +1464,21 @@ void MainWindow::onEditBook()
     // PDF файл книги
     QString currentPdfPath = QString::fromStdString(bookPtr->getPdfPath());
     QString pdfPath = currentPdfPath;
-    QLabel* pdfLabel = new QLabel(&dialog);
+    auto* pdfLabel = new QLabel(&dialog);
     if (!currentPdfPath.isEmpty() && QFile::exists(currentPdfPath)) {
         QFileInfo fileInfo(currentPdfPath);
         pdfLabel->setText("PDF: " + fileInfo.fileName());
     } else {
         pdfLabel->setText("PDF не выбран");
     }
-    QPushButton* selectPdfBtn = new QPushButton("Выбрать PDF", &dialog);
-    QPushButton* clearPdfBtn = new QPushButton("Удалить PDF", &dialog);
+    auto* selectPdfBtn = new QPushButton("Выбрать PDF", &dialog);
+    auto* clearPdfBtn = new QPushButton("Удалить PDF", &dialog);
     
-    QHBoxLayout* pdfLayout = new QHBoxLayout();
+    auto* pdfLayout = new QHBoxLayout();
     pdfLayout->addWidget(selectPdfBtn);
     pdfLayout->addWidget(clearPdfBtn);
     
-    QVBoxLayout* pdfBoxLayout = new QVBoxLayout();
+    auto* pdfBoxLayout = new QVBoxLayout();
     pdfBoxLayout->addWidget(pdfLabel);
     pdfBoxLayout->addLayout(pdfLayout);
     
@@ -1496,14 +1496,14 @@ void MainWindow::onEditBook()
         pdfLabel->setText("PDF не выбран");
     });
     
-    QCheckBox* availableCheckBox = new QCheckBox(&dialog);
+    auto* availableCheckBox = new QCheckBox(&dialog);
     // Проверяем реальную доступность (с учетом количества и ручной блокировки)
     int borrowedCount = librarySystem.getBorrowedCount(bookId);
     int availableCount = bookPtr->getQuantity() - borrowedCount;
     bool actuallyAvailable = !bookPtr->getManuallyDisabled() && availableCount > 0;
     availableCheckBox->setChecked(actuallyAvailable);
     // Добавляем подсказку о количестве
-    QLabel* availabilityHint = new QLabel(&dialog);
+    auto* availabilityHint = new QLabel(&dialog);
     availabilityHint->setText(QString("Доступно экземпляров: %1 из %2").arg(availableCount).arg(bookPtr->getQuantity()));
     if (bookPtr->getManuallyDisabled()) {
         availabilityHint->setText(availabilityHint->text() + " (заблокировано вручную)");
@@ -1650,13 +1650,13 @@ void MainWindow::onShowBookDetails(int bookId)
             return;
         }
         // Создаем красивое окно с информацией о книге
-        QDialog* detailDialogPtr = new QDialog(this);
+        auto* detailDialogPtr = new QDialog(this);
         detailDialogPtr->setWindowTitle(QString("Информация о книге: %1").arg(QString::fromStdString(bookPtr->getTitle())));
         detailDialogPtr->setMinimumSize(600, 500);
-        QHBoxLayout* mainLayoutPtr = new QHBoxLayout(detailDialogPtr);
+        auto* mainLayoutPtr = new QHBoxLayout(detailDialogPtr);
         // Левая часть - обложка
-        QVBoxLayout* leftLayoutPtr = new QVBoxLayout();
-        QLabel* coverLabelPtr = new QLabel(detailDialogPtr);
+        auto* leftLayoutPtr = new QVBoxLayout();
+        auto* coverLabelPtr = new QLabel(detailDialogPtr);
         coverLabelPtr->setMinimumSize(200, 300);
         coverLabelPtr->setAlignment(Qt::AlignCenter);
         coverLabelPtr->setStyleSheet("border: 2px solid gray; background-color: #f0f0f0;");
@@ -1673,18 +1673,18 @@ void MainWindow::onShowBookDetails(int bookId)
         leftLayoutPtr->addWidget(coverLabelPtr);
         leftLayoutPtr->addStretch();
         // Правая часть - информация
-        QVBoxLayout* rightLayoutPtr = new QVBoxLayout();
-        QFormLayout* infoLayoutPtr = new QFormLayout();
-        QLabel* idLabel = new QLabel(QString::number(bookPtr->getId()));
-        QLabel* titleLabel = new QLabel(QString::fromStdString(bookPtr->getTitle()));
+        auto* rightLayoutPtr = new QVBoxLayout();
+        auto* infoLayoutPtr = new QFormLayout();
+        auto* idLabel = new QLabel(QString::number(bookPtr->getId()));
+        auto* titleLabel = new QLabel(QString::fromStdString(bookPtr->getTitle()));
         titleLabel->setWordWrap(true);
-        QLabel* authorLabel = new QLabel(QString::fromStdString(bookPtr->getAuthor()));
-        QLabel* isbnLabel = new QLabel(QString::fromStdString(bookPtr->getIsbn()));
-        QLabel* yearLabel = new QLabel(QString::number(bookPtr->getYear()));
-        QLabel* genreLabel = new QLabel(QString::fromStdString(bookPtr->getGenre()));
-        QLabel* availableLabel = new QLabel(bookPtr->isAvailable() ? "Да" : "Нет");
-        QLabel* quantityLabel = new QLabel(QString::number(bookPtr->getQuantity()));
-        QLabel* descriptionLabel = new QLabel(QString::fromStdString(bookPtr->getDescription()));
+        auto* authorLabel = new QLabel(QString::fromStdString(bookPtr->getAuthor()));
+        auto* isbnLabel = new QLabel(QString::fromStdString(bookPtr->getIsbn()));
+        auto* yearLabel = new QLabel(QString::number(bookPtr->getYear()));
+        auto* genreLabel = new QLabel(QString::fromStdString(bookPtr->getGenre()));
+        auto* availableLabel = new QLabel(bookPtr->isAvailable() ? "Да" : "Нет");
+        auto* quantityLabel = new QLabel(QString::number(bookPtr->getQuantity()));
+        auto* descriptionLabel = new QLabel(QString::fromStdString(bookPtr->getDescription()));
         descriptionLabel->setWordWrap(true);
         descriptionLabel->setMaximumWidth(300);
         infoLayoutPtr->addRow("ID:", idLabel);
@@ -1696,7 +1696,7 @@ void MainWindow::onShowBookDetails(int bookId)
         infoLayoutPtr->addRow("Количество:", quantityLabel);
         infoLayoutPtr->addRow("Доступна:", availableLabel);
         infoLayoutPtr->addRow("Описание:", descriptionLabel);
-        QGroupBox* infoBoxPtr = new QGroupBox("Информация о книге", detailDialogPtr);
+        auto* infoBoxPtr = new QGroupBox("Информация о книге", detailDialogPtr);
         infoBoxPtr->setLayout(infoLayoutPtr);
         rightLayoutPtr->addWidget(infoBoxPtr);
         // Кнопка открытия PDF
@@ -1731,10 +1731,10 @@ void MainWindow::onAddMember()
     dialog.setWindowTitle("Добавить абонента");
     QFormLayout form(&dialog);
     
-    QLineEdit* nameEdit = new QLineEdit(&dialog);
-    QLineEdit* surnameEdit = new QLineEdit(&dialog);
-    QLineEdit* phoneEdit = new QLineEdit(&dialog);
-    QLineEdit* emailEdit = new QLineEdit(&dialog);
+    auto* nameEdit = new QLineEdit(&dialog);
+    auto* surnameEdit = new QLineEdit(&dialog);
+    auto* phoneEdit = new QLineEdit(&dialog);
+    auto* emailEdit = new QLineEdit(&dialog);
     
     form.addRow("Имя:", nameEdit);
     form.addRow("Фамилия:", surnameEdit);
@@ -1781,7 +1781,7 @@ void MainWindow::onEditMember()
     }
     
     // Получаем ID из UserRole первой колонки (Имя)
-    QTableWidgetItem* nameItem = membersTable->item(currentRow, 0);
+    auto* nameItem = membersTable->item(currentRow, 0);
     if (!nameItem) return;
     
     int id = nameItem->data(Qt::UserRole).toInt();
@@ -1800,13 +1800,13 @@ void MainWindow::onEditMember()
     dialog.setWindowTitle("Редактировать абонента");
     QFormLayout form(&dialog);
     
-    QLineEdit* nameEdit = new QLineEdit(&dialog);
+    auto* nameEdit = new QLineEdit(&dialog);
     nameEdit->setText(QString::fromStdString(member->getName()));
-    QLineEdit* surnameEdit = new QLineEdit(&dialog);
+    auto* surnameEdit = new QLineEdit(&dialog);
     surnameEdit->setText(QString::fromStdString(member->getSurname()));
-    QLineEdit* phoneEdit = new QLineEdit(&dialog);
+    auto* phoneEdit = new QLineEdit(&dialog);
     phoneEdit->setText(QString::fromStdString(member->getPhone()));
-    QLineEdit* emailEdit = new QLineEdit(&dialog);
+    auto* emailEdit = new QLineEdit(&dialog);
     emailEdit->setText(QString::fromStdString(member->getEmail()));
     
     form.addRow("Имя:", nameEdit);
@@ -1898,7 +1898,7 @@ void MainWindow::onBorrowBook()
     QFormLayout form(&dialog);
 
     // Абонент с поиском
-    QComboBox* memberCombo = new QComboBox(&dialog);
+    auto* memberCombo = new QComboBox(&dialog);
     memberCombo->setEditable(true);
     QStringList memberList;
     auto members = librarySystem.getAllMembers();
@@ -1913,7 +1913,7 @@ void MainWindow::onBorrowBook()
     form.addRow("Абонент:", memberCombo);
 
     // Книга с поиском
-    QComboBox* bookCombo = new QComboBox(&dialog);
+    auto* bookCombo = new QComboBox(&dialog);
     bookCombo->setEditable(true);
     QStringList bookList;
     auto books = librarySystem.getAllBooks();
@@ -1928,7 +1928,7 @@ void MainWindow::onBorrowBook()
     form.addRow("Книга:", bookCombo);
 
     // Работник с поиском
-    QComboBox* employeeCombo = new QComboBox(&dialog);
+    auto* employeeCombo = new QComboBox(&dialog);
     employeeCombo->setEditable(true);
     QStringList employeeList;
     auto employees = librarySystem.getAllEmployees();
@@ -1971,7 +1971,7 @@ void MainWindow::onReturnBook()
     QFormLayout form(&dialog);
     
     // Абонент с поиском
-    QComboBox* memberCombo = new QComboBox(&dialog);
+    auto* memberCombo = new QComboBox(&dialog);
     memberCombo->setEditable(true);
     QStringList memberList;
     auto members = librarySystem.getAllMembers();
@@ -1986,7 +1986,7 @@ void MainWindow::onReturnBook()
     form.addRow("Абонент:", memberCombo);
     
     // Книга с поиском (только взятые книги выбранного абонента)
-    QComboBox* bookCombo = new QComboBox(&dialog);
+    auto* bookCombo = new QComboBox(&dialog);
     bookCombo->setEditable(true);
     bookCombo->setEnabled(false); // Будет активирован после выбора абонента
     
@@ -2076,10 +2076,10 @@ void MainWindow::onSearchMember()
     dialog.setWindowTitle("Поиск абонента");
     QFormLayout form(&dialog);
     
-    QLineEdit* nameEdit = new QLineEdit(&dialog);
-    QLineEdit* surnameEdit = new QLineEdit(&dialog);
-    QLineEdit* phoneEdit = new QLineEdit(&dialog);
-    QLineEdit* emailEdit = new QLineEdit(&dialog);
+    auto* nameEdit = new QLineEdit(&dialog);
+    auto* surnameEdit = new QLineEdit(&dialog);
+    auto* phoneEdit = new QLineEdit(&dialog);
+    auto* emailEdit = new QLineEdit(&dialog);
     
     form.addRow("Имя:", nameEdit);
     form.addRow("Фамилия:", surnameEdit);
@@ -2170,22 +2170,22 @@ void MainWindow::onShowMemberDetails(int memberId)
         auto allEmployees = librarySystem.getAllEmployees();
         
         // Создаем красивое окно с информацией
-        QDialog* detailDialog = new QDialog(this);
+        auto* detailDialog = new QDialog(this);
         detailDialog->setWindowTitle(QString("Информация об абоненте: %1").arg(memberId));
         detailDialog->setMinimumSize(1100, 600);
         detailDialog->resize(1200, 700);
         
-        QVBoxLayout* mainLayout = new QVBoxLayout(detailDialog);
+        auto* mainLayout = new QVBoxLayout(detailDialog);
         
         // Информация об абоненте
-        QGroupBox* memberInfoBox = new QGroupBox("Информация об абоненте", detailDialog);
-        QFormLayout* memberLayout = new QFormLayout(memberInfoBox);
+        auto* memberInfoBox = new QGroupBox("Информация об абоненте", detailDialog);
+        auto* memberLayout = new QFormLayout(memberInfoBox);
         
-        QLabel* idLabel = new QLabel(QString::number(member->getId()));
-        QLabel* nameLabel = new QLabel(QString::fromStdString(member->getFullName()));
-        QLabel* phoneLabel = new QLabel(QString::fromStdString(member->getPhone()));
-        QLabel* emailLabel = new QLabel(QString::fromStdString(member->getEmail()));
-        QLabel* blockedLabel = new QLabel(member->getIsBlocked() ? "Да" : "Нет");
+        auto* idLabel = new QLabel(QString::number(member->getId()));
+        auto* nameLabel = new QLabel(QString::fromStdString(member->getFullName()));
+        auto* phoneLabel = new QLabel(QString::fromStdString(member->getPhone()));
+        auto* emailLabel = new QLabel(QString::fromStdString(member->getEmail()));
+        auto* blockedLabel = new QLabel(member->getIsBlocked() ? "Да" : "Нет");
         
         memberLayout->addRow("ID:", idLabel);
         memberLayout->addRow("ФИО:", nameLabel);
@@ -2196,10 +2196,10 @@ void MainWindow::onShowMemberDetails(int memberId)
         mainLayout->addWidget(memberInfoBox);
         
         // Таблица взятых книг
-        QGroupBox* booksBox = new QGroupBox("Взятые книги", detailDialog);
-        QVBoxLayout* booksLayout = new QVBoxLayout(booksBox);
+        auto* booksBox = new QGroupBox("Взятые книги", detailDialog);
+        auto* booksLayout = new QVBoxLayout(booksBox);
         
-        QTableWidget* booksTable = new QTableWidget(detailDialog);
+        auto* booksTable = new QTableWidget(detailDialog);
         booksTable->setColumnCount(6);
         booksTable->setHorizontalHeaderLabels({"Название", "Дата взятия", "Дата возврата", "Возвращена", "Выдал работник", "Действие"});
         
@@ -2300,7 +2300,7 @@ void MainWindow::onShowOverdueBooks()
         overdueDialog->setMinimumSize(800, 400);
         overdueDialog->resize(1000, 500);
         
-        QVBoxLayout* mainLayout = new QVBoxLayout(overdueDialog);
+        auto* mainLayout = new QVBoxLayout(overdueDialog);
         
         // Простой заголовок
         QLabel* headerLabel = new QLabel(overdueDialog);
@@ -2419,13 +2419,13 @@ void MainWindow::onAddEmployee()
 {
     QDialog dialog(this);
     dialog.setWindowTitle("Добавить работника");
-    QVBoxLayout* mainLayout = new QVBoxLayout(&dialog);
+    auto* mainLayout = new QVBoxLayout(&dialog);
     
     // Выбор типа работника
-    QGroupBox* typeGroup = new QGroupBox("Тип работника", &dialog);
-    QVBoxLayout* typeLayout = new QVBoxLayout(typeGroup);
-    QRadioButton* librarianRadio = new QRadioButton("Библиотекарь", typeGroup);
-    QRadioButton* managerRadio = new QRadioButton("Менеджер", typeGroup);
+    auto* typeGroup = new QGroupBox("Тип работника", &dialog);
+    auto* typeLayout = new QVBoxLayout(typeGroup);
+    auto* librarianRadio = new QRadioButton("Библиотекарь", typeGroup);
+    auto* managerRadio = new QRadioButton("Менеджер", typeGroup);
     librarianRadio->setChecked(true); // По умолчанию выбран библиотекарь
     typeLayout->addWidget(librarianRadio);
     typeLayout->addWidget(managerRadio);
@@ -2436,10 +2436,10 @@ void MainWindow::onAddEmployee()
     QLineEdit* nameEdit = new QLineEdit(&dialog);
     QLineEdit* surnameEdit = new QLineEdit(&dialog);
     QLineEdit* phoneEdit = new QLineEdit(&dialog);
-    QDoubleSpinBox* salaryEdit = new QDoubleSpinBox(&dialog);
+    auto* salaryEdit = new QDoubleSpinBox(&dialog);
     salaryEdit->setRange(0, 1000000);
     salaryEdit->setValue(50000);
-    QSpinBox* workHoursEdit = new QSpinBox(&dialog);
+    auto* workHoursEdit = new QSpinBox(&dialog);
     workHoursEdit->setRange(1, 100);
     workHoursEdit->setValue(40);
     
@@ -2496,10 +2496,10 @@ void MainWindow::onAddLibrarian()
     QLineEdit* nameEdit = new QLineEdit(&dialog);
     QLineEdit* surnameEdit = new QLineEdit(&dialog);
     QLineEdit* phoneEdit = new QLineEdit(&dialog);
-    QDoubleSpinBox* salaryEdit = new QDoubleSpinBox(&dialog);
+    auto* salaryEdit = new QDoubleSpinBox(&dialog);
     salaryEdit->setRange(0, 1000000);
     salaryEdit->setValue(50000);
-    QSpinBox* workHoursEdit = new QSpinBox(&dialog);
+    auto* workHoursEdit = new QSpinBox(&dialog);
     workHoursEdit->setRange(1, 100);
     workHoursEdit->setValue(40);
     
@@ -2544,10 +2544,10 @@ void MainWindow::onAddManager()
     QLineEdit* nameEdit = new QLineEdit(&dialog);
     QLineEdit* surnameEdit = new QLineEdit(&dialog);
     QLineEdit* phoneEdit = new QLineEdit(&dialog);
-    QDoubleSpinBox* salaryEdit = new QDoubleSpinBox(&dialog);
+    auto* salaryEdit = new QDoubleSpinBox(&dialog);
     salaryEdit->setRange(0, 1000000);
     salaryEdit->setValue(80000);
-    QSpinBox* workHoursEdit = new QSpinBox(&dialog);
+    auto* workHoursEdit = new QSpinBox(&dialog);
     workHoursEdit->setRange(1, 100);
     workHoursEdit->setValue(40);
     
@@ -2624,10 +2624,10 @@ void MainWindow::onEditEmployee()
     surnameEdit->setText(QString::fromStdString(emp->getSurname()));
     QLineEdit* phoneEdit = new QLineEdit(&dialog);
     phoneEdit->setText(QString::fromStdString(emp->getPhone()));
-    QDoubleSpinBox* salaryEdit = new QDoubleSpinBox(&dialog);
+    auto* salaryEdit = new QDoubleSpinBox(&dialog);
     salaryEdit->setRange(0, 1000000);
     salaryEdit->setValue(emp->getSalary());
-    QSpinBox* workHoursEdit = new QSpinBox(&dialog);
+    auto* workHoursEdit = new QSpinBox(&dialog);
     workHoursEdit->setRange(1, 100);
     workHoursEdit->setValue(emp->getWorkHours());
     
