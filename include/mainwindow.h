@@ -115,7 +115,7 @@ private:
     void setupOperationsTab();
     void showError(const QString& message);
     void showInfo(const QString& message);
-    void autoSave(); // Автоматическое сохранение
+    void autoSave() const; // Автоматическое сохранение
     void updateUndoRedoButtons() const; // Обновление состояния кнопок undo/redo во всех вкладках
     void applyBookSorting(QTableWidget* table) const; // Применение сортировки книг
     QIcon createRedCrossIcon() const; // Создание красной иконки крестика

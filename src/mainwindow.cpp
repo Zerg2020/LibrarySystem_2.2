@@ -85,6 +85,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
     // Сохраняем данные перед закрытием
     try {
         FileManager::saveLibrarySystem(librarySystem, dataPath.toStdString());
+    } catch (const FileException& e) {
+        QMessageBox::warning(this, "Предупреждение", 
+                           QString("Не удалось сохранить данные: %1\n\nПриложение все равно будет закрыто.")
+                           .arg(QString::fromStdString(e.what())));
     } catch (const LibraryException& e) {
         QMessageBox::warning(this, "Предупреждение", 
                            QString("Не удалось сохранить данные: %1\n\nПриложение все равно будет закрыто.")
@@ -2904,7 +2908,7 @@ void MainWindow::showInfo(const QString& message)
 
 // Контекстное меню для книг больше не используется, действия вынесены в отдельную колонку
 
-void MainWindow::autoSave()
+void MainWindow::autoSave() const
 {
     // Автоматическое сохранение без сообщений
     try {
@@ -2943,7 +2947,7 @@ QIcon MainWindow::createRedCrossIcon() const
     QIcon standardIcon = style()->standardIcon(QStyle::SP_DialogCloseButton);
     
     if (QPixmap pixmap = standardIcon.pixmap(22, 22); !pixmap.isNull()) {
-        QPixmap redPixmap = pixmap;
+        auto redPixmap = pixmap;
         QPainter painter(&redPixmap);
         painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
         painter.fillRect(redPixmap.rect(), QColor(255, 0, 0));
@@ -2989,11 +2993,11 @@ void MainWindow::onClearMemberFilters()
     memberFilters = MemberFilters();
     
     // Очищаем поля ввода
-    QLineEdit* nameFilter = findChild<QLineEdit*>("memberNameFilter");
-    QLineEdit* surnameFilter = findChild<QLineEdit*>("memberSurnameFilter");
-    QLineEdit* phoneFilter = findChild<QLineEdit*>("memberPhoneFilter");
-    QLineEdit* emailFilter = findChild<QLineEdit*>("memberEmailFilter");
-    QComboBox* blockedFilter = findChild<QComboBox*>("memberBlockedFilter");
+    auto* nameFilter = findChild<QLineEdit*>("memberNameFilter");
+    auto* surnameFilter = findChild<QLineEdit*>("memberSurnameFilter");
+    auto* phoneFilter = findChild<QLineEdit*>("memberPhoneFilter");
+    auto* emailFilter = findChild<QLineEdit*>("memberEmailFilter");
+    auto* blockedFilter = findChild<QComboBox*>("memberBlockedFilter");
     
     if (nameFilter) nameFilter->clear();
     if (surnameFilter) surnameFilter->clear();
