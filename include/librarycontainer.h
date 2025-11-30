@@ -7,6 +7,7 @@
 #include <algorithm>
 #include "exceptions.h"
 #include <iterator>
+#include <string_view>
 
 class LibraryContainer {
 private:
@@ -37,8 +38,8 @@ public:
     void removeBook(int id);
     Book* findBook(int id);
     const Book* findBook(int id) const;
-    Book* findBookByIsbn(const std::string& isbn);
-    const Book* findBookByIsbn(const std::string& isbn) const;
+    Book* findBookByIsbn(std::string_view isbn);
+    const Book* findBookByIsbn(std::string_view isbn) const;
     std::vector<Book*> getAllBooks() const;
     std::vector<Book*> getAvailableBooks() const;
     size_t size() const { return books.size(); }

@@ -4,6 +4,7 @@
 #include "person.h"
 #include <vector>
 #include <string>
+#include <string_view>
 #include <ctime>
 
 struct BorrowedBook {
@@ -13,7 +14,7 @@ struct BorrowedBook {
     bool returned = false;
     int employeeId; // ID работника, который выдал книгу
 
-    BorrowedBook(int bookId, const std::string& borrowDate, const std::string& returnDate = "", int employeeId = 0)
+    BorrowedBook(int bookId, std::string_view borrowDate, std::string_view returnDate = "", int employeeId = 0)
         : bookId(bookId), borrowDate(borrowDate), returnDate(returnDate), employeeId(employeeId) {}
 };
 
@@ -23,13 +24,13 @@ private:
     std::vector<BorrowedBook> borrowedBooks;
 
 public:
-    explicit LibraryMember(int pId, const std::string& pName, const std::string& pSurname, const std::string& pPhone, const std::string& pEmail = "");
+    explicit LibraryMember(int pId, std::string_view pName, std::string_view pSurname, std::string_view pPhone, std::string_view pEmail = "");
     
     bool getIsBlocked() const { return isBlocked; }
     void setBlocked(bool pBlocked) { isBlocked = pBlocked; }
     
     void borrowBook(int bookId, int employeeId = 0);
-    void borrowBookWithDate(int bookId, const std::string& borrowDate, const std::string& returnDate, bool returned, int employeeId = 0);
+    void borrowBookWithDate(int bookId, std::string_view borrowDate, std::string_view returnDate, bool returned, int employeeId = 0);
     void returnBook(int bookId);
     std::vector<BorrowedBook> getBorrowedBooks() const { return borrowedBooks; }
     std::vector<BorrowedBook> getOverdueBooks() const;

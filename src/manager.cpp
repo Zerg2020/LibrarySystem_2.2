@@ -1,8 +1,8 @@
 #include "manager.h"
 #include <sstream>
 
-Manager::Manager(int pId, const std::string& pName, const std::string& pSurname,
-                 const std::string& pPhone, double pSalary, int pWorkHours)
+Manager::Manager(int pId, std::string_view pName, std::string_view pSurname,
+                 std::string_view pPhone, double pSalary, int pWorkHours)
     : Employee(pId, pName, pSurname, pPhone, "Manager", pSalary, pWorkHours) {
 }
 

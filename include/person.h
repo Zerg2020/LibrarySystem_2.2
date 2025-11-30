@@ -14,7 +14,7 @@ protected:
     int id;
 
 public:
-    explicit Person(int pId, const std::string& pName, const std::string& pSurname, const std::string& pPhone, const std::string& pEmail = "");
+    explicit Person(int pId, std::string_view pName, std::string_view pSurname, std::string_view pPhone, std::string_view pEmail = "");
     virtual ~Person() = default;
 
     int getId() const { return id; }

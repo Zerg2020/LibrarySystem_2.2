@@ -5,7 +5,7 @@
 #include <algorithm>
 #include "exceptions.h"
 
-LibraryMember::LibraryMember(int pId, const std::string& pName, const std::string& pSurname, const std::string& pPhone, const std::string& pEmail)
+LibraryMember::LibraryMember(int pId, std::string_view pName, std::string_view pSurname, std::string_view pPhone, std::string_view pEmail)
     : Person(pId, pName, pSurname, pPhone, pEmail) {
 }
 
@@ -45,7 +45,7 @@ void LibraryMember::borrowBook(int bookId, int employeeId) {
     borrowedBooks.emplace_back(bookId, oss.str(), returnOss.str(), employeeId);
 }
 
-void LibraryMember::borrowBookWithDate(int bookId, const std::string& borrowDate, const std::string& returnDate, bool returned, int employeeId) {
+void LibraryMember::borrowBookWithDate(int bookId, std::string_view borrowDate, std::string_view returnDate, bool returned, int employeeId) {
     BorrowedBook book(bookId, borrowDate, returnDate, employeeId);
     book.returned = returned;
     borrowedBooks.push_back(book);

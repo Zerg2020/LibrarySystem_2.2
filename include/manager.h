@@ -8,8 +8,8 @@ private:
     int employeesManaged = 0;
 
 public:
-    explicit Manager(int pId, const std::string& pName, const std::string& pSurname,
-            const std::string& pPhone, double pSalary, int pWorkHours);
+    explicit Manager(int pId, std::string_view pName, std::string_view pSurname,
+            std::string_view pPhone, double pSalary, int pWorkHours);
     
     int getEmployeesManaged() const { return employeesManaged; }
     void setEmployeesManaged(int pCount) { employeesManaged = pCount; }

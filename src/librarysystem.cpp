@@ -5,10 +5,10 @@
 
 LibrarySystem::LibrarySystem() = default;
 
-void LibrarySystem::addBook(const std::string& title, const std::string& author,
-                            const std::string& isbn, int year, const std::string& genre,
-                            const std::string& coverPath, int quantity,
-                            const std::string& description, const std::string& pdfPath) {
+void LibrarySystem::addBook(std::string_view title, std::string_view author,
+                            std::string_view isbn, int year, std::string_view genre,
+                            std::string_view coverPath, int quantity,
+                            std::string_view description, std::string_view pdfPath) {
     try {
         int id = nextBookId;
         nextBookId++;
@@ -19,10 +19,10 @@ void LibrarySystem::addBook(const std::string& title, const std::string& author,
     }
 }
 
-void LibrarySystem::editBook(int id, const std::string& title, const std::string& author,
-                             const std::string& isbn, int year, const std::string& genre,
-                             const std::string& coverPath, int quantity,
-                             const std::string& description, const std::string& pdfPath) {
+void LibrarySystem::editBook(int id, std::string_view title, std::string_view author,
+                             std::string_view isbn, int year, std::string_view genre,
+                             std::string_view coverPath, int quantity,
+                             std::string_view description, std::string_view pdfPath) {
     Book* book = findBook(id);
     if (!book) {
         throw NotFoundException("Книга с ID " + std::to_string(id));
@@ -82,7 +82,7 @@ const Book* LibrarySystem::findBook(int id) const {
     return books.findBook(id);
 }
 
-int LibrarySystem::addMember(const std::string& name, const std::string& surname, const std::string& phone, const std::string& email) {
+int LibrarySystem::addMember(std::string_view name, std::string_view surname, std::string_view phone, std::string_view email) {
     try {
         int id = members.generateId();
         auto command = std::make_unique<AddMemberCommand>(this, id, name, surname, phone, email);
@@ -93,7 +93,7 @@ int LibrarySystem::addMember(const std::string& name, const std::string& surname
     }
 }
 
-void LibrarySystem::editMember(int id, const std::string& name, const std::string& surname, const std::string& phone, const std::string& email) {
+void LibrarySystem::editMember(int id, std::string_view name, std::string_view surname, std::string_view phone, std::string_view email) {
     if (const LibraryMember* member = findMember(id); !member) {
         throw NotFoundException("Абонент с ID " + std::to_string(id));
     }
@@ -231,8 +231,8 @@ std::vector<std::pair<const LibraryMember*, BorrowedBook>> LibrarySystem::getOve
     return overdue;
 }
 
-void LibrarySystem::addLibrarian(const std::string& name, const std::string& surname,
-                                  const std::string& phone, double salary, int workHours) {
+void LibrarySystem::addLibrarian(std::string_view name, std::string_view surname,
+                                  std::string_view phone, double salary, int workHours) {
     try {
         int id = nextEmployeeId;
         nextEmployeeId++;
@@ -243,8 +243,8 @@ void LibrarySystem::addLibrarian(const std::string& name, const std::string& sur
     }
 }
 
-void LibrarySystem::addManager(const std::string& name, const std::string& surname,
-                                const std::string& phone, double salary, int workHours) {
+void LibrarySystem::addManager(std::string_view name, std::string_view surname,
+                                std::string_view phone, double salary, int workHours) {
     try {
         int id = nextEmployeeId;
         nextEmployeeId++;
@@ -255,8 +255,8 @@ void LibrarySystem::addManager(const std::string& name, const std::string& surna
     }
 }
 
-void LibrarySystem::editEmployee(int id, const std::string& name, const std::string& surname,
-                                 const std::string& phone, double salary, int workHours) {
+void LibrarySystem::editEmployee(int id, std::string_view name, std::string_view surname,
+                                 std::string_view phone, double salary, int workHours) {
     const Employee* emp = nullptr;
     for (const auto* e : getAllEmployees()) {
         if (e->getId() == id) {
@@ -355,10 +355,10 @@ bool LibrarySystem::canRedoEmployees() const {
     return commandManagerEmployees.canRedo();
 }
 
-void LibrarySystem::addBookWithId(int id, const std::string& title, const std::string& author,
-                                   const std::string& isbn, int year, const std::string& genre, bool available,
-                                   const std::string& coverPath, int quantity,
-                                   const std::string& description, const std::string& pdfPath) {
+void LibrarySystem::addBookWithId(int id, std::string_view title, std::string_view author,
+                                   std::string_view isbn, int year, std::string_view genre, bool available,
+                                   std::string_view coverPath, int quantity,
+                                   std::string_view description, std::string_view pdfPath) {
     auto book = std::make_unique<Book>(id, title, author, isbn, year, genre, coverPath, quantity, description, pdfPath);
     book->setAvailable(available);
     if (id >= nextBookId) {
@@ -371,10 +371,10 @@ void LibrarySystem::removeBookDirect(int id) {
     books.removeBook(id);
 }
 
-void LibrarySystem::editBookDirect(int id, const std::string& title, const std::string& author,
-                                   const std::string& isbn, int year, const std::string& genre,
-                                   const std::string& coverPath, int quantity,
-                                   const std::string& description, const std::string& pdfPath) {
+void LibrarySystem::editBookDirect(int id, std::string_view title, std::string_view author,
+                                   std::string_view isbn, int year, std::string_view genre,
+                                   std::string_view coverPath, int quantity,
+                                   std::string_view description, std::string_view pdfPath) {
     Book* book = findBook(id);
     if (!book) {
         throw NotFoundException("Книга с ID " + std::to_string(id));
@@ -391,8 +391,8 @@ void LibrarySystem::editBookDirect(int id, const std::string& title, const std::
     book->setPdfPath(pdfPath);
 }
 
-void LibrarySystem::addMemberWithId(int id, const std::string& name, const std::string& surname, 
-                                     const std::string& phone, bool blocked, const std::string& email) {
+void LibrarySystem::addMemberWithId(int id, std::string_view name, std::string_view surname, 
+                                     std::string_view phone, bool blocked, std::string_view email) {
     auto member = std::make_unique<LibraryMember>(id, name, surname, phone, email);
     member->setBlocked(blocked);
     if (id >= members.getNextId()) {
@@ -405,7 +405,7 @@ void LibrarySystem::removeMemberDirect(int id) {
     members.removeMember(id);
 }
 
-void LibrarySystem::editMemberDirect(int id, const std::string& name, const std::string& surname, const std::string& phone, const std::string& email) {
+void LibrarySystem::editMemberDirect(int id, std::string_view name, std::string_view surname, std::string_view phone, std::string_view email) {
     LibraryMember* member = findMember(id);
     if (!member) {
         throw NotFoundException("Абонент с ID " + std::to_string(id));
@@ -432,8 +432,8 @@ void LibrarySystem::unblockMemberDirect(int id) {
     member->setBlocked(false);
 }
 
-void LibrarySystem::addEmployeeWithId(int id, const std::string& name, const std::string& surname,
-                                      const std::string& phone, double salary, int workHours, bool isLibrarian) {
+void LibrarySystem::addEmployeeWithId(int id, std::string_view name, std::string_view surname,
+                                      std::string_view phone, double salary, int workHours, bool isLibrarian) {
     if (isLibrarian) {
         employees.emplace_back(std::make_unique<Librarian>(id, name, surname, phone, salary, workHours));
     } else {
@@ -456,8 +456,8 @@ void LibrarySystem::removeEmployeeDirect(int id) {
     }
 }
 
-void LibrarySystem::editEmployeeDirect(int id, const std::string& name, const std::string& surname,
-                                       const std::string& phone, double salary, int workHours) {
+void LibrarySystem::editEmployeeDirect(int id, std::string_view name, std::string_view surname,
+                                       std::string_view phone, double salary, int workHours) {
     Employee* emp = nullptr;
     for (const auto& e : employees) {
         if (e->getId() == id) {
@@ -476,8 +476,8 @@ void LibrarySystem::editEmployeeDirect(int id, const std::string& name, const st
     emp->setWorkHours(workHours);
 }
 
-void LibrarySystem::addBorrowedBook(int memberId, int bookId, const std::string& borrowDate, 
-                                    const std::string& returnDate, bool returned, int employeeId) {
+void LibrarySystem::addBorrowedBook(int memberId, int bookId, std::string_view borrowDate, 
+                                    std::string_view returnDate, bool returned, int employeeId) {
     LibraryMember* member = findMember(memberId);
     if (!member) {
         throw NotFoundException("Абонент с ID " + std::to_string(memberId));

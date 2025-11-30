@@ -11,7 +11,7 @@ protected:
     bool available = true;
 
 public:
-    explicit Item(int pId, const std::string& pTitle);
+    explicit Item(int pId, std::string_view pTitle);
     virtual ~Item() = default;
 
     int getId() const { return id; }

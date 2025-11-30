@@ -3,29 +3,31 @@
 #include <sstream>
 #include <iostream>
 
-void FileManager::saveLibrarySystem(const LibrarySystem& system, const std::string& basePath) {
+void FileManager::saveLibrarySystem(const LibrarySystem& system, std::string_view basePath) {
     try {
-        saveBooks(system, basePath + "/books.txt");
-        saveMembers(system, basePath + "/members.txt");
-        saveEmployees(system, basePath + "/employees.txt");
-        saveMetadata(system, basePath + "/metadata.txt");
+        std::string basePathStr(basePath);
+        saveBooks(system, basePathStr + "/books.txt");
+        saveMembers(system, basePathStr + "/members.txt");
+        saveEmployees(system, basePathStr + "/employees.txt");
+        saveMetadata(system, basePathStr + "/metadata.txt");
     } catch (const std::exception& e) {
         throw FileException("Не удалось сохранить систему библиотеки: " + std::string(e.what()));
     }
 }
 
-void FileManager::loadLibrarySystem(LibrarySystem& system, const std::string& basePath) {
+void FileManager::loadLibrarySystem(LibrarySystem& system, std::string_view basePath) {
     try {
+        std::string basePathStr(basePath);
         // Сначала загружаем метаданные (ID счетчики)
-        loadMetadata(system, basePath + "/metadata.txt");
+        loadMetadata(system, basePathStr + "/metadata.txt");
         // Затем загружаем книги
-        loadBooks(system, basePath + "/books.txt");
+        loadBooks(system, basePathStr + "/books.txt");
         // Затем загружаем абонентов (без взятых книг)
-        loadMembers(system, basePath + "/members.txt");
+        loadMembers(system, basePathStr + "/members.txt");
         // Затем загружаем работников
-        loadEmployees(system, basePath + "/employees.txt");
+        loadEmployees(system, basePathStr + "/employees.txt");
         // В конце загружаем взятые книги (нужно загружать после книг и абонентов)
-        loadBorrowedBooks(system, basePath + "/members.txt");
+        loadBorrowedBooks(system, basePathStr + "/members.txt");
         
         // Обновляем доступность всех книг после загрузки всех данных
         auto allBooks = system.getAllBooks();
@@ -37,8 +39,9 @@ void FileManager::loadLibrarySystem(LibrarySystem& system, const std::string& ba
     }
 }
 
-void FileManager::saveBooks(const LibrarySystem& system, const std::string& filename) {
-    std::ofstream file(filename);
+void FileManager::saveBooks(const LibrarySystem& system, std::string_view filename) {
+    std::string filenameStr(filename);
+    std::ofstream file(filenameStr);
     if (!file.is_open()) {
         throw FileException("Не удалось открыть файл: " + filename);
     }
@@ -61,8 +64,9 @@ void FileManager::saveBooks(const LibrarySystem& system, const std::string& file
     file.close();
 }
 
-void FileManager::loadBooks(LibrarySystem& system, const std::string& filename) {
-    std::ifstream file(filename);
+void FileManager::loadBooks(LibrarySystem& system, std::string_view filename) {
+    std::string filenameStr(filename);
+    std::ifstream file(filenameStr);
     if (!file.is_open()) {
         return; // Файл может не существовать при первой загрузке
     }
@@ -99,8 +103,9 @@ void FileManager::loadBooks(LibrarySystem& system, const std::string& filename) 
     file.close();
 }
 
-void FileManager::saveMembers(const LibrarySystem& system, const std::string& filename) {
-    std::ofstream file(filename);
+void FileManager::saveMembers(const LibrarySystem& system, std::string_view filename) {
+    std::string filenameStr(filename);
+    std::ofstream file(filenameStr);
     if (!file.is_open()) {
         throw FileException("Не удалось открыть файл: " + filename);
     }
@@ -128,8 +133,9 @@ void FileManager::saveMembers(const LibrarySystem& system, const std::string& fi
     file.close();
 }
 
-void FileManager::loadMembers(LibrarySystem& system, const std::string& filename) {
-    std::ifstream file(filename);
+void FileManager::loadMembers(LibrarySystem& system, std::string_view filename) {
+    std::string filenameStr(filename);
+    std::ifstream file(filenameStr);
     if (!file.is_open()) {
         return;
     }
@@ -158,8 +164,9 @@ void FileManager::loadMembers(LibrarySystem& system, const std::string& filename
     file.close();
 }
 
-void FileManager::loadBorrowedBooks(LibrarySystem& system, const std::string& filename) {
-    std::ifstream file(filename);
+void FileManager::loadBorrowedBooks(LibrarySystem& system, std::string_view filename) {
+    std::string filenameStr(filename);
+    std::ifstream file(filenameStr);
     if (!file.is_open()) {
         return;
     }
@@ -191,8 +198,9 @@ void FileManager::loadBorrowedBooks(LibrarySystem& system, const std::string& fi
     file.close();
 }
 
-void FileManager::saveEmployees(const LibrarySystem& system, const std::string& filename) {
-    std::ofstream file(filename);
+void FileManager::saveEmployees(const LibrarySystem& system, std::string_view filename) {
+    std::string filenameStr(filename);
+    std::ofstream file(filenameStr);
     if (!file.is_open()) {
         throw FileException("Не удалось открыть файл: " + filename);
     }
@@ -222,8 +230,9 @@ void FileManager::saveEmployees(const LibrarySystem& system, const std::string& 
     file.close();
 }
 
-void FileManager::loadEmployees(LibrarySystem& system, const std::string& filename) {
-    std::ifstream file(filename);
+void FileManager::loadEmployees(LibrarySystem& system, std::string_view filename) {
+    std::string filenameStr(filename);
+    std::ifstream file(filenameStr);
     if (!file.is_open()) {
         return;
     }
@@ -249,8 +258,9 @@ void FileManager::loadEmployees(LibrarySystem& system, const std::string& filena
     file.close();
 }
 
-void FileManager::saveMetadata(const LibrarySystem& system, const std::string& filename) {
-    std::ofstream file(filename);
+void FileManager::saveMetadata(const LibrarySystem& system, std::string_view filename) {
+    std::string filenameStr(filename);
+    std::ofstream file(filenameStr);
     if (!file.is_open()) {
         throw FileException("Не удалось открыть файл: " + filename);
     }
@@ -260,8 +270,9 @@ void FileManager::saveMetadata(const LibrarySystem& system, const std::string& f
     file.close();
 }
 
-void FileManager::loadMetadata(LibrarySystem& system, const std::string& filename) {
-    std::ifstream file(filename);
+void FileManager::loadMetadata(LibrarySystem& system, std::string_view filename) {
+    std::string filenameStr(filename);
+    std::ifstream file(filenameStr);
     if (!file.is_open()) {
         return;
     }
@@ -285,10 +296,11 @@ void FileManager::loadMetadata(LibrarySystem& system, const std::string& filenam
     file.close();
 }
 
-std::vector<std::string> FileManager::split(const std::string& str, char delimiter) {
+std::vector<std::string> FileManager::split(std::string_view str, char delimiter) {
     std::vector<std::string> tokens;
     std::string token;
-    std::istringstream tokenStream(str);
+    std::string strStr(str);
+    std::istringstream tokenStream(strStr);
     while (std::getline(tokenStream, token, delimiter)) {
         tokens.push_back(token);
     }

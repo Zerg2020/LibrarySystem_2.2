@@ -12,8 +12,8 @@ protected:
     int workHours;
 
 public:
-    explicit Employee(int pId, const std::string& pName, const std::string& pSurname, 
-             const std::string& pPhone, const std::string& pPosition, double pSalary, int pWorkHours);
+    explicit Employee(int pId, std::string_view pName, std::string_view pSurname, 
+             std::string_view pPhone, std::string_view pPosition, double pSalary, int pWorkHours);
     
     std::string getPosition() const { return position; }
     double getSalary() const { return salary; }

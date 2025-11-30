@@ -18,10 +18,10 @@ private:
     bool manuallyDisabled = false; // Ручная блокировка доступности (переопределяет автоматическую логику)
 
 public:
-    explicit Book(int pId, const std::string& pTitle, const std::string& pAuthor, 
-         const std::string& pIsbn, int pYear, const std::string& pGenre, 
-         const std::string& pCoverPath = "", int pQuantity = 1,
-         const std::string& pDescription = "", const std::string& pPdfPath = "");
+    explicit Book(int pId, std::string_view pTitle, std::string_view pAuthor, 
+         std::string_view pIsbn, int pYear, std::string_view pGenre, 
+         std::string_view pCoverPath = "", int pQuantity = 1,
+         std::string_view pDescription = "", std::string_view pPdfPath = "");
     
     std::string getAuthor() const { return author; }
     std::string getIsbn() const { return isbn; }

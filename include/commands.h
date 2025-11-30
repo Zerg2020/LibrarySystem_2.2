@@ -7,6 +7,7 @@
 #include "librarymember.h"
 #include "employee.h"
 #include <string>
+#include <string_view>
 
 // Команда добавления книги
 class AddBookCommand : public Command {
@@ -24,9 +25,9 @@ private:
     int quantity;
     
 public:
-    AddBookCommand(LibrarySystem* sys, int id, const std::string& t, const std::string& a,
-                   const std::string& i, int y, const std::string& g,
-                   const std::string& cp, int q, const std::string& d, const std::string& pdf)
+    AddBookCommand(LibrarySystem* sys, int id, std::string_view t, std::string_view a,
+                   std::string_view i, int y, std::string_view g,
+                   std::string_view cp, int q, std::string_view d, std::string_view pdf)
         : system(sys), bookId(id), title(t), author(a), isbn(i), genre(g),
           coverPath(cp), description(d), pdfPath(pdf), year(y), quantity(q) {}
     
@@ -145,9 +146,9 @@ private:
     bool newManuallyDisabled;
     
 public:
-    EditBookCommand(LibrarySystem* sys, int id, const std::string& t, const std::string& a,
-                   const std::string& i, int y, const std::string& g,
-                   const std::string& cp, int q, const std::string& d, const std::string& pdf) 
+    EditBookCommand(LibrarySystem* sys, int id, std::string_view t, std::string_view a,
+                   std::string_view i, int y, std::string_view g,
+                   std::string_view cp, int q, std::string_view d, std::string_view pdf) 
         : system(sys), bookId(id), newTitle(t), newAuthor(a), newIsbn(i), newGenre(g),
           newCoverPath(cp), newDescription(d), newPdfPath(pdf), newYear(y), newQuantity(q) {
         const Book* book = sys->findBook(id);
@@ -208,7 +209,7 @@ private:
     std::string email;
     
 public:
-    AddMemberCommand(LibrarySystem* sys, int id, const std::string& n, const std::string& s, const std::string& p, const std::string& e = "")
+    AddMemberCommand(LibrarySystem* sys, int id, std::string_view n, std::string_view s, std::string_view p, std::string_view e = "")
         : system(sys), memberId(id), name(n), surname(s), phone(p), email(e) {}
     
     void execute() override {
@@ -275,7 +276,7 @@ private:
     std::string newEmail;
     
 public:
-    EditMemberCommand(LibrarySystem* sys, int id, const std::string& n, const std::string& s, const std::string& p, const std::string& e = "")
+    EditMemberCommand(LibrarySystem* sys, int id, std::string_view n, std::string_view s, std::string_view p, std::string_view e = "")
         : system(sys), memberId(id), newName(n), newSurname(s), newPhone(p), newEmail(e) {
         const LibraryMember* member = sys->findMember(id);
         if (member) {
@@ -343,8 +344,8 @@ private:
     bool isLibrarian; // true для библиотекаря, false для менеджера
     
 public:
-    AddEmployeeCommand(LibrarySystem* sys, int id, const std::string& n, const std::string& s,
-                      const std::string& p, double sal, int hours, bool librarian)
+    AddEmployeeCommand(LibrarySystem* sys, int id, std::string_view n, std::string_view s,
+                      std::string_view p, double sal, int hours, bool librarian)
         : system(sys), employeeId(id), name(n), surname(s), phone(p),
           salary(sal), workHours(hours), isLibrarian(librarian) {}
     
@@ -423,8 +424,8 @@ private:
     bool isLibrarian;
     
 public:
-    EditEmployeeCommand(LibrarySystem* sys, int id, const std::string& n, const std::string& s,
-                        const std::string& p, double sal, int hours)
+    EditEmployeeCommand(LibrarySystem* sys, int id, std::string_view n, std::string_view s,
+                        std::string_view p, double sal, int hours)
         : system(sys), employeeId(id), newName(n), newSurname(s), newPhone(p),
           newSalary(sal), newWorkHours(hours) {
         const Employee* emp = nullptr;

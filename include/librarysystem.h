@@ -11,6 +11,7 @@
 #include "manager.h"
 #include <vector>
 #include <memory>
+#include <string_view>
 
 class LibrarySystem {
 private:
@@ -27,14 +28,14 @@ public:
     LibrarySystem();
     
     // Книги
-    void addBook(const std::string& title, const std::string& author,
-                 const std::string& isbn, int year, const std::string& genre,
-                 const std::string& coverPath = "", int quantity = 1,
-                 const std::string& description = "", const std::string& pdfPath = "");
-    void editBook(int id, const std::string& title, const std::string& author,
-                  const std::string& isbn, int year, const std::string& genre,
-                  const std::string& coverPath = "", int quantity = 1,
-                  const std::string& description = "", const std::string& pdfPath = "");
+    void addBook(std::string_view title, std::string_view author,
+                 std::string_view isbn, int year, std::string_view genre,
+                 std::string_view coverPath = "", int quantity = 1,
+                 std::string_view description = "", std::string_view pdfPath = "");
+    void editBook(int id, std::string_view title, std::string_view author,
+                  std::string_view isbn, int year, std::string_view genre,
+                  std::string_view coverPath = "", int quantity = 1,
+                  std::string_view description = "", std::string_view pdfPath = "");
     void removeBook(int id);
     std::vector<Book*> getAllBooks() const;
     std::vector<Book*> getAvailableBooks() const;
@@ -44,8 +45,8 @@ public:
     void updateBookAvailability(int bookId); // Обновление доступности на основе количества
     
     // Абоненты
-    int addMember(const std::string& name, const std::string& surname, const std::string& phone, const std::string& email = "");
-    void editMember(int id, const std::string& name, const std::string& surname, const std::string& phone, const std::string& email = "");
+    int addMember(std::string_view name, std::string_view surname, std::string_view phone, std::string_view email = "");
+    void editMember(int id, std::string_view name, std::string_view surname, std::string_view phone, std::string_view email = "");
     void removeMember(int id);
     void blockMember(int id);
     void unblockMember(int id);
@@ -60,12 +61,12 @@ public:
     std::vector<std::pair<const LibraryMember*, BorrowedBook>> getOverdueBooks() const;
     
     // Работники
-    void addLibrarian(const std::string& name, const std::string& surname,
-                      const std::string& phone, double salary, int workHours);
-    void addManager(const std::string& name, const std::string& surname,
-                    const std::string& phone, double salary, int workHours);
-    void editEmployee(int id, const std::string& name, const std::string& surname,
-                      const std::string& phone, double salary, int workHours);
+    void addLibrarian(std::string_view name, std::string_view surname,
+                      std::string_view phone, double salary, int workHours);
+    void addManager(std::string_view name, std::string_view surname,
+                    std::string_view phone, double salary, int workHours);
+    void editEmployee(int id, std::string_view name, std::string_view surname,
+                      std::string_view phone, double salary, int workHours);
     void removeEmployee(int id);
     std::vector<Employee*> getAllEmployees() const;
     
@@ -104,28 +105,28 @@ public:
     void setNextEmployeeId(int id) { nextEmployeeId = id; }
     
     // Методы для загрузки данных и команд
-    void addBookWithId(int id, const std::string& title, const std::string& author,
-                       const std::string& isbn, int year, const std::string& genre, bool available,
-                       const std::string& coverPath = "", int quantity = 1,
-                       const std::string& description = "", const std::string& pdfPath = "");
+    void addBookWithId(int id, std::string_view title, std::string_view author,
+                       std::string_view isbn, int year, std::string_view genre, bool available,
+                       std::string_view coverPath = "", int quantity = 1,
+                       std::string_view description = "", std::string_view pdfPath = "");
     void removeBookDirect(int id); // Прямое удаление без команды (для команд undo/redo)
-    void editBookDirect(int id, const std::string& title, const std::string& author,
-                       const std::string& isbn, int year, const std::string& genre,
-                       const std::string& coverPath, int quantity,
-                       const std::string& description, const std::string& pdfPath); // Прямое редактирование без команды
-    void addMemberWithId(int id, const std::string& name, const std::string& surname, 
-                         const std::string& phone, bool blocked, const std::string& email = "");
+    void editBookDirect(int id, std::string_view title, std::string_view author,
+                       std::string_view isbn, int year, std::string_view genre,
+                       std::string_view coverPath, int quantity,
+                       std::string_view description, std::string_view pdfPath); // Прямое редактирование без команды
+    void addMemberWithId(int id, std::string_view name, std::string_view surname, 
+                         std::string_view phone, bool blocked, std::string_view email = "");
     void removeMemberDirect(int id); // Прямое удаление без команды
-    void editMemberDirect(int id, const std::string& name, const std::string& surname, const std::string& phone, const std::string& email = ""); // Прямое редактирование без команды
+    void editMemberDirect(int id, std::string_view name, std::string_view surname, std::string_view phone, std::string_view email = ""); // Прямое редактирование без команды
     void blockMemberDirect(int id); // Прямая блокировка без команды
     void unblockMemberDirect(int id); // Прямая разблокировка без команды
-    void addEmployeeWithId(int id, const std::string& name, const std::string& surname,
-                          const std::string& phone, double salary, int workHours, bool isLibrarian);
+    void addEmployeeWithId(int id, std::string_view name, std::string_view surname,
+                          std::string_view phone, double salary, int workHours, bool isLibrarian);
     void removeEmployeeDirect(int id); // Прямое удаление без команды
-    void editEmployeeDirect(int id, const std::string& name, const std::string& surname,
-                           const std::string& phone, double salary, int workHours); // Прямое редактирование без команды
-    void addBorrowedBook(int memberId, int bookId, const std::string& borrowDate, 
-                        const std::string& returnDate, bool returned, int employeeId = 0);
+    void editEmployeeDirect(int id, std::string_view name, std::string_view surname,
+                           std::string_view phone, double salary, int workHours); // Прямое редактирование без команды
+    void addBorrowedBook(int memberId, int bookId, std::string_view borrowDate, 
+                        std::string_view returnDate, bool returned, int employeeId = 0);
 };
 
 #endif // LIBRARYSYSTEM_H

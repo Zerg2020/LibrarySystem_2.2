@@ -1,8 +1,8 @@
 #include "librarian.h"
 #include <sstream>
 
-Librarian::Librarian(int pId, const std::string& pName, const std::string& pSurname,
-                     const std::string& pPhone, double pSalary, int pWorkHours)
+Librarian::Librarian(int pId, std::string_view pName, std::string_view pSurname,
+                     std::string_view pPhone, double pSalary, int pWorkHours)
     : Employee(pId, pName, pSurname, pPhone, "Librarian", pSalary, pWorkHours) {
 }
 
