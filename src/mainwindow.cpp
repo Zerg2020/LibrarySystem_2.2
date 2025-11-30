@@ -2614,11 +2614,11 @@ void MainWindow::onEditEmployee()
     dialog.setWindowTitle("Редактировать работника");
     QFormLayout form(&dialog);
     
-    QLineEdit* nameEdit = new QLineEdit(&dialog);
+    auto* nameEdit = new QLineEdit(&dialog);
     nameEdit->setText(QString::fromStdString(emp->getName()));
-    QLineEdit* surnameEdit = new QLineEdit(&dialog);
+    auto* surnameEdit = new QLineEdit(&dialog);
     surnameEdit->setText(QString::fromStdString(emp->getSurname()));
-    QLineEdit* phoneEdit = new QLineEdit(&dialog);
+    auto* phoneEdit = new QLineEdit(&dialog);
     phoneEdit->setText(QString::fromStdString(emp->getPhone()));
     auto* salaryEdit = new QDoubleSpinBox(&dialog);
     salaryEdit->setRange(0, 1000000);
