@@ -35,7 +35,7 @@ public:
     ~MainWindow();
 
 protected:
-    void closeEvent(QCloseEvent *event) override;
+    void closeEvent(QCloseEvent *event) override final;
 
 private slots:
     void onAddBook();

@@ -95,8 +95,7 @@ int LibrarySystem::addMember(const std::string& name, const std::string& surname
 }
 
 void LibrarySystem::editMember(int id, const std::string& name, const std::string& surname, const std::string& phone, const std::string& email) {
-    LibraryMember* member = findMember(id);
-    if (!member) {
+    if (LibraryMember* member = findMember(id); !member) {
         throw NotFoundException("Абонент с ID " + std::to_string(id));
     }
     

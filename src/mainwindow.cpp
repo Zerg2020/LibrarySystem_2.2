@@ -47,8 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
     resize(1400, 800);
     
     // Создаем папку для данных, если её нет
-    QDir dir;
-    if (!dir.exists(dataPath)) {
+    if (QDir dir; !dir.exists(dataPath)) {
         dir.mkpath(dataPath);
     }
     
@@ -154,8 +153,7 @@ void MainWindow::setupUI()
     toolbarLayout->addWidget(addButton);
     
     // Размещаем панель в layout центрального виджета над вкладками
-    QVBoxLayout* centralLayout = qobject_cast<QVBoxLayout*>(ui->centralwidget->layout());
-    if (centralLayout) {
+    if (QVBoxLayout* centralLayout = qobject_cast<QVBoxLayout*>(ui->centralwidget->layout()); centralLayout) {
         centralLayout->insertWidget(0, toolbarWidget);
     }
     
@@ -588,10 +586,8 @@ void MainWindow::refreshBooks()
         
         // Колонка 0 - Обложка
         QTableWidgetItem* coverItem = new QTableWidgetItem();
-        QString coverPath = QString::fromStdString(book->getCoverPath());
-        if (!coverPath.isEmpty() && QFile::exists(coverPath)) {
-            QPixmap pixmap(coverPath);
-            if (!pixmap.isNull()) {
+        if (QString coverPath = QString::fromStdString(book->getCoverPath()); !coverPath.isEmpty() && QFile::exists(coverPath)) {
+            if (QPixmap pixmap(coverPath); !pixmap.isNull()) {
                 // Обложка в вертикальной пропорции книги (высота строки 180px, ширина колонки 120px)
                 // Масштабируем с сохранением пропорций, максимальная высота 170px, ширина 110px
                 QPixmap scaled = pixmap.scaled(110, 170, Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -1056,11 +1052,9 @@ void MainWindow::refreshMembers()
         editBtn->setIconSize(QSize(22, 22));
         editBtn->setToolTip("Редактировать абонента");
         connect(editBtn, &QPushButton::clicked, this, [this, member]() {
-            QTableWidget* table = findChild<QTableWidget*>("membersTable");
-            if (table) {
+            if (QTableWidget* table = findChild<QTableWidget*>("membersTable"); table) {
                 for (int r = 0; r < table->rowCount(); ++r) {
-                    QTableWidgetItem* item = table->item(r, 0);
-                    if (item && item->data(Qt::UserRole).toInt() == member->getId()) {
+                    if (QTableWidgetItem* item = table->item(r, 0); item && item->data(Qt::UserRole).toInt() == member->getId()) {
                         table->selectRow(r);
                         break;
                     }
@@ -1163,11 +1157,9 @@ void MainWindow::refreshEmployees()
         editBtn->setIconSize(QSize(22, 22));
         editBtn->setToolTip("Редактировать работника");
         connect(editBtn, &QPushButton::clicked, this, [this, emp]() {
-            QTableWidget* table = findChild<QTableWidget*>("employeesTable");
-            if (table) {
+            if (QTableWidget* table = findChild<QTableWidget*>("employeesTable"); table) {
                 for (int r = 0; r < table->rowCount(); ++r) {
-                    QTableWidgetItem* item = table->item(r, 0);
-                    if (item && item->data(Qt::UserRole).toInt() == emp->getId()) {
+                    if (QTableWidgetItem* item = table->item(r, 0); item && item->data(Qt::UserRole).toInt() == emp->getId()) {
                         table->selectRow(r);
                         break;
                     }
@@ -1604,9 +1596,8 @@ void MainWindow::onEditBook()
             
             // Управление доступностью: если пользователь снял галочку "Доступна",
             // значит он хочет вручную заблокировать книгу
-            bool shouldBeAvailable = availableCheckBox->isChecked();
             // Если пользователь хочет сделать книгу недоступной вручную
-            if (!shouldBeAvailable) {
+            if (bool shouldBeAvailable = availableCheckBox->isChecked(); !shouldBeAvailable) {
                 bookPtr->setManuallyDisabled(true);
                 bookPtr->setAvailable(false);
             } else {
@@ -1662,10 +1653,8 @@ void MainWindow::onShowBookDetails(int bookId)
         coverLabelPtr->setMinimumSize(200, 300);
         coverLabelPtr->setAlignment(Qt::AlignCenter);
         coverLabelPtr->setStyleSheet("border: 2px solid gray; background-color: #f0f0f0;");
-        QString coverPath = QString::fromStdString(bookPtr->getCoverPath());
-        if (!coverPath.isEmpty() && QFile::exists(coverPath)) {
-            QPixmap pixmap(coverPath);
-            if (!pixmap.isNull()) {
+        if (QString coverPath = QString::fromStdString(bookPtr->getCoverPath()); !coverPath.isEmpty() && QFile::exists(coverPath)) {
+            if (QPixmap pixmap(coverPath); !pixmap.isNull()) {
                 QPixmap scaled = pixmap.scaled(coverLabelPtr->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
                 coverLabelPtr->setPixmap(scaled);
             } else {

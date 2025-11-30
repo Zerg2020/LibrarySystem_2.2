@@ -14,8 +14,7 @@ int main(int argc, char *argv[])
         app.setFont(defaultFont);
     
     // Создаем папку для данных, если её нет
-    QDir dir;
-    if (!dir.exists("data")) {
+    if (QDir dir; !dir.exists("data")) {
         dir.mkpath("data");
     }
     
