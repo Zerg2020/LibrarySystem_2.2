@@ -243,66 +243,22 @@ void MainWindow::setupBooksTab()
     filtersLayout->setContentsMargins(8, 8, 8, 8);
     filtersLayout->setSpacing(6);
     
-    auto* titleFilter = new QLineEdit(filtersGroup);
-    titleFilter->setPlaceholderText("Название...");
-    titleFilter->setObjectName("titleFilter");
-    titleFilter->setMinimumWidth(220);
-    connect(titleFilter, &QLineEdit::textChanged, this, &MainWindow::onFilterChanged);
-    filtersLayout->addWidget(titleFilter);
-    
-    auto* authorFilter = new QLineEdit(filtersGroup);
-    authorFilter->setPlaceholderText("Автор...");
-    authorFilter->setObjectName("authorFilter");
-    authorFilter->setMinimumWidth(220);
-    connect(authorFilter, &QLineEdit::textChanged, this, &MainWindow::onFilterChanged);
-    filtersLayout->addWidget(authorFilter);
-    
-    auto* genreFilter = new QLineEdit(filtersGroup);
-    genreFilter->setPlaceholderText("Жанр...");
-    genreFilter->setObjectName("genreFilter");
-    genreFilter->setMinimumWidth(180);
-    connect(genreFilter, &QLineEdit::textChanged, this, &MainWindow::onFilterChanged);
-    filtersLayout->addWidget(genreFilter);
-    
-    auto* isbnFilter = new QLineEdit(filtersGroup);
-    isbnFilter->setPlaceholderText("ISBN...");
-    isbnFilter->setObjectName("isbnFilter");
-    isbnFilter->setMinimumWidth(180);
-    connect(isbnFilter, &QLineEdit::textChanged, this, &MainWindow::onFilterChanged);
-    filtersLayout->addWidget(isbnFilter);
+    filtersLayout->addWidget(createLineEditFilter(filtersGroup, "Название...", "titleFilter", 220, &MainWindow::onFilterChanged));
+    filtersLayout->addWidget(createLineEditFilter(filtersGroup, "Автор...", "authorFilter", 220, &MainWindow::onFilterChanged));
+    filtersLayout->addWidget(createLineEditFilter(filtersGroup, "Жанр...", "genreFilter", 180, &MainWindow::onFilterChanged));
+    filtersLayout->addWidget(createLineEditFilter(filtersGroup, "ISBN...", "isbnFilter", 180, &MainWindow::onFilterChanged));
     
     auto* yearFromLabel = new QLabel("Год от:", filtersGroup);
-    auto* yearFromFilter = new QSpinBox(filtersGroup);
-    yearFromFilter->setRange(0, 9999);
-    yearFromFilter->setValue(0);
-    yearFromFilter->setSpecialValueText("Любой");
-    yearFromFilter->setObjectName("yearFromFilter");
-    yearFromFilter->setMinimumWidth(120);
-    connect(yearFromFilter, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::onFilterChanged);
     filtersLayout->addWidget(yearFromLabel);
-    filtersLayout->addWidget(yearFromFilter);
+    filtersLayout->addWidget(createSpinBoxFilter(filtersGroup, "yearFromFilter", 120, &MainWindow::onFilterChanged));
     
     auto* yearToLabel = new QLabel("до:", filtersGroup);
-    auto* yearToFilter = new QSpinBox(filtersGroup);
-    yearToFilter->setRange(0, 9999);
-    yearToFilter->setValue(0);
-    yearToFilter->setSpecialValueText("Любой");
-    yearToFilter->setObjectName("yearToFilter");
-    yearToFilter->setMinimumWidth(120);
-    connect(yearToFilter, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::onFilterChanged);
     filtersLayout->addWidget(yearToLabel);
-    filtersLayout->addWidget(yearToFilter);
+    filtersLayout->addWidget(createSpinBoxFilter(filtersGroup, "yearToFilter", 120, &MainWindow::onFilterChanged));
     
     auto* availabilityLabel = new QLabel("Доступность:", filtersGroup);
-    auto* availabilityFilter = new QComboBox(filtersGroup);
-    availabilityFilter->addItem("Все", -1);
-    availabilityFilter->addItem("Доступна", 1);
-    availabilityFilter->addItem("Недоступна", 0);
-    availabilityFilter->setObjectName("availabilityFilter");
-    availabilityFilter->setMinimumWidth(140);
-    connect(availabilityFilter, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::onFilterChanged);
     filtersLayout->addWidget(availabilityLabel);
-    filtersLayout->addWidget(availabilityFilter);
+    filtersLayout->addWidget(createComboBoxFilter(filtersGroup, "availabilityFilter", 140, &MainWindow::onFilterChanged));
     
     filtersLayout->addStretch();
     
@@ -355,44 +311,15 @@ void MainWindow::setupMembersTab() // NOSONAR - cannot be const, modifies UI
     memberFiltersLayout->setContentsMargins(8, 8, 8, 8);
     memberFiltersLayout->setSpacing(6);
     
-    auto* nameFilter = new QLineEdit(memberFiltersGroup);
-    nameFilter->setPlaceholderText("Имя...");
-    nameFilter->setObjectName("memberNameFilter");
-    nameFilter->setMinimumWidth(180);
-    connect(nameFilter, &QLineEdit::textChanged, this, &MainWindow::onMemberFilterChanged);
-    memberFiltersLayout->addWidget(nameFilter);
-    
-    auto* surnameFilter = new QLineEdit(memberFiltersGroup);
-    surnameFilter->setPlaceholderText("Фамилия...");
-    surnameFilter->setObjectName("memberSurnameFilter");
-    surnameFilter->setMinimumWidth(180);
-    connect(surnameFilter, &QLineEdit::textChanged, this, &MainWindow::onMemberFilterChanged);
-    memberFiltersLayout->addWidget(surnameFilter);
-    
-    auto* phoneFilter = new QLineEdit(memberFiltersGroup);
-    phoneFilter->setPlaceholderText("Телефон...");
-    phoneFilter->setObjectName("memberPhoneFilter");
-    phoneFilter->setMinimumWidth(150);
-    connect(phoneFilter, &QLineEdit::textChanged, this, &MainWindow::onMemberFilterChanged);
-    memberFiltersLayout->addWidget(phoneFilter);
-    
-    auto* emailFilter = new QLineEdit(memberFiltersGroup);
-    emailFilter->setPlaceholderText("Email...");
-    emailFilter->setObjectName("memberEmailFilter");
-    emailFilter->setMinimumWidth(200);
-    connect(emailFilter, &QLineEdit::textChanged, this, &MainWindow::onMemberFilterChanged);
-    memberFiltersLayout->addWidget(emailFilter);
+    memberFiltersLayout->addWidget(createLineEditFilter(memberFiltersGroup, "Имя...", "memberNameFilter", 180, &MainWindow::onMemberFilterChanged));
+    memberFiltersLayout->addWidget(createLineEditFilter(memberFiltersGroup, "Фамилия...", "memberSurnameFilter", 180, &MainWindow::onMemberFilterChanged));
+    memberFiltersLayout->addWidget(createLineEditFilter(memberFiltersGroup, "Телефон...", "memberPhoneFilter", 150, &MainWindow::onMemberFilterChanged));
+    memberFiltersLayout->addWidget(createLineEditFilter(memberFiltersGroup, "Email...", "memberEmailFilter", 200, &MainWindow::onMemberFilterChanged));
     
     auto* blockedLabel = new QLabel("Статус:", memberFiltersGroup);
-    auto* blockedFilter = new QComboBox(memberFiltersGroup);
-    blockedFilter->addItem("Все", -1);
-    blockedFilter->addItem("Не заблокирован", 0);
-    blockedFilter->addItem("Заблокирован", 1);
-    blockedFilter->setObjectName("memberBlockedFilter");
-    blockedFilter->setMinimumWidth(140);
-    connect(blockedFilter, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::onMemberFilterChanged);
     memberFiltersLayout->addWidget(blockedLabel);
-    memberFiltersLayout->addWidget(blockedFilter);
+    QStringList blockedItems = {"Все", "Не заблокирован", "Заблокирован"};
+    memberFiltersLayout->addWidget(createComboBoxFilter(memberFiltersGroup, "memberBlockedFilter", 140, &MainWindow::onMemberFilterChanged, blockedItems));
     
     memberFiltersLayout->addStretch();
     
@@ -3007,7 +2934,7 @@ void MainWindow::saveDataWithWarning()
     }
 }
 
-void MainWindow::configureTableFonts(QTableWidget* table)
+void MainWindow::configureTableFonts(QTableWidget* table) const
 {
     // Устанавливаем больший шрифт для таблицы
     QFont tableFont = table->font();
@@ -3018,5 +2945,46 @@ void MainWindow::configureTableFonts(QTableWidget* table)
     headerFont.setPointSize(11);
     headerFont.setBold(true);
     table->horizontalHeader()->setFont(headerFont);
+}
+
+QLineEdit* MainWindow::createLineEditFilter(QWidget* parent, const QString& placeholder, const QString& objectName, int minWidth, void (MainWindow::*slot)()) const
+{
+    auto* filter = new QLineEdit(parent);
+    filter->setPlaceholderText(placeholder);
+    filter->setObjectName(objectName);
+    filter->setMinimumWidth(minWidth);
+    connect(filter, &QLineEdit::textChanged, this, slot);
+    return filter;
+}
+
+QSpinBox* MainWindow::createSpinBoxFilter(QWidget* parent, const QString& objectName, int minWidth, void (MainWindow::*slot)()) const
+{
+    auto* filter = new QSpinBox(parent);
+    filter->setRange(0, 9999);
+    filter->setValue(0);
+    filter->setSpecialValueText("Любой");
+    filter->setObjectName(objectName);
+    filter->setMinimumWidth(minWidth);
+    connect(filter, QOverload<int>::of(&QSpinBox::valueChanged), this, [this, slot](int) { (this->*slot)(); });
+    return filter;
+}
+
+QComboBox* MainWindow::createComboBoxFilter(QWidget* parent, const QString& objectName, int minWidth, void (MainWindow::*slot)(), const QStringList& items) const
+{
+    auto* filter = new QComboBox(parent);
+    if (items.isEmpty()) {
+        filter->addItem("Все", -1);
+        filter->addItem("Доступна", 1);
+        filter->addItem("Недоступна", 0);
+    } else {
+        filter->addItem(items[0], -1);
+        for (int i = 1; i < items.size(); ++i) {
+            filter->addItem(items[i], i - 1);
+        }
+    }
+    filter->setObjectName(objectName);
+    filter->setMinimumWidth(minWidth);
+    connect(filter, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this, slot](int) { (this->*slot)(); });
+    return filter;
 }
 

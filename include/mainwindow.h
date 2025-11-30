@@ -126,7 +126,12 @@ private:
     void saveDataWithWarning(); // Сохранение данных с предупреждением при ошибке
     
     // Вспомогательные методы для настройки таблиц (устранение дублирования кода)
-    void configureTableFonts(QTableWidget* table); // Настройка шрифтов таблицы и заголовков
+    void configureTableFonts(QTableWidget* table) const; // Настройка шрифтов таблицы и заголовков
+    
+    // Вспомогательные методы для создания фильтров (устранение дублирования кода)
+    QLineEdit* createLineEditFilter(QWidget* parent, const QString& placeholder, const QString& objectName, int minWidth, void (MainWindow::*slot)()) const;
+    QSpinBox* createSpinBoxFilter(QWidget* parent, const QString& objectName, int minWidth, void (MainWindow::*slot)()) const;
+    QComboBox* createComboBoxFilter(QWidget* parent, const QString& objectName, int minWidth, void (MainWindow::*slot)(), const QStringList& items = {}) const;
 };
 
 #endif // MAINWINDOW_H
