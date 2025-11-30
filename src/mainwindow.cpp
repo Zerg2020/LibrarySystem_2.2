@@ -916,14 +916,8 @@ void MainWindow::applyBookSorting(QTableWidget* table)
     // Сортируем таблицу
     Qt::SortOrder order = (sortOrder == 1) ? Qt::AscendingOrder : Qt::DescendingOrder;
     
-    // Для числовых колонок (ID, Год, Количество) используем числовую сортировку через Qt::UserRole
-    if (sortColumn == 1 || sortColumn == 5 || sortColumn == 8) {
-        // Числовая сортировка по UserRole
-        table->sortItems(sortColumn, order);
-    } else {
-        // Текстовая сортировка для остальных колонок
-        table->sortItems(sortColumn, order);
-    }
+    // Сортируем таблицу (sortItems автоматически использует UserRole для числовых колонок, если данные установлены)
+    table->sortItems(sortColumn, order);
 }
 
 void MainWindow::refreshMembers()
