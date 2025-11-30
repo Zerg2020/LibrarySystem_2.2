@@ -70,4 +70,33 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       with:
         projectBaseDir: .
+    
+    - name: Export SonarCloud Issues to File
+      if: always()
+      run: |
+        echo "Exporting SonarCloud issues..."
+        PROJECT_KEY="Zerg2020_LibrarySystem_2.2"
+        curl -u "${{ secrets.SONAR_TOKEN }}:" \
+          "https://sonarcloud.io/api/issues/search?componentKeys=${PROJECT_KEY}&resolved=false&ps=500" \
+          -o sonarcloud-issues.json || echo "Failed to export issues"
+        
+        if [ -f "sonarcloud-issues.json" ]; then
+          echo "✅ Issues exported successfully"
+          echo "Total issues found: $(jq '.total' sonarcloud-issues.json 2>/dev/null || echo 'N/A')"
+          # Создаем читаемый текстовый файл
+          jq -r '.issues[] | "\(.severity) | \(.rule) | \(.component) | \(.line) | \(.message)"' sonarcloud-issues.json > sonarcloud-issues.txt 2>/dev/null || echo "Could not create text file"
+        else
+          echo "⚠️  Could not export issues"
+        fi
+      continue-on-error: true
+    
+    - name: Upload SonarCloud Issues
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: sonarcloud-issues
+        path: |
+          sonarcloud-issues.json
+          sonarcloud-issues.txt
+        retention-days: 30
 
