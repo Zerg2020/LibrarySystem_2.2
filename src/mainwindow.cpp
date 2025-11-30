@@ -37,9 +37,8 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-    , dataPath("data")
 {
+    ui = new Ui::MainWindow;
     ui->setupUi(this);
     
     // Устанавливаем размер главного окна

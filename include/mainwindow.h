@@ -79,9 +79,9 @@ private slots:
     void onBookHeaderClicked(int column);
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow *ui = nullptr;
     LibrarySystem librarySystem;
-    QString dataPath;
+    QString dataPath = "data";
     QMap<int, int> bookSortStates; // колонка -> состояние (0=неактивна, 1=возрастание, 2=убывание)
     
     // Фильтры для книг
