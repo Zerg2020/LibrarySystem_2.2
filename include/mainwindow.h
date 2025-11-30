@@ -71,9 +71,6 @@ private slots:
     void refreshBooks();
     void refreshMembers();
     void refreshEmployees();
-    // void showMemberContextMenu(const QPoint& pos); // больше не используется
-    // void showBookContextMenu(const QPoint& pos); // больше не используется
-    // void showEmployeeContextMenu(const QPoint& pos); // больше не используется
     void onSearchBooks(const QString& text); // Устаревший метод, оставлен для совместимости
     void onFilterChanged(); // Обработчик изменения любого фильтра книг
     void onClearFilters(); // Очистка всех фильтров книг

@@ -10,11 +10,11 @@ struct BorrowedBook {
     int bookId;
     std::string borrowDate;
     std::string returnDate;
-    bool returned;
+    bool returned = false;
     int employeeId; // ID работника, который выдал книгу
 
     BorrowedBook(int bookId, const std::string& borrowDate, const std::string& returnDate = "", int employeeId = 0)
-        : bookId(bookId), borrowDate(borrowDate), returnDate(returnDate), returned(false), employeeId(employeeId) {}
+        : bookId(bookId), borrowDate(borrowDate), returnDate(returnDate), employeeId(employeeId) {}
 };
 
 class LibraryMember : public Person {

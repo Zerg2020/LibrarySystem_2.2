@@ -6,8 +6,7 @@
 
 class LibraryException : public std::runtime_error {
 public:
-    explicit LibraryException(const std::string& message) 
-        : std::runtime_error(message) {}
+    using std::runtime_error::runtime_error;
 };
 
 class FileException : public LibraryException {

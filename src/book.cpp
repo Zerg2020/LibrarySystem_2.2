@@ -7,7 +7,7 @@ Book::Book(int pId, const std::string& pTitle, const std::string& pAuthor,
            const std::string& pDescription, const std::string& pPdfPath)
     : Item(pId, pTitle), author(pAuthor), isbn(pIsbn), year(pYear), genre(pGenre), 
       coverPath(pCoverPath), quantity(pQuantity), description(pDescription), 
-      pdfPath(pPdfPath), manuallyDisabled(false) {
+      pdfPath(pPdfPath) {
 }
 
 std::string Book::getInfo() const {

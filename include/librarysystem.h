@@ -20,8 +20,8 @@ private:
     CommandManager commandManagerBooks;      // Для операций с книгами
     CommandManager commandManagerMembers;     // Для операций с абонентами
     CommandManager commandManagerEmployees;  // Для операций с работниками
-    int nextBookId;
-    int nextEmployeeId;
+    int nextBookId = 1;
+    int nextEmployeeId = 1;
 
 public:
     LibrarySystem();

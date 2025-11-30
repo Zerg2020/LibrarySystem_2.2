@@ -3,7 +3,7 @@
 #include "commands.h"
 #include <algorithm>
 
-LibrarySystem::LibrarySystem() : nextBookId(1), nextEmployeeId(1) {
+LibrarySystem::LibrarySystem() {
 }
 
 void LibrarySystem::addBook(const std::string& title, const std::string& author,
@@ -225,7 +225,7 @@ std::vector<std::pair<LibraryMember*, BorrowedBook>> LibrarySystem::getOverdueBo
     for (auto* member : getAllMembers()) {
         auto memberOverdue = member->getOverdueBooks();
         for (const auto& book : memberOverdue) {
-            overdue.push_back({member, book});
+            overdue.emplace_back(member, book);
         }
     }
     return overdue;

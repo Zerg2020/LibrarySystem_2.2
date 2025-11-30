@@ -21,7 +21,7 @@ void LibraryMember::borrowBook(int bookId, int employeeId) {
         }
     }
     
-    time_t now = time(0);
+    time_t now = time(nullptr);
     struct tm timeinfo;
 #ifdef _WIN32
     localtime_s(&timeinfo, &now);
@@ -55,7 +55,7 @@ void LibraryMember::returnBook(int bookId) {
     bool found = false;
     for (auto& book : borrowedBooks) {
         if (book.bookId == bookId && !book.returned) {
-            time_t now = time(0);
+            time_t now = time(nullptr);
             struct tm timeinfo;
 #ifdef _WIN32
             localtime_s(&timeinfo, &now);
@@ -77,7 +77,7 @@ void LibraryMember::returnBook(int bookId) {
 
 std::vector<BorrowedBook> LibraryMember::getOverdueBooks() const {
     std::vector<BorrowedBook> overdue;
-    time_t now = time(0);
+    time_t now = time(nullptr);
     
     for (const auto& book : borrowedBooks) {
         if (!book.returned && !book.returnDate.empty()) {

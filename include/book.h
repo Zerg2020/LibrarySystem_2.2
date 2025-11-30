@@ -14,7 +14,7 @@ private:
     int quantity; // Количество экземпляров книги
     std::string description; // Описание книги
     std::string pdfPath; // Путь к PDF файлу книги
-    bool manuallyDisabled; // Ручная блокировка доступности (переопределяет автоматическую логику)
+    bool manuallyDisabled = false; // Ручная блокировка доступности (переопределяет автоматическую логику)
 
 public:
     explicit Book(int pId, const std::string& pTitle, const std::string& pAuthor, 
