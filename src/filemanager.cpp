@@ -43,7 +43,7 @@ void FileManager::saveBooks(const LibrarySystem& system, std::string_view filena
     std::string filenameStr(filename);
     std::ofstream file(filenameStr);
     if (!file.is_open()) {
-        throw FileException("Не удалось открыть файл: " + filename);
+        throw FileException("Не удалось открыть файл: " + filenameStr);
     }
     
     auto allBooks = system.getAllBooks();
@@ -107,7 +107,7 @@ void FileManager::saveMembers(const LibrarySystem& system, std::string_view file
     std::string filenameStr(filename);
     std::ofstream file(filenameStr);
     if (!file.is_open()) {
-        throw FileException("Не удалось открыть файл: " + filename);
+        throw FileException("Не удалось открыть файл: " + filenameStr);
     }
     
     auto allMembers = system.getAllMembers();
@@ -202,7 +202,7 @@ void FileManager::saveEmployees(const LibrarySystem& system, std::string_view fi
     std::string filenameStr(filename);
     std::ofstream file(filenameStr);
     if (!file.is_open()) {
-        throw FileException("Не удалось открыть файл: " + filename);
+        throw FileException("Не удалось открыть файл: " + filenameStr);
     }
     
     auto allEmployees = system.getAllEmployees();
@@ -262,7 +262,7 @@ void FileManager::saveMetadata(const LibrarySystem& system, std::string_view fil
     std::string filenameStr(filename);
     std::ofstream file(filenameStr);
     if (!file.is_open()) {
-        throw FileException("Не удалось открыть файл: " + filename);
+        throw FileException("Не удалось открыть файл: " + filenameStr);
     }
     
     file << "nextBookId=" << system.getNextBookId() << "\n";
