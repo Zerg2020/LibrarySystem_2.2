@@ -1,5 +1,5 @@
 #include "commandmanager.h"
-#include <stdexcept>
+#include "exceptions.h"
 
 void CommandManager::executeCommand(std::unique_ptr<Command> command) {
     try {
@@ -20,13 +20,13 @@ void CommandManager::executeCommand(std::unique_ptr<Command> command) {
         }
     } catch (...) {
         // Если команда не может выполниться, не добавляем её в стек
-        throw;
+        throw; // Re-throw to let caller handle the exception
     }
 }
 
 void CommandManager::undo() {
     if (undoStack.empty()) {
-        throw std::runtime_error("Нет действий для отмены");
+        throw LibraryException("Нет действий для отмены");
     }
     auto command = std::move(undoStack.top());
     undoStack.pop();
@@ -36,7 +36,7 @@ void CommandManager::undo() {
 
 void CommandManager::redo() {
     if (redoStack.empty()) {
-        throw std::runtime_error("Нет действий для повторения");
+        throw LibraryException("Нет действий для повторения");
     }
     auto command = std::move(redoStack.top());
     redoStack.pop();
