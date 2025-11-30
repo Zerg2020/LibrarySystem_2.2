@@ -117,8 +117,7 @@ void LibrarySystem::removeMember(int id) {
 }
 
 void LibrarySystem::blockMember(int id) {
-    LibraryMember* member = findMember(id);
-    if (!member) {
+    if (LibraryMember* member = findMember(id); !member) {
         throw NotFoundException("Абонент с ID " + std::to_string(id));
     }
     try {
@@ -130,8 +129,7 @@ void LibrarySystem::blockMember(int id) {
 }
 
 void LibrarySystem::unblockMember(int id) {
-    LibraryMember* member = findMember(id);
-    if (!member) {
+    if (LibraryMember* member = findMember(id); !member) {
         throw NotFoundException("Абонент с ID " + std::to_string(id));
     }
     try {
@@ -486,8 +484,7 @@ void LibrarySystem::addBorrowedBook(int memberId, int bookId, const std::string&
         throw NotFoundException("Абонент с ID " + std::to_string(memberId));
     }
     
-    Book* book = findBook(bookId);
-    if (!book) {
+    if (Book* book = findBook(bookId); !book) {
         throw NotFoundException("Книга с ID " + std::to_string(bookId));
     }
     
