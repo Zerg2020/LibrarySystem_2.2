@@ -8,7 +8,7 @@ Librarian::Librarian(int pId, std::string_view pName, std::string_view pSurname,
 
 double Librarian::calculateMonthlySalary() const {
     // Базовая зарплата + бонус за обработанные книги
-    return salary + (booksProcessed * 0.1);
+    return getSalary() + (booksProcessed * 0.1);
 }
 
 std::string Librarian::getInfo() const {

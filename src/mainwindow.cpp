@@ -60,11 +60,8 @@ MainWindow::MainWindow(QWidget *parent)
         refreshMembers();
         refreshEmployees();
         updateUndoRedoButtons();
-    } catch (const FileException& e) {
-        // Игнорируем ошибки при первой загрузке (файлы могут не существовать)
-        (void)e; // Suppress unused variable warning
     } catch (const FileException&) {
-        // Игнорируем ошибки файлов при первой загрузке
+        // Игнорируем ошибки файлов при первой загрузке (файлы могут не существовать)
     } catch (const LibraryException&) {
         // Игнорируем другие ошибки при первой загрузке
     }

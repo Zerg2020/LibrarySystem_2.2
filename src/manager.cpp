@@ -8,7 +8,7 @@ Manager::Manager(int pId, std::string_view pName, std::string_view pSurname,
 
 double Manager::calculateMonthlySalary() const {
     // Базовая зарплата + бонус за управление сотрудниками
-    return salary + (employeesManaged * 50.0);
+    return getSalary() + (employeesManaged * 50.0);
 }
 
 std::string Manager::getInfo() const {
